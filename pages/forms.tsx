@@ -1,5 +1,5 @@
 import React from "react";
-import { FormsMain } from "../components/FormsMain";
+import { FormsMain } from "../components/Forms/FormsMain";
 import { Header } from "../components/Header";
 
 export default function Forms() {

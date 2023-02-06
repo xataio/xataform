@@ -1,16 +1,13 @@
 import { useAuth, useUser } from "@clerk/nextjs";
 import { Transition, Menu } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/20/solid";
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { LinkProps } from "next/link";
 import { Fragment } from "react";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export function Header() {
+export function Header(props: React.PropsWithChildren) {
   const { user } = useUser();
   const { signOut } = useAuth();
 
@@ -81,7 +78,7 @@ export function Header() {
                       item.href ? (
                         <Link
                           href={item.href}
-                          className={classNames(
+                          className={clsx(
                             active ? "bg-indigo-100" : "",
                             "block px-4 py-2 text-sm text-gray-700"
                           )}
@@ -90,7 +87,7 @@ export function Header() {
                         </Link>
                       ) : (
                         <a
-                          className={classNames(
+                          className={clsx(
                             active ? "bg-indigo-100" : "",
                             "block px-4 py-2 text-sm text-gray-700",
                             "cursor-pointer "

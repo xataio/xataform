@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { RouterOutputs, trpc } from "../utils/trpc";
-import { Button } from "./Button";
+import { RouterOutputs, trpc } from "../../utils/trpc";
+import { Button } from "../Button";
 import { CreateOrRenameFormModal } from "./CreateOrRenameFormModal";
 import { FormCard } from "./FormCard";
-import { Spinner } from "./Spinner";
+import { Spinner } from "../Spinner";
 import { WelcomeForms } from "./WelcomeForms";
 import { toast } from "react-toastify";
-import { ToastDeletion } from "./ToastDeletion";
+import { ToastDeletion } from "../ToastDeletion";
 
 export function FormsMain() {
   const utils = trpc.useContext();

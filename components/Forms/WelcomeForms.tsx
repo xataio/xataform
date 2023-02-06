@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import { Button } from "./Button";
+import { Button } from "../Button";
 
 export type WelcomeFormsProps = {
   onCreateClick: () => void;

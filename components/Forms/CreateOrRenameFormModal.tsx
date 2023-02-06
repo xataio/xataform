@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Spinner } from "./Spinner";
+import { Spinner } from "../Spinner";
 
 export type CreateOrRenameFormModalProps = {
   isOpen: boolean;

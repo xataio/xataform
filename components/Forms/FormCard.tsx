@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { RouterOutputs } from "../utils/trpc";
-import { Menu } from "./Menu";
+import { RouterOutputs } from "../../utils/trpc";
+import { Menu } from "../Menu";
 
 export type FormCardProps = {
   form: RouterOutputs["form"]["list"][-1];
