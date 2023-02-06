@@ -13,6 +13,27 @@ export const formRouter = router({
   }),
 
   /**
+   * Get a form
+   */
+  get: protectedProcedure
+    .input(z.object({ formId: z.string() }))
+    .query(async ({ ctx: { user, db }, input: { formId } }) => {
+      const form = await db.getForm(formId);
+      if (form === null) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      if (form.userId !== user.id) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return {
+        id: formId,
+        ...formSchema.parse(form),
+      };
+    }),
+
+  /**
    * Create a new form
    */
   create: protectedProcedure
