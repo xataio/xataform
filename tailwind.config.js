@@ -8,6 +8,9 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
       },
+      gridTemplateColumns: {
+        header: "max-content auto",
+      },
     },
   },
   plugins: [require("tailwind-scrollbar")({ nocompatible: true })],

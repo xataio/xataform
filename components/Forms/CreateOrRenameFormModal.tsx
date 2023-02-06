@@ -84,7 +84,7 @@ export function CreateOrRenameFormModal({
                       disabled={isLoading}
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="text-baseshadow-sm inline-flex w-full justify-center rounded-md border-2 border-indigo-500 px-4 py-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm"
+                      className="inline-flex w-full justify-center rounded-md border-2 border-indigo-500 px-4 py-2 text-base shadow-sm focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm"
                     />
                     {isLoading ? (
                       <div className="absolute top-1 right-1 scale-90">
