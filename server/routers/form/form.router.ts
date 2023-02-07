@@ -51,6 +51,18 @@ export const formRouter = router({
         userId: user.id,
       });
 
+      await db.createQuestion({
+        formId: createdForm.id,
+        type: "shortText",
+        description: "",
+        illustration: null,
+        maxLength: null,
+        order: 0,
+        required: false,
+        title: "",
+        userId: user.id,
+      });
+
       return createdForm;
     }),
 

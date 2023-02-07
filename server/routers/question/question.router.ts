@@ -64,6 +64,17 @@ export const questionRouter = router({
         if (question.userId !== user.id) {
           throw new TRPCError({ code: "NOT_FOUND" });
         }
+        const count = await db.getQuestionsCount({
+          formId: question.formId,
+          userId: question.userId,
+        });
+
+        if (count <= 1) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: "You can't delete the last question",
+          });
+        }
 
         await db.deleteQuestion(questionId);
 
