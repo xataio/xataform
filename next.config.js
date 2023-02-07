@@ -2,7 +2,7 @@ const withRoutes = require("nextjs-routes/config")();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // https://github.com/atlassian/react-beautiful-dnd/issues/2407
   experimental: {
     scrollRestoration: true,
   },
