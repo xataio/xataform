@@ -22,7 +22,7 @@ type ButtonPropsCommun = {
 type ButtonPropsWithoutIcon = ButtonPropsCommun & {
   icon?: never;
   iconOnly?: never;
-  tooltipPlacement: never;
+  tooltipPlacement?: never;
 };
 
 type ButtonWithIconProps = ButtonPropsCommun & {
