@@ -64,12 +64,14 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
             {isContentPanelOpen ? "Close sidebar" : "Open sidebar"}
           </Button>
           <div className="flex-raw flex items-center gap-2">
-            <div
-              className="cursor-pointer text-sm text-slate-400 underline"
-              onClick={() => addMockQuestions({ formId })}
-            >
-              Add mock questions
-            </div>
+            {process.env.NODE_ENV === "development" ? (
+              <div
+                className="cursor-pointer text-sm text-slate-400 underline"
+                onClick={() => addMockQuestions({ formId })}
+              >
+                Add mock questions
+              </div>
+            ) : null}
             <Button
               icon={isQuestionPanelOpen ? "sidebar-right" : "sidebar-left"}
               onClick={toggleQuestionPanelOpen}
