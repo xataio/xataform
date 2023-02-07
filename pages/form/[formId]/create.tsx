@@ -67,7 +67,7 @@ export default function FormCreate({
           <Button variant="ghost">Publish</Button>
         </>
       </Header>
-      <CreateFormMain />
+      <CreateFormMain formId={form.id} />
     </Box>
   );
 }

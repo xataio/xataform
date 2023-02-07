@@ -1,11 +1,17 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
+import { useAddMockQuestions } from "hooks/useAddMockQuestions";
 import { useToggle } from "hooks/useToggle";
 import React, { useRef } from "react";
 import { useLayoutEffect } from "react";
 import { ContentPanel } from "./ContentPanel";
 
-export function CreateFormMain() {
+export type CreateFormMainProps = {
+  formId: string;
+};
+
+export function CreateFormMain({ formId }: CreateFormMainProps) {
+  const { addMockQuestions, isAddingMockQuestions } = useAddMockQuestions();
   const [isContentPanelOpen, toggleContentPanelOpen] = useToggle(true);
   const [isQuestionPanelOpen, toggleQuestionPanelOpen] = useToggle(false);
 
@@ -34,7 +40,7 @@ export function CreateFormMain() {
   return (
     <div className="flex h-full justify-between overflow-hidden">
       <Panel isOpen={isContentPanelOpen}>
-        <ContentPanel />
+        <ContentPanel formId={formId} />
       </Panel>
       <section className="flex w-full flex-col overflow-hidden border-x border-slate-200 bg-slate-100 p-4">
         <div
@@ -57,14 +63,22 @@ export function CreateFormMain() {
           >
             {isContentPanelOpen ? "Close sidebar" : "Open sidebar"}
           </Button>
-          <Button
-            icon={isQuestionPanelOpen ? "sidebar-right" : "sidebar-left"}
-            onClick={toggleQuestionPanelOpen}
-            iconOnly
-            variant="secondary"
-          >
-            {isQuestionPanelOpen ? "Close sidebar" : "Open sidebar"}
-          </Button>
+          <div className="flex-raw flex items-center gap-2">
+            <div
+              className="cursor-pointer text-sm text-slate-400 underline"
+              onClick={() => addMockQuestions({ formId })}
+            >
+              Add mock questions
+            </div>
+            <Button
+              icon={isQuestionPanelOpen ? "sidebar-right" : "sidebar-left"}
+              onClick={toggleQuestionPanelOpen}
+              iconOnly
+              variant="secondary"
+            >
+              {isQuestionPanelOpen ? "Close sidebar" : "Open sidebar"}
+            </Button>
+          </div>
         </div>
       </section>
       <Panel isOpen={isQuestionPanelOpen}>question</Panel>

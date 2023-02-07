@@ -1,25 +1,35 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
+import { ErrorMessage } from "components/ErrorMessage";
 import { QuestionIcon } from "components/Question/QuestionIcon";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   QuestionCommunProps,
-  questionSchema,
   QuestionType,
 } from "server/routers/question/question.schemas";
+import { trpc } from "utils/trpc";
 
-const mockItems = Array.from(questionSchema.optionsMap.keys()).map(
-  (i, index) => ({
-    description: null,
-    id: `question-${index}`,
-    illustration: null,
-    order: index,
-    title: i as string,
-    type: i as QuestionType,
-  })
-);
+export type ContentPanelProps = {
+  formId: string;
+};
 
-export function ContentPanel() {
+export function ContentPanel({ formId }: ContentPanelProps) {
+  const { data: questions, error } = trpc.form.summary.useQuery(
+    { formId },
+    {
+      placeholderData: [
+        {
+          id: "",
+          description: null,
+          illustration: null,
+          order: 0,
+          title: "Loading…",
+          type: "shortText",
+        },
+      ],
+    }
+  );
+
   return (
     <>
       <header className="flex items-center justify-between p-2 text-sm font-medium">
@@ -28,6 +38,7 @@ export function ContentPanel() {
           Add a new question
         </Button>
       </header>
+      {error ? <ErrorMessage>{error.message}</ErrorMessage> : null}
       <DragDropContext
         onDragStart={() => {
           if (window.navigator.vibrate) {
@@ -39,21 +50,23 @@ export function ContentPanel() {
 
           const questionId = result.draggableId;
           const nextOrder = result.destination?.index;
+          // TODO: re-order
         }}
       >
         <Droppable droppableId="questions">
           {(provided) => (
             <ul
               className={clsx(
+                "h-full",
                 "scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 scrollbar-thumb-rounded"
               )}
               {...provided.droppableProps}
               style={{
-                overflow: "scroll",
+                overflow: "auto",
               }}
               ref={provided.innerRef}
             >
-              {mockItems.map((question) => (
+              {questions?.map((question) => (
                 <DraggableQuestion key={question.id} question={question} />
               ))}
               {provided.placeholder}

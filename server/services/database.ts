@@ -254,6 +254,16 @@ export const database = {
 
     return count;
   },
+
+  createQuestions: (
+    questions: Array<{
+      title: string;
+      type: string;
+      form: string;
+      userId: string;
+      order: number;
+    }>
+  ) => xata.db.question.create(questions),
 };
 
 export type Database = typeof database;

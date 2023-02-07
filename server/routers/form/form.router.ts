@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../../trpc";
-import { questionSchema } from "../question/question.schemas";
+import { questionSchema, QuestionType } from "../question/question.schemas";
 import { formSchema } from "./form.schemas";
 
 export const formRouter = router({
@@ -159,6 +159,29 @@ export const formRouter = router({
       }
 
       await db.createQuestion({ formId, userId, ...question });
+
+      return { formId };
+    }),
+
+  /**
+   * Add one question of each type for debugging
+   */
+  addMockQuestions: protectedProcedure
+    .input(z.object({ formId: z.string() }))
+    .mutation(async ({ ctx: { user, db }, input: { formId } }) => {
+      const count = await db.getQuestionsCount({ formId, userId: user.id });
+
+      await db.createQuestions(
+        Array.from(questionSchema.optionsMap.keys()).map((i, index) => ({
+          order: count + index,
+          title: i as string,
+          type: i as QuestionType,
+          form: formId,
+          userId: user.id,
+        }))
+      );
+
+      return { formId };
     }),
 });
 
