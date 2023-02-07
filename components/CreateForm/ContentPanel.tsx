@@ -102,11 +102,12 @@ function DraggableQuestion({
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           className={clsx(
+            "focus:outline-none focus:ring-2 focus:ring-indigo-500",
             "flex select-none flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-50",
             snapshot.isDragging && "bg-indigo-100 shadow"
           )}
         >
-          <QuestionIcon type={question.type} order={question.order} />
+          <QuestionIcon type={question.type} order={question.order + 1} />
           <h2 className="truncate text-sm">{question.title}</h2>
         </li>
       )}
