@@ -10,6 +10,7 @@ import { useDeleteForm } from "hooks/useDeleteForm";
 import { WelcomeForms } from "./WelcomeForms";
 import { CreateOrRenameFormModal } from "./CreateOrRenameFormModal";
 import { FormCard } from "./FormCard";
+import clsx from "clsx";
 
 export function FormsMain() {
   const {
@@ -57,7 +58,12 @@ export function FormsMain() {
           Create xataform
         </Button>
       </header>
-      <main className="flex-auto overflow-y-auto bg-slate-50 scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 scrollbar-thumb-rounded">
+      <main
+        className={clsx(
+          "flex-auto overflow-y-auto bg-slate-50",
+          "scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 scrollbar-thumb-rounded"
+        )}
+      >
         <div className="h-full p-4">
           {isFormsLoading ? <Spinner /> : null}
           {formsError ? formsError.message : null}

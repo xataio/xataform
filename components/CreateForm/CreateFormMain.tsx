@@ -3,10 +3,11 @@ import { Button } from "components/Button";
 import { useToggle } from "hooks/useToggle";
 import React, { useRef } from "react";
 import { useLayoutEffect } from "react";
+import { ContentPanel } from "./ContentPanel";
 
 export function CreateFormMain() {
   const [isContentPanelOpen, toggleContentPanelOpen] = useToggle(true);
-  const [isQuestionPanelOpen, toggleQuestionPanelOpen] = useToggle(true);
+  const [isQuestionPanelOpen, toggleQuestionPanelOpen] = useToggle(false);
 
   const slideContainerRef = useRef<HTMLDivElement>(null);
   const slideRef = useRef<HTMLDivElement>(null);
@@ -31,9 +32,11 @@ export function CreateFormMain() {
   }, [slideContainerRef]);
 
   return (
-    <div className="flex h-full justify-between">
-      <Panel isOpen={isContentPanelOpen}>content</Panel>
-      <div className="flex w-full flex-col overflow-hidden border-x border-slate-200 bg-slate-100 p-4">
+    <div className="flex h-full justify-between overflow-hidden">
+      <Panel isOpen={isContentPanelOpen}>
+        <ContentPanel />
+      </Panel>
+      <section className="flex w-full flex-col overflow-hidden border-x border-slate-200 bg-slate-100 p-4">
         <div
           className="flex h-full items-center justify-center"
           ref={slideContainerRef}
@@ -63,7 +66,7 @@ export function CreateFormMain() {
             {isQuestionPanelOpen ? "Close sidebar" : "Open sidebar"}
           </Button>
         </div>
-      </div>
+      </section>
       <Panel isOpen={isQuestionPanelOpen}>question</Panel>
     </div>
   );
@@ -74,13 +77,13 @@ function Panel({
   isOpen,
 }: React.PropsWithChildren<{ isOpen: boolean }>) {
   return (
-    <div
+    <section
       className={clsx(
-        isOpen ? "w-64" : "w-0",
-        "z-10  shadow-lg transition-all overflow-x-hidden"
+        isOpen ? "w-64 min-w-[16rem]" : "w-0",
+        "z-10 flex h-full flex-col shadow-lg transition-all overflow-x-hidden"
       )}
     >
       {children}
-    </div>
+    </section>
   );
 }
