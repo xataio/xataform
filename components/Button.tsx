@@ -6,6 +6,7 @@ import {
   ArrowLeftOnRectangleIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/20/solid";
+import { Placement } from "@popperjs/core";
 import clsx from "clsx";
 import { useState } from "react";
 import { usePopper } from "react-popper";
@@ -21,14 +22,18 @@ type ButtonPropsCommun = {
 type ButtonPropsWithoutIcon = ButtonPropsCommun & {
   icon?: never;
   iconOnly?: never;
+  tooltipPlacement: never;
 };
 
 type ButtonWithIconProps = ButtonPropsCommun & {
   icon: "add" | "grid" | "list" | "preview" | "sidebar-left" | "sidebar-right";
   iconOnly?: boolean;
+  tooltipPlacement?: Placement;
 };
 
 export function Button(props: ButtonProps) {
+  const placement = props.tooltipPlacement ?? "top-start";
+
   const [showTooltip, setShowTooltip] = useState(false);
   const [referenceElement, setReferenceElement] =
     useState<HTMLButtonElement | null>(null);
@@ -37,7 +42,7 @@ export function Button(props: ButtonProps) {
   );
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: "top-start",
+    placement,
     modifiers: [
       { name: "arrow", options: { element: arrowElement } },
       {
@@ -118,6 +123,8 @@ export function Button(props: ButtonProps) {
       </button>
       {props.iconOnly && showTooltip ? (
         <div
+          id="tooltip"
+          role="tooltip"
           aria-hidden="true"
           className="rounded bg-slate-800 py-1 px-2 text-sm text-white"
           ref={setPopperElement}
@@ -125,11 +132,7 @@ export function Button(props: ButtonProps) {
           {...attributes.popper}
         >
           {props.children}
-          <div
-            className="h-0 w-0 border-x-8 border-t-8 border-x-transparent border-t-slate-800"
-            ref={setArrowElement}
-            style={styles.arrow}
-          ></div>
+          <div id="arrow" ref={setArrowElement} style={styles.arrow}></div>
         </div>
       ) : null}
     </>
