@@ -264,6 +264,13 @@ export const database = {
       order: number;
     }>
   ) => xata.db.question.create(questions),
+
+  updateQuestions: (
+    questions: Array<{
+      id: string;
+      order: number;
+    }>
+  ) => xata.db.question.update(questions),
 };
 
 export type Database = typeof database;

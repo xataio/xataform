@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { Button } from "components/Button";
 import { ErrorMessage } from "components/ErrorMessage";
 import { QuestionIcon } from "components/Question/QuestionIcon";
+import { useReorderQuestions } from "hooks/useReorderQuestions";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   QuestionCommunProps,
@@ -14,6 +15,8 @@ export type ContentPanelProps = {
 };
 
 export function ContentPanel({ formId }: ContentPanelProps) {
+  const { reorderQuestions } = useReorderQuestions();
+
   const { data: questions, error } = trpc.form.summary.useQuery(
     { formId },
     {
@@ -48,9 +51,13 @@ export function ContentPanel({ formId }: ContentPanelProps) {
         onDragEnd={(result) => {
           if (!result.destination) return;
 
-          const questionId = result.draggableId;
-          const nextOrder = result.destination?.index;
-          // TODO: re-order
+          const reorderedQuestions = reorder(
+            questions || [],
+            result.source.index,
+            result.destination.index
+          ).map((i, order) => ({ ...i, order }));
+
+          reorderQuestions({ formId, questions: reorderedQuestions });
         }}
       >
         <Droppable droppableId="questions">
@@ -95,7 +102,6 @@ function DraggableQuestion({
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           className={clsx(
-            "transition-all",
             "flex select-none flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-50",
             snapshot.isDragging && "bg-indigo-100 shadow"
           )}
@@ -106,4 +112,12 @@ function DraggableQuestion({
       )}
     </Draggable>
   );
+}
+
+function reorder<T>(list: Array<T>, startIndex: number, endIndex: number) {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
 }

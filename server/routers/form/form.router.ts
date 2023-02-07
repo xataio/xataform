@@ -1,7 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../../trpc";
-import { questionSchema, QuestionType } from "../question/question.schemas";
+import {
+  questionCommunProps,
+  questionSchema,
+  QuestionType,
+  questionTypeSchema,
+} from "../question/question.schemas";
 import { formSchema } from "./form.schemas";
 
 export const formRouter = router({
@@ -161,6 +166,27 @@ export const formRouter = router({
       await db.createQuestion({ formId, userId, ...question });
 
       return { formId };
+    }),
+
+  /**
+   * Reorder questions
+   */
+  reorderQuestions: protectedProcedure
+    .input(
+      z.object({
+        formId: z.string(),
+        questions: z.array(
+          questionCommunProps.extend({
+            id: z.string(),
+            type: questionTypeSchema,
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx: { db }, input: { questions, formId } }) => {
+      await db.updateQuestions(questions);
+
+      return { questions, formId };
     }),
 
   /**
