@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { clsx } from "clsx";
@@ -26,11 +26,13 @@ export type MenuProps = {
 };
 
 export function Menu(props: MenuProps) {
-  let [referenceElement, setReferenceElement] =
+  const [referenceElement, setReferenceElement] =
     useState<HTMLButtonElement | null>(null);
-  let [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
+  const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
+    null
+  );
 
-  let { styles, attributes } = usePopper(referenceElement, popperElement, {
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: "bottom-start",
     modifiers: [
       {
