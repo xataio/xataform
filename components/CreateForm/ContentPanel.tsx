@@ -1,7 +1,10 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
 import { QuestionIcon } from "components/Question/QuestionIcon";
-import { questionSchema } from "server/routers/question/question.schemas";
+import {
+  questionSchema,
+  QuestionType,
+} from "server/routers/question/question.schemas";
 
 export function ContentPanel() {
   return (
@@ -12,22 +15,22 @@ export function ContentPanel() {
           Add a new question
         </Button>
       </header>
-      <div
+      <ul
         className={clsx(
           "overflow-y-auto",
           "scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 scrollbar-thumb-rounded"
         )}
       >
         {Array.from(questionSchema.optionsMap.keys()).map((i, index) => (
-          <div
-            className="flex flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-50"
+          <li
+            className="flex cursor-pointer flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-50"
             key={index}
           >
-            <QuestionIcon type={i} order={index + 1} />
-            <h2 className="truncate text-sm">Question title ({i})</h2>
-          </div>
+            <QuestionIcon type={i as QuestionType} order={index + 1} />
+            <h2 className="truncate text-sm">{i?.toString()}</h2>
+          </li>
         ))}
-      </div>
+      </ul>
     </>
   );
 }
