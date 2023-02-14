@@ -35,7 +35,7 @@ export const questionSchema = z.discriminatedUnion("type", [
     multipleSelection: z.boolean().default(false),
     randomize: z.boolean().default(false),
     otherOption: z.boolean().default(false),
-    choices: z.array(z.string()),
+    choices: z.array(z.string()).default([]),
   }),
 
   // Contact Info
@@ -65,7 +65,7 @@ export const questionSchema = z.discriminatedUnion("type", [
   // Phone Number
   questionCommunProps.extend({
     type: z.literal("phoneNumber"),
-    required: z.boolean(),
+    required: z.boolean().default(false),
   }),
 
   // Short Text
@@ -94,7 +94,7 @@ export const questionSchema = z.discriminatedUnion("type", [
     type: z.literal("ranking"),
     required: z.boolean().default(false),
     randomize: z.boolean().default(false),
-    choices: z.array(z.string()),
+    choices: z.array(z.string()).default([]),
   }),
 
   // Yes/No
@@ -113,18 +113,18 @@ export const questionSchema = z.discriminatedUnion("type", [
   questionCommunProps.extend({
     type: z.literal("opinionScale"),
     required: z.boolean().default(false),
-    min: z.number().min(0).max(1).int(),
-    max: z.number().min(5).max(10).int(),
-    labelMin: z.string().max(24),
-    labelMed: z.string().max(24),
-    labelMax: z.string().max(24),
+    min: z.number().min(0).max(1).int().default(1),
+    max: z.number().min(5).max(10).int().default(5),
+    labelMin: z.string().max(24).default(""),
+    labelMed: z.string().max(24).default(""),
+    labelMax: z.string().max(24).default(""),
   }),
 
   // Rating
   questionCommunProps.extend({
     type: z.literal("rating"),
     required: z.boolean().default(false),
-    steps: z.number().min(1).max(10).int(),
+    steps: z.number().min(1).max(10).int().default(1),
   }),
 
   // Matrix
@@ -132,8 +132,8 @@ export const questionSchema = z.discriminatedUnion("type", [
     type: z.literal("matrix"),
     required: z.boolean().default(false),
     multipleSelection: z.boolean().default(false),
-    rows: z.array(z.string()),
-    columns: z.array(z.string()),
+    rows: z.array(z.string()).default([]),
+    columns: z.array(z.string()).default([]),
   }),
 
   // Date
@@ -162,7 +162,7 @@ export const questionSchema = z.discriminatedUnion("type", [
     required: z.boolean().default(false),
     randomize: z.boolean().default(false),
     alphabeticalOrder: z.boolean().default(false),
-    choices: z.array(z.string()),
+    choices: z.array(z.string()).default([]),
   }),
 
   // Legal
@@ -186,3 +186,7 @@ export type QuestionType = Question["type"];
 export const questionTypeSchema = z.enum(
   Array.from(questionSchema.optionsMap.keys()) as UnionToTuple<QuestionType>
 );
+
+export const questionTypes = Array.from(
+  questionSchema.optionsMap.keys()
+) as QuestionType[];

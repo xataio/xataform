@@ -1,3 +1,4 @@
+import { Spinner } from "components/Spinner";
 import Link from "next/link";
 import { RouterOutputs } from "../../utils/trpc";
 import { Menu } from "../Menu";
@@ -17,7 +18,7 @@ export function FormCard({
   return (
     <div
       {...props}
-      className=" w-40 rounded bg-white shadow transition-all duration-150  hover:scale-105 hover:cursor-pointer hover:shadow-md"
+      className="relative w-40 rounded bg-white shadow transition-all duration-150  hover:scale-105 hover:cursor-pointer hover:shadow-md"
     >
       <Link
         href={{
@@ -66,6 +67,12 @@ export function FormCard({
           ]}
         />
       </div>
+      {form.id.startsWith("optimistic") ? (
+        <div className="absolute inset-0 flex cursor-progress items-center justify-center overflow-hidden rounded">
+          <div className="absolute h-full w-full bg-slate-500 opacity-20" />
+          <Spinner />
+        </div>
+      ) : null}
     </div>
   );
 }

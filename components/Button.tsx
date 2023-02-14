@@ -73,7 +73,7 @@ export function Button(props: ButtonProps) {
         ref={setReferenceElement}
         type="button"
         className={clsx(
-          "inline-flex items-center rounded border border-transparent  px-2.5 py-1.5 text-xs font-medium leading-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+          "inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-xs font-medium leading-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
           colorClasses
         )}
         onClick={props.onClick}

@@ -39,7 +39,11 @@ export function QuestionIcon({ type, order }: QuestionIconProps) {
       )}
     >
       <Icon className="h-4 w-4" />
-      <div className="min-w-[16px] text-right text-sm font-medium">{order}</div>
+      {typeof order === "number" && (
+        <div className="min-w-[16px] text-right text-sm font-medium">
+          {order}
+        </div>
+      )}
     </div>
   );
 }

@@ -22,6 +22,7 @@ specifiers:
   '@xata.io/cli': ^0.11.5
   '@xata.io/client': ^0.21.6
   autoprefixer: ^10.4.13
+  case: ^1.6.3
   clsx: ^1.2.1
   eslint: 8.32.0
   eslint-config-next: 13.1.2
@@ -58,6 +59,7 @@ dependencies:
   '@trpc/react-query': 10.9.0_qw4miir7nnxijwjta54q3esyeq
   '@trpc/server': 10.9.0
   '@xata.io/client': 0.21.6_typescript@4.9.4
+  case: 1.6.3
   clsx: 1.2.1
   next: 13.1.2_biqbaboplfbrettd7655fr4n2y
   nextjs-routes: 1.0.8_next@13.1.2
@@ -2353,7 +2355,6 @@ packages:
   /case/1.6.3:
     resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
     engines: {node: '>= 0.8.0'}
-    dev: true
 
   /chai/4.3.7:
     resolution: {integrity: sha512-HLnAzZ2iupm25PlN0xFreAlBA5zaBSv3og0DdeGA4Ar6h6rJ3A0rolRUKJhSF2V10GZKDgWF/VmAEsNWjCRB+A==}

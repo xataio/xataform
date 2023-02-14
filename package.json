@@ -25,6 +25,7 @@
     "@trpc/react-query": "^10.5.0",
     "@trpc/server": "^10.5.0",
     "@xata.io/client": "^0.21.6",
+    "case": "^1.6.3",
     "clsx": "^1.2.1",
     "next": "13.1.2",
     "nextjs-routes": "^1.0.8",

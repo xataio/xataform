@@ -2,13 +2,16 @@ import clsx from "clsx";
 import { Button } from "components/Button";
 import { ErrorMessage } from "components/ErrorMessage";
 import { QuestionIcon } from "components/Question/QuestionIcon";
+import { useAddQuestion } from "hooks/useAddQuestion";
 import { useReorderQuestions } from "hooks/useReorderQuestions";
+import { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   QuestionCommunProps,
   QuestionType,
 } from "server/routers/question/question.schemas";
 import { trpc } from "utils/trpc";
+import { AddQuestionPopover } from "./AddQuestionPopover";
 
 export type ContentPanelProps = {
   formId: string;
@@ -33,11 +36,36 @@ export function ContentPanel({ formId }: ContentPanelProps) {
     }
   );
 
+  const { addQuestion } = useAddQuestion();
+  const [isAddQuestionOpen, setIsAddQuestionOpen] = useState(false);
+
   return (
     <>
+      <AddQuestionPopover
+        isOpen={isAddQuestionOpen}
+        onAdd={(questionType) => {
+          setIsAddQuestionOpen(false);
+          addQuestion({
+            formId,
+            question: {
+              type: questionType,
+              title: "new question",
+              order: questions?.length ?? -1,
+              description: null,
+              illustration: null,
+            },
+          });
+        }}
+        onClose={() => setIsAddQuestionOpen(false)}
+      />
       <header className="flex items-center justify-between p-2 text-sm font-medium">
         <h1>Content</h1>
-        <Button icon="add" iconOnly tooltipPlacement="bottom-start">
+        <Button
+          icon="add"
+          iconOnly
+          tooltipPlacement="bottom-start"
+          onClick={() => setIsAddQuestionOpen(true)}
+        >
           Add a new question
         </Button>
       </header>
@@ -65,6 +93,7 @@ export function ContentPanel({ formId }: ContentPanelProps) {
             <ul
               className={clsx(
                 "h-full",
+                "py-0.5",
                 "scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 scrollbar-thumb-rounded"
               )}
               {...provided.droppableProps}
@@ -102,8 +131,8 @@ function DraggableQuestion({
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           className={clsx(
-            "focus:outline-none focus:ring-2 focus:ring-indigo-500",
-            "flex select-none flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-50",
+            "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus-visible:bg-indigo-100",
+            "flex select-none flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-100",
             snapshot.isDragging && "bg-indigo-100 shadow"
           )}
         >

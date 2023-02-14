@@ -64,7 +64,7 @@ export const formRouter = router({
         maxLength: null,
         order: 0,
         required: false,
-        title: "",
+        title: "My first question",
         userId: user.id,
       });
 
@@ -154,12 +154,6 @@ export const formRouter = router({
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
           message: "Limit of 100 questions/form reached!",
-        });
-      }
-      if (question.order !== count) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: `\`question.order\` is out of sync, should be ${count} instead of ${question.order}`,
         });
       }
 
