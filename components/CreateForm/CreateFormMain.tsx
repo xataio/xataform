@@ -49,7 +49,7 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
       const { width, height } = container.getBoundingClientRect();
       const scaleWidth = width / 1024;
       const scaleHeight = (height - 50) / 512; // Margin to not hit the bottom controls
-      const scale = Math.min(scaleHeight, scaleWidth);
+      const scale = Math.min(scaleHeight, scaleWidth, 1);
       slide.style.transform = `scale(${scale})`;
     });
     resizeObserver.observe(container);
@@ -72,7 +72,6 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
       questions.find((i) => i.id === questionId)
     );
 
-    console.log({ questionId, isValidQuestionId, questions });
     if (!isValidQuestionId) {
       router.push(
         {
@@ -101,6 +100,7 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
           >
             {typeof router.query.questionId === "string" ? (
               <QuestionSlide
+                key={router.query.questionId}
                 questionId={router.query.questionId}
                 formId={formId}
               />
