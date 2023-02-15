@@ -183,6 +183,12 @@ export type QuestionCommunProps = z.infer<typeof questionCommunProps>;
 
 export type QuestionType = Question["type"];
 
+export type QuestionOfType<T extends QuestionType, U = Question> = U extends {
+  type: T;
+}
+  ? U
+  : never;
+
 export const questionTypeSchema = z.enum(
   Array.from(questionSchema.optionsMap.keys()) as UnionToTuple<QuestionType>
 );

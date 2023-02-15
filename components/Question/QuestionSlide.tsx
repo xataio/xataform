@@ -4,8 +4,14 @@ import { ErrorMessage } from "components/ErrorMessage";
 import { Spinner } from "components/Spinner";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import {
+  KeyboardEvent,
+  KeyboardEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { trpc } from "utils/trpc";
+import { Answer } from "./Answer";
 
 export type QuestionSlideProps = {
   formId: string;
@@ -23,10 +29,25 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
 
   const [draft, setDraft] = useState(data!);
   useEffect(() => {
-    if (data) setDraft(data);
+    if (data)
+      setDraft((prev) => ({
+        ...data,
+        title: prev?.title ?? data.title,
+        description: prev?.description ?? data.description,
+      }));
   }, [data]);
 
   const onBlur = () => updateQuestion({ id: questionId, question: draft });
+  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+    // Undo
+    if (e.key === "Escape" && data) {
+      setDraft(data);
+    }
+    // Validate the input
+    if (e.key === "Enter") {
+      e.currentTarget.blur();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -45,31 +66,43 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
   }
 
   return (
-    <div className="grid h-full grid-cols-2 items-center">
-      <div className="grid grid-cols-header p-10">
+    <div
+      className={clsx(
+        "h-full items-center",
+        data.illustration ? "grid grid-cols-2" : "flex justify-center"
+      )}
+    >
+      <div
+        className={clsx(
+          "grid grid-cols-header p-10",
+          !data.illustration && "w-full p-28"
+        )}
+      >
         {/* Question number */}
-        <div className="mr-2 flex flex-row items-center gap-1 text-xs text-indigo-600">
+        <div className="text mr-2 flex flex-row items-center gap-1 text-indigo-600">
           {data.order + 1}
-          <ArrowRightIcon className="h-2 w-2" />
+          <ArrowRightIcon className="h-4 w-4" />
         </div>
 
         {/* Title */}
         <input
           aria-label="title"
           type="text"
-          className="outline-none"
+          className="text-xl outline-none placeholder:font-light placeholder:italic placeholder:text-slate-300"
+          placeholder="Your question here."
           onChange={(e) =>
             setDraft((prev) => ({ ...prev, title: e.target.value }))
           }
           value={draft.title}
+          onKeyUp={onKeyUp}
           onBlur={onBlur}
         />
 
         {/* Description */}
         <input
           className={clsx(
-            "col-start-2",
-            "text-sm font-light outline-none",
+            "col-start-2 mt-1",
+            "font-light outline-none",
             "placeholder:italic"
           )}
           aria-label="description"
@@ -79,27 +112,29 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
             setDraft((prev) => ({ ...prev, description: e.target.value }))
           }
           value={draft.description || ""}
+          onKeyUp={onKeyUp}
           onBlur={onBlur}
         />
 
-        {/* Answer */}
-        <input
-          type="text"
-          disabled
-          className=" col-start-2 mt-8  w-fit border-b border-indigo-200 bg-white pb-0.5 placeholder:text-indigo-200"
-          placeholder="Type your answer here…"
+        <Answer
+          type={data.type}
+          layout={data.illustration ? "split" : "full"}
+          editable
+          onUpdate={console.log}
         />
       </div>
 
       {/* Illustation */}
-      <div className="relative h-full border">
-        <Image
-          fill
-          className="object-cover"
-          alt="todo"
-          src="https://images.unsplash.com/photo-1599631438215-75bc2640feb8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-        />
-      </div>
+      {data.illustration ? (
+        <div className="relative h-full border">
+          <Image
+            fill
+            className="object-cover"
+            alt="todo"
+            src={data.illustration}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
