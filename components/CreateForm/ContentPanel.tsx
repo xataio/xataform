@@ -120,7 +120,8 @@ function DraggableQuestion({
           className={clsx(
             "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus-visible:bg-indigo-100",
             "flex select-none flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-100",
-            snapshot.isDragging && "bg-indigo-100 shadow"
+            snapshot.isDragging && "bg-indigo-100 shadow",
+            router.query.questionId === question.id && "bg-slate-200"
           )}
           onClick={() =>
             router.push(
