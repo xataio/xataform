@@ -10,10 +10,10 @@ export const questionRouter = router({
    * Update one question
    */
   update: protectedProcedure
-    .input(z.object({ id: z.string(), question: questionSchema }))
+    .input(z.object({ questionId: z.string(), question: questionSchema }))
     .mutation(async ({ ctx: { db, user }, input }): Promise<QuestionWithId> => {
       // Retrieve previous question & check if everything is legit
-      const prev = await db.getQuestion(input.id);
+      const prev = await db.getQuestion(input.questionId);
       if (!prev) throw new TRPCError({ code: "NOT_FOUND" });
       if (prev.userId !== user.id) throw new TRPCError({ code: "FORBIDDEN" });
       if (prev.order !== input.question.order)
@@ -22,7 +22,10 @@ export const questionRouter = router({
           message: "Please use the specialized `question.reorder` method",
         });
 
-      return await db.updateQuestion(input);
+      return await db.updateQuestion({
+        id: input.questionId,
+        question: input.question,
+      });
     }),
 
   /**

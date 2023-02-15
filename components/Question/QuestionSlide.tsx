@@ -37,7 +37,8 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
       }));
   }, [data]);
 
-  const onBlur = () => updateQuestion({ id: questionId, question: draft });
+  const onBlur = () =>
+    updateQuestion({ questionId: questionId, question: draft });
   const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     // Undo
     if (e.key === "Escape" && data) {

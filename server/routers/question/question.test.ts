@@ -193,26 +193,29 @@ describe("question router", () => {
 
     it("should throws NOT_FOUND if the question doesn't exist", async () => {
       expect(() =>
-        router.update({ id: "notfound", question: nextQuestion })
+        router.update({ questionId: "notfound", question: nextQuestion })
       ).rejects.toThrowError("NOT_FOUND");
     });
 
     it("should throws FORBIDDEN if the user doesn't match", async () => {
       expect(() =>
-        router.update({ id: "somebody", question: nextQuestion })
+        router.update({ questionId: "somebody", question: nextQuestion })
       ).rejects.toThrowError("FORBIDDEN");
     });
 
     it("should throws CONFLICT if the order doesn't match", async () => {
       expect(() =>
-        router.update({ id: "found", question: { ...nextQuestion, order: 42 } })
+        router.update({
+          questionId: "found",
+          question: { ...nextQuestion, order: 42 },
+        })
       ).rejects.toThrowError(
         "Please use the specialized `question.reorder` method"
       );
     });
 
     it("should update the record", async () => {
-      await router.update({ id: "found", question: nextQuestion });
+      await router.update({ questionId: "found", question: nextQuestion });
       expect(updateQuestion).toBeCalledWith({
         id: "found",
         question: nextQuestion,
