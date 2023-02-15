@@ -51,12 +51,13 @@ export const formRouter = router({
           message: "Limit of 100 forms reached!",
         });
       }
+
       const createdForm = await db.createForm({
         ...input,
         userId: user.id,
       });
 
-      await db.createQuestion({
+      db.createQuestion({
         formId: createdForm.id,
         type: "shortText",
         description: "",
