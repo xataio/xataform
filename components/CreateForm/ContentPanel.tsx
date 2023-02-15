@@ -19,6 +19,7 @@ export type ContentPanelProps = {
 };
 
 export function ContentPanel({ formId, questions }: ContentPanelProps) {
+  const router = useRouter();
   const { reorderQuestions } = useReorderQuestions();
 
   const { addQuestion } = useAddQuestion();
@@ -28,9 +29,9 @@ export function ContentPanel({ formId, questions }: ContentPanelProps) {
     <>
       <AddQuestionPopover
         isOpen={isAddQuestionOpen}
-        onAdd={(questionType) => {
+        onAdd={async (questionType) => {
           setIsAddQuestionOpen(false);
-          addQuestion({
+          const { createdQuestion } = await addQuestion({
             formId,
             question: {
               type: questionType,
@@ -40,6 +41,14 @@ export function ContentPanel({ formId, questions }: ContentPanelProps) {
               illustration: null,
             },
           });
+          router.push(
+            {
+              pathname: router.pathname,
+              query: { ...router.query, questionId: createdQuestion.id },
+            },
+            undefined,
+            { shallow: true }
+          );
         }}
         onClose={() => setIsAddQuestionOpen(false)}
       />

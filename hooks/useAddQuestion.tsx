@@ -4,7 +4,7 @@ import { RouterOutputs, trpc } from "utils/trpc";
 export function useAddQuestion() {
   const utils = trpc.useContext();
 
-  const { mutate: addQuestion } = trpc.form.addQuestion.useMutation({
+  const { mutateAsync: addQuestion } = trpc.form.addQuestion.useMutation({
     async onMutate(newQuestion) {
       await utils.form.summary.cancel();
       const previousQuestions = utils.form.summary.getData({
@@ -30,8 +30,10 @@ export function useAddQuestion() {
       );
       toast.error(err.message);
     },
-    onSettled(res) {
-      utils.form.summary.invalidate(res ? { formId: res.formId } : undefined);
+    async onSettled(res) {
+      await utils.form.summary.invalidate(
+        res ? { formId: res.formId } : undefined
+      );
     },
   });
 
