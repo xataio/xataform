@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { AnswerProps } from "./AnswerProps";
 
-function AnswerEmail(props: AnswerProps<"number">) {
+function AnswerNumber(props: AnswerProps<"number">) {
   return (
     <input
       type="number"
-      disabled={props.editable}
+      disabled={props.admin}
       className={clsx(
         props.layout === "split" ? "w-fit" : "w-full",
         "col-start-2 mt-8 border-b border-indigo-200 bg-white pb-0.5 text-lg placeholder:text-indigo-200"
@@ -15,4 +15,4 @@ function AnswerEmail(props: AnswerProps<"number">) {
   );
 }
 
-export default AnswerEmail;
+export default AnswerNumber;

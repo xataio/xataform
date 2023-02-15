@@ -12,7 +12,7 @@ function AnswerLongText(props: AnswerProps<"longText">) {
     >
       <input
         type="text"
-        disabled={props.editable}
+        disabled={props.admin}
         className={clsx(
           "w-full border-b border-indigo-200 bg-white pb-0.5 text-lg placeholder:text-indigo-200"
         )}

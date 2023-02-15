@@ -7,17 +7,16 @@ export type AnswerProps<T extends QuestionType> =
   | EditingAnswerProps<T>
   | SubmitAnswerProps<T>;
 
-type CommonProps<T extends QuestionType> = {
-  type: T;
+type CommonProps<T extends QuestionType> = QuestionOfType<T> & {
   layout: "split" | "full";
 };
 
 type EditingAnswerProps<T extends QuestionType> = CommonProps<T> & {
-  editable: true;
-  onUpdate: (question: QuestionOfType<T>) => void;
+  admin: true;
+  onUpdate: (question: Partial<QuestionOfType<T>>) => void;
 };
 
 type SubmitAnswerProps<T extends QuestionType> = CommonProps<T> & {
-  editable: false;
+  admin: false;
   onSubmit: (answer: string) => void;
 };

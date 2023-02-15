@@ -118,9 +118,9 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
         />
 
         <Answer
-          type={data.type}
+          {...data}
           layout={data.illustration ? "split" : "full"}
-          editable
+          admin
           onUpdate={console.log}
         />
       </div>

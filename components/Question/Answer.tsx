@@ -16,6 +16,9 @@ const AnswerEmail = dynamic(() => import("./AnswerEmail"), {
 const AnswerNumber = dynamic(() => import("./AnswerNumber"), {
   loading: Spinner,
 });
+const AnswerDate = dynamic(() => import("./AnswerDate"), {
+  loading: Spinner,
+});
 
 // Transforms `AnswerProps<T>` to `AnswerProps<"shortText"> | AnswerProps<"longText"> | …`
 // This is to enable proper type narrowing in our component switch cases
@@ -31,6 +34,8 @@ export function Answer(props: AnswerPropsUnion<QuestionType>) {
       return <AnswerNumber {...props} />;
     case "email":
       return <AnswerEmail {...props} />;
+    case "date":
+      return <AnswerDate {...props} />;
   }
 
   return <div>Not implemented!</div>;
