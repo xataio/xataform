@@ -1,9 +1,12 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
+import { QuestionSlide } from "components/Question/QuestionSlide";
 import { useAddMockQuestions } from "hooks/useAddMockQuestions";
 import { useToggle } from "hooks/useToggle";
-import React, { useRef } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef } from "react";
 import { useLayoutEffect } from "react";
+import { trpc } from "utils/trpc";
 import { ContentPanel } from "./ContentPanel";
 
 export type CreateFormMainProps = {
@@ -11,7 +14,24 @@ export type CreateFormMainProps = {
 };
 
 export function CreateFormMain({ formId }: CreateFormMainProps) {
-  const { addMockQuestions, isAddingMockQuestions } = useAddMockQuestions();
+  const { addMockQuestions } = useAddMockQuestions();
+  const { data: questions, error } = trpc.form.summary.useQuery(
+    { formId },
+    {
+      placeholderData: [
+        {
+          id: "placeholder",
+          description: null,
+          illustration: null,
+          order: 0,
+          title: "Loading…",
+          type: "shortText",
+        },
+      ],
+    }
+  );
+
+  // Panels control
   const [isContentPanelOpen, toggleContentPanelOpen] = useToggle(true);
   const [isQuestionPanelOpen, toggleQuestionPanelOpen] = useToggle(false);
 
@@ -35,12 +55,40 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
     resizeObserver.observe(container);
 
     return () => resizeObserver.unobserve(container);
-  }, [slideContainerRef]);
+  }, [slideContainerRef, slideRef]);
+
+  // Sync url with questionId
+  const router = useRouter();
+  useEffect(() => {
+    if (!questions || questions.length < 1) return;
+    if (questions[0].id === "placeholder") return;
+
+    const questionId =
+      typeof router.query.questionId === "string"
+        ? router.query.questionId
+        : null;
+
+    const isValidQuestionId = Boolean(
+      questions.find((i) => i.id === questionId)
+    );
+
+    console.log({ questionId, isValidQuestionId, questions });
+    if (!isValidQuestionId) {
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, questionId: questions[0].id },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [questions, router]);
 
   return (
     <div className="flex h-full justify-between overflow-hidden">
       <Panel isOpen={isContentPanelOpen}>
-        <ContentPanel formId={formId} />
+        <ContentPanel formId={formId} questions={questions || []} />
       </Panel>
       <section className="flex w-full flex-col overflow-hidden border-x border-slate-200 bg-slate-100 p-4">
         <div
@@ -48,10 +96,15 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
           ref={slideContainerRef}
         >
           <div
-            className="absolute h-[512px] w-[1024px] rounded-md bg-white p-4 shadow"
+            className="absolute h-[512px] w-[1024px] overflow-hidden rounded-md bg-white shadow"
             ref={slideRef}
           >
-            Question
+            {typeof router.query.questionId === "string" ? (
+              <QuestionSlide
+                questionId={router.query.questionId}
+                formId={formId}
+              />
+            ) : null}
           </div>
         </div>
         <div className="flex justify-between">

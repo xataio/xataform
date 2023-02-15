@@ -1,40 +1,25 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
-import { ErrorMessage } from "components/ErrorMessage";
 import { QuestionIcon } from "components/Question/QuestionIcon";
 import { useAddQuestion } from "hooks/useAddQuestion";
 import { useReorderQuestions } from "hooks/useReorderQuestions";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   QuestionCommunProps,
   QuestionType,
 } from "server/routers/question/question.schemas";
-import { trpc } from "utils/trpc";
+import { RouterOutputs, trpc } from "utils/trpc";
 import { AddQuestionPopover } from "./AddQuestionPopover";
 
 export type ContentPanelProps = {
   formId: string;
+  questions: RouterOutputs["form"]["summary"];
 };
 
-export function ContentPanel({ formId }: ContentPanelProps) {
+export function ContentPanel({ formId, questions }: ContentPanelProps) {
   const { reorderQuestions } = useReorderQuestions();
-
-  const { data: questions, error } = trpc.form.summary.useQuery(
-    { formId },
-    {
-      placeholderData: [
-        {
-          id: "",
-          description: null,
-          illustration: null,
-          order: 0,
-          title: "Loading…",
-          type: "shortText",
-        },
-      ],
-    }
-  );
 
   const { addQuestion } = useAddQuestion();
   const [isAddQuestionOpen, setIsAddQuestionOpen] = useState(false);
@@ -49,8 +34,8 @@ export function ContentPanel({ formId }: ContentPanelProps) {
             formId,
             question: {
               type: questionType,
-              title: "new question",
-              order: questions?.length ?? -1,
+              title: "New question",
+              order: questions?.length ?? 100,
               description: null,
               illustration: null,
             },
@@ -69,7 +54,6 @@ export function ContentPanel({ formId }: ContentPanelProps) {
           Add a new question
         </Button>
       </header>
-      {error ? <ErrorMessage>{error.message}</ErrorMessage> : null}
       <DragDropContext
         onDragStart={() => {
           if (window.navigator.vibrate) {
@@ -119,6 +103,9 @@ function DraggableQuestion({
 }: {
   question: QuestionCommunProps & { id: string; type: QuestionType };
 }) {
+  const router = useRouter();
+  const utils = trpc.useContext();
+
   return (
     <Draggable
       key={question.id}
@@ -135,6 +122,21 @@ function DraggableQuestion({
             "flex select-none flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-100",
             snapshot.isDragging && "bg-indigo-100 shadow"
           )}
+          onClick={() =>
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, questionId: question.id },
+              },
+              undefined,
+              { shallow: true }
+            )
+          }
+          onMouseOver={() =>
+            utils.question.get.prefetch({
+              questionId: question.id,
+            })
+          }
         >
           <QuestionIcon type={question.type} order={question.order + 1} />
           <h2 className="truncate text-sm">{question.title}</h2>

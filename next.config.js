@@ -8,7 +8,7 @@ const nextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    domains: ["tailwindui.com", "images.clerk.dev"],
+    domains: ["tailwindui.com", "images.clerk.dev", "images.unsplash.com"],
   },
 };
 
