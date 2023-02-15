@@ -2,16 +2,12 @@ import { title } from "case";
 import clsx from "clsx";
 import { Button } from "components/Button";
 import { AnswerProps } from "./AnswerProps";
+import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerLongText(props: AnswerProps<"date">) {
   return (
-    <div
-      className={clsx(
-        props.layout === "split" ? "w-fit" : "w-full",
-        "col-start-2 mt-8"
-      )}
-    >
-      <div className="mb-4 flex flex-row items-end gap-2">
+    <AnswerWrapper layout={props.layout}>
+      <div className="flex flex-row items-end gap-2">
         {props.format === "DDMMYY" ? (
           <>
             <DatePart type="day" disabled={props.admin} />
@@ -35,13 +31,7 @@ function AnswerLongText(props: AnswerProps<"date">) {
         </div>
         <DatePart type="year" disabled={props.admin} />
       </div>
-      <div className="flex flex-row items-center gap-2">
-        <Button>OK ✓</Button>
-        <div className="text-xs">
-          press <b>Enter</b>↵
-        </div>
-      </div>
-    </div>
+    </AnswerWrapper>
   );
 }
 
