@@ -158,9 +158,13 @@ export const formRouter = router({
         });
       }
 
-      await db.createQuestion({ formId, userId, ...question });
+      const createdQuestion = await db.createQuestion({
+        formId,
+        userId,
+        ...question,
+      });
 
-      return { formId };
+      return { formId, createdQuestion };
     }),
 
   /**

@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
 import { QuestionSlide } from "components/Question/QuestionSlide";
+import { Settings } from "components/Question/Settings";
 import { useAddMockQuestions } from "hooks/useAddMockQuestions";
 import { useToggle } from "hooks/useToggle";
 import { useRouter } from "next/router";
@@ -136,7 +137,11 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
           </div>
         </div>
       </section>
-      <Panel isOpen={isQuestionPanelOpen}>question</Panel>
+      <Panel isOpen={isQuestionPanelOpen}>
+        {typeof router.query.questionId === "string" ? (
+          <Settings formId={formId} questionId={router.query.questionId} />
+        ) : null}
+      </Panel>
     </div>
   );
 }

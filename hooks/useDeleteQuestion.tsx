@@ -1,10 +1,9 @@
 import { toast } from "react-toastify";
-import { questionSchema } from "server/routers/question/question.schemas";
 import { trpc } from "utils/trpc";
 
-export function useUpdateQuestion({ formId }: { formId: string }) {
+export function useDeleteQuestion({ formId }: { formId: string }) {
   const utils = trpc.useContext();
-  const { mutate: updateQuestion } = trpc.question.update.useMutation({
+  const { mutate: deleteQuestion } = trpc.question.delete.useMutation({
     async onMutate(updatedQuestion) {
       await utils.question.get.cancel({
         questionId: updatedQuestion.questionId,
@@ -18,23 +17,11 @@ export function useUpdateQuestion({ formId }: { formId: string }) {
 
       utils.question.get.setData(
         { questionId: updatedQuestion.questionId },
-        () => ({
-          id: updatedQuestion.questionId,
-          ...questionSchema.parse(updatedQuestion.question),
-        })
+        undefined
       );
 
       utils.form.summary.setData({ formId }, (prev) =>
-        prev
-          ? prev.map((i) =>
-              i.id === updatedQuestion.questionId
-                ? {
-                    id: updatedQuestion.questionId,
-                    ...questionSchema.parse(updatedQuestion.question),
-                  }
-                : i
-            )
-          : []
+        prev ? prev.filter((i) => i.id !== updatedQuestion.questionId) : []
       );
 
       return {
@@ -53,12 +40,12 @@ export function useUpdateQuestion({ formId }: { formId: string }) {
     onSettled(question) {
       utils.form.summary.invalidate({ formId });
       utils.question.get.invalidate(
-        question ? { questionId: question.id } : undefined
+        question ? { questionId: question.questionId } : undefined
       );
     },
   });
 
   return {
-    updateQuestion,
+    deleteQuestion,
   };
 }
