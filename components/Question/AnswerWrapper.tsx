@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
 import React from "react";
-import { AnswerProps } from "./AnswerProps";
+import { AnswerLayout } from "./AnswerProps";
 
 export function AnswerWrapper(props: {
   children: React.ReactNode;
-  layout: AnswerProps<any>["layout"];
+  layout: AnswerLayout;
 }) {
   return (
     <div

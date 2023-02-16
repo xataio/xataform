@@ -1,8 +1,7 @@
 import { title } from "case";
-import clsx from "clsx";
-import { Button } from "components/Button";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
+import { Input } from "./Input";
 
 function AnswerLongText(props: AnswerProps<"date">) {
   return (
@@ -47,14 +46,11 @@ function DatePart({
       <label htmlFor={type} className="text-[0.7rem] text-indigo-700">
         {title(type)}
       </label>
-      <input
+      <Input
         id={type}
         type="text"
         disabled={disabled}
-        className={clsx(
-          "border-b border-indigo-200 bg-white pb-0.5 text-lg placeholder:text-indigo-200",
-          type === "year" ? "w-20" : "w-10"
-        )}
+        className={type === "year" ? "w-20" : "w-10"}
         placeholder={type === "year" ? "YYYY" : type === "month" ? "MM" : "DD"}
       />
     </div>
