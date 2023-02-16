@@ -4,6 +4,7 @@ specifiers:
   '@clerk/backend-core': ^2.13.2
   '@clerk/nextjs': ^4.6.13
   '@headlessui/react': ^1.7.7
+  '@headlessui/tailwindcss': ^0.1.2
   '@heroicons/react': ^2.0.14
   '@next/font': 13.1.2
   '@popperjs/core': ^2.11.6
@@ -49,6 +50,7 @@ dependencies:
   '@clerk/backend-core': 2.13.2
   '@clerk/nextjs': 4.6.18_7jnwqgtpcnwg4nzft4b6xlzlfi
   '@headlessui/react': 1.7.7_biqbaboplfbrettd7655fr4n2y
+  '@headlessui/tailwindcss': 0.1.2_tailwindcss@3.2.4
   '@heroicons/react': 2.0.14_react@18.2.0
   '@next/font': 13.1.2
   '@popperjs/core': 2.11.6
@@ -837,6 +839,15 @@ packages:
       client-only: 0.0.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@headlessui/tailwindcss/0.1.2_tailwindcss@3.2.4:
+    resolution: {integrity: sha512-AQNESz+f1grCxifrocOE6hDMDFqhqY0g3xrSGOS0ocGkmVkssaBzXaAPAPNSs/nHmr4ZUhfl5THQpYrvaouWlQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      tailwindcss: ^3.0
+    dependencies:
+      tailwindcss: 3.2.4_postcss@8.4.21
     dev: false
 
   /@heroicons/react/2.0.14_react@18.2.0:

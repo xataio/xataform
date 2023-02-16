@@ -13,5 +13,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar")({ nocompatible: true })],
+  plugins: [
+    require("@headlessui/tailwindcss"),
+    require("tailwind-scrollbar")({ nocompatible: true }),
+  ],
 };
