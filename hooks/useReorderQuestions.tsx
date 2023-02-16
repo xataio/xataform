@@ -6,6 +6,7 @@ export function useReorderQuestions() {
 
   const { mutate: reorderQuestions } = trpc.form.reorderQuestions.useMutation({
     async onMutate({ questions: reorderedQuestions, formId }) {
+      await utils.form.summary.cancel();
       utils.form.summary.setData(
         { formId },
         reorderedQuestions.map((i, order) => ({ ...i, order }))
