@@ -11,7 +11,7 @@ import {
   QuestionType,
 } from "server/routers/question/question.schemas";
 import { RouterOutputs, trpc } from "utils/trpc";
-import { AddQuestionPopover } from "./AddQuestionPopover";
+import { AddQuestionDialog } from "./AddQuestionDialog";
 
 export type ContentPanelProps = {
   formId: string;
@@ -27,7 +27,7 @@ export function ContentPanel({ formId, questions }: ContentPanelProps) {
 
   return (
     <>
-      <AddQuestionPopover
+      <AddQuestionDialog
         isOpen={isAddQuestionOpen}
         onAdd={async (questionType) => {
           setIsAddQuestionOpen(false);
