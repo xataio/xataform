@@ -21,7 +21,11 @@ export function useDeleteQuestion({ formId }: { formId: string }) {
       );
 
       utils.form.summary.setData({ formId }, (prev) =>
-        prev ? prev.filter((i) => i.id !== updatedQuestion.questionId) : []
+        prev
+          ? prev
+              .filter((i) => i.id !== updatedQuestion.questionId)
+              .map((i, order) => ({ ...i, order }))
+          : []
       );
 
       return {
