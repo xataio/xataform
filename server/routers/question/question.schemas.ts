@@ -32,7 +32,8 @@ export const questionSchema = z.discriminatedUnion("type", [
   questionCommunProps.extend({
     type: z.literal("multipleChoice"),
     required: z.boolean().default(false),
-    multipleSelection: z.boolean().default(false),
+    limitMin: z.number().optional(),
+    limitMax: z.number().optional(),
     randomize: z.boolean().default(false),
     otherOption: z.boolean().default(false),
     choices: z.array(z.string()).default([]),

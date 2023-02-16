@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "xata": "xata",
-    "xata:init": "xata init --schema=schema.template.json --codegen utils/xata.ts",
+    "xata:init": "xata init --schema=xata.schema.json --codegen utils/xata.ts",
     "test": "vitest"
   },
   "dependencies": {

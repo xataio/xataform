@@ -60,8 +60,12 @@
               "type": "bool"
             },
             {
-              "name": "multipleSelection",
-              "type": "bool"
+              "name": "limitMin",
+              "type": "int"
+            },
+            {
+              "name": "limitMax",
+              "type": "int"
             },
             {
               "name": "randomize",

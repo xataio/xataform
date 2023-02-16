@@ -17,6 +17,13 @@ const tables = [
         notNull: true,
         defaultValue: "now",
       },
+      {
+        name: "updatedAt",
+        type: "datetime",
+        notNull: true,
+        defaultValue: "now",
+      },
+      { name: "deletedAt", type: "datetime" },
       { name: "order", type: "int", notNull: true, defaultValue: "0" },
       { name: "title", type: "string", notNull: true, defaultValue: "" },
       { name: "type", type: "string", notNull: true, defaultValue: "" },
@@ -27,7 +34,8 @@ const tables = [
         type: "object",
         columns: [
           { name: "required", type: "bool" },
-          { name: "multipleSelection", type: "bool" },
+          { name: "limitMin", type: "int" },
+          { name: "limitMax", type: "int" },
           { name: "randomize", type: "bool" },
           { name: "otherOption", type: "bool" },
           { name: "choices", type: "multiple" },
@@ -208,22 +216,11 @@ const tables = [
         columns: [{ name: "required", type: "bool" }],
       },
       { name: "form", type: "link", link: { table: "form" } },
-      { name: "deletedAt", type: "datetime" },
-      {
-        name: "updatedAt",
-        type: "datetime",
-        notNull: true,
-        defaultValue: "now",
-      },
     ],
   },
   {
     name: "form",
     columns: [
-      { name: "title", type: "string" },
-      { name: "status", type: "string" },
-      { name: "userId", type: "string" },
-      { name: "deletedAt", type: "datetime" },
       {
         name: "createdAt",
         type: "datetime",
@@ -236,6 +233,10 @@ const tables = [
         notNull: true,
         defaultValue: "now",
       },
+      { name: "deletedAt", type: "datetime" },
+      { name: "title", type: "string" },
+      { name: "status", type: "string" },
+      { name: "userId", type: "string" },
     ],
   },
 ] as const;
@@ -257,7 +258,7 @@ export type DatabaseSchema = {
 const DatabaseClient = buildClient();
 
 const defaultOptions = {
-  databaseURL: "https://fabien-ph3r1h.eu-west-1.xata.sh/db/xataform-4",
+  databaseURL: "https://fabien-ph3r1h.eu-west-1.xata.sh/db/xataform-6",
 };
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {
