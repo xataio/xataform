@@ -4,12 +4,7 @@ import { ErrorMessage } from "components/ErrorMessage";
 import { Spinner } from "components/Spinner";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
 import Image from "next/image";
-import {
-  KeyboardEvent,
-  KeyboardEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { trpc } from "utils/trpc";
 import { Answer } from "./Answer";
 
@@ -119,6 +114,7 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
 
         <Answer
           {...data}
+          questionId={questionId}
           layout={data.illustration ? "split" : "full"}
           admin
           onUpdate={console.log}

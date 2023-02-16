@@ -9,17 +9,17 @@ import { QuestionIcon } from "components/Question/QuestionIcon";
 import { title } from "case";
 import Image from "next/image";
 
-export type AddQuestionPopoverProps = {
+export type AddQuestionDialogProps = {
   onClose: () => void;
   isOpen: boolean;
   onAdd: (type: QuestionType) => void;
 };
 
-export function AddQuestionPopover({
+export function AddQuestionDialog({
   onAdd,
   isOpen,
   onClose,
-}: AddQuestionPopoverProps) {
+}: AddQuestionDialogProps) {
   const [filter, setFilter] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
 
