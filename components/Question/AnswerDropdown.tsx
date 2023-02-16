@@ -2,7 +2,7 @@ import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 import { EditChoicesDialog } from "./EditChoicesDialog";
@@ -20,12 +20,22 @@ function AnswerDropdown({
 
   const [answer, setAnswer] = useState("");
   const [query, setQuery] = useState("");
-  const [isEditingChoices, setIsEditingChoices] = useState(true);
+  const [isEditingChoices, setIsEditingChoices] = useState(false);
 
-  const filteredChoices =
+  const orderedChoices = useMemo(() => {
+    if (question.alphabeticalOrder) {
+      return choices.sort();
+    }
+    if (question.randomize) {
+      return choices.sort(() => Math.random() - 0.5);
+    }
+    return choices;
+  }, [choices, question.alphabeticalOrder, question.randomize]);
+
+  let filteredChoices =
     query === ""
-      ? choices
-      : choices.filter((choice) =>
+      ? orderedChoices
+      : orderedChoices.filter((choice) =>
           choice.toLowerCase().includes(query.toLowerCase())
         );
 
