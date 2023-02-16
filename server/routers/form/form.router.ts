@@ -23,7 +23,8 @@ export const formRouter = router({
   get: protectedProcedure
     .input(z.object({ formId: z.string() }))
     .query(async ({ ctx: { user, db }, input: { formId } }) => {
-      const form = await db.getForm(formId);
+      const form = await db.getForm(formId).catch(() => null);
+
       if (form === null) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
@@ -91,7 +92,7 @@ export const formRouter = router({
   delete: protectedProcedure
     .input(z.object({ formId: z.string() }))
     .mutation(async ({ ctx: { user, db }, input: { formId } }) => {
-      const form = await db.getForm(formId);
+      const form = await db.getForm(formId).catch(() => null);
 
       if (form === null) {
         throw new TRPCError({ code: "NOT_FOUND" });
@@ -109,7 +110,9 @@ export const formRouter = router({
   undoDelete: protectedProcedure
     .input(z.object({ formId: z.string() }))
     .mutation(async ({ ctx: { user, db }, input: { formId } }) => {
-      const form = await db.getForm(formId, { skipDeleteCheck: true });
+      const form = await db
+        .getForm(formId, { skipDeleteCheck: true })
+        .catch(() => null);
 
       if (form === null) {
         throw new TRPCError({ code: "NOT_FOUND" });

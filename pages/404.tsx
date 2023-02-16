@@ -1,7 +1,9 @@
+import { useAuth } from "@clerk/nextjs";
 import Head from "next/head";
 import Link from "next/link";
 
 export default function NotFound() {
+  const { isSignedIn } = useAuth();
   return (
     <>
       <Head>
@@ -27,7 +29,7 @@ export default function NotFound() {
           </p>
           <div className="mt-6">
             <Link
-              href="/"
+              href={isSignedIn ? "/forms" : "/"}
               className="inline-flex items-center rounded-md border border-transparent bg-white bg-opacity-75 px-4 py-2 text-sm font-medium text-black text-opacity-75 sm:bg-opacity-25 sm:hover:bg-opacity-50"
             >
               Go back home
