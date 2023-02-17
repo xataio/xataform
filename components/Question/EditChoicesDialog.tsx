@@ -2,6 +2,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Button } from "components/Button";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/20/solid";
+import { LightBulbIcon } from "@heroicons/react/24/outline";
 
 export type EditChoicesDialogProps = {
   onSave: (choices: string[]) => void;
@@ -101,7 +103,10 @@ export function EditChoicesDialog({
                   }}
                   className="mb-2 h-52 rounded ring-1 ring-slate-400 ring-offset-1"
                 />
-                <div className="mt-2 flex flex-row gap-2" ref={actionsRef}>
+                <div
+                  className="relative mt-2 flex flex-row gap-2"
+                  ref={actionsRef}
+                >
                   <Button
                     disabled={!hasChanged}
                     onClick={() =>
@@ -128,6 +133,20 @@ export function EditChoicesDialog({
                   >
                     Cancel
                   </Button>
+                  <div className="absolute right-0 top-0 flex flex-row items-center gap-2 text-xs text-slate-500">
+                    <div className="flex items-center gap-1">
+                      <Key>Alt</Key>
+                      <div>+</div>
+                      <Key>
+                        <ArrowUpIcon className="h-2.5 w-2.5 " />
+                      </Key>
+                      /
+                      <Key>
+                        <ArrowDownIcon className="h-2.5 w-2.5 " />
+                      </Key>
+                    </div>
+                    <div>: Move line up/down</div>
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -141,6 +160,15 @@ export function EditChoicesDialog({
 /**
  * Typeguard to filter focusable HTML Button element.
  */
-const isFocusableButton = (element: Element): element is HTMLButtonElement => {
+function isFocusableButton(element: Element): element is HTMLButtonElement {
   return element instanceof HTMLButtonElement && element.disabled === false;
-};
+}
+
+function Key(props: { children: React.ReactNode }) {
+  return (
+    <div
+      className="flex h-4 items-center rounded-sm border border-slate-300 bg-slate-50 px-1"
+      {...props}
+    />
+  );
+}
