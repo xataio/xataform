@@ -11,7 +11,7 @@ function AnswerLongText(props: AnswerProps<"longText">) {
         className="w-full"
         placeholder="Type your answer here…"
       />
-      <p className="mt-2 text-xs text-indigo-600">
+      <p className="-mt-2 text-xs text-indigo-600">
         <b>Shift ⇑ + Enter ↵</b> to make a line break
       </p>
     </AnswerWrapper>

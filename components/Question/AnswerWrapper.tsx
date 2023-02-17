@@ -12,7 +12,7 @@ export function AnswerWrapper(props: {
     <div
       className={clsx(
         props.layout === "split" ? "w-fit" : "w-full",
-        "relative col-start-2 mt-8"
+        "relative col-start-2 mt-8 flex flex-col gap-4"
       )}
     >
       {props.children}
@@ -23,7 +23,7 @@ export function AnswerWrapper(props: {
           onClick={props.onClick}
         />
       )}
-      <div className="mt-4 flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-2">
         <Button>OK ✓</Button>
         <div className="text-xs">
           press <b>Enter</b>↵
