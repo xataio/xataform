@@ -191,6 +191,18 @@ describe("question router", () => {
 
         expect(question.limitMin).toBe(2);
       });
+
+      it("should cap min to choices length", async () => {
+        const question = await getMultipleChoice({
+          choicesCount: 2,
+          limitMin: 10,
+        });
+
+        if (question.type !== "multipleChoice")
+          throw new Error("Should be multiple choice question");
+
+        expect(question.limitMin).toBe(2);
+      });
     });
   });
 

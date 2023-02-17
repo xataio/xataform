@@ -53,7 +53,7 @@ export const questionRouter = router({
           question.limitMin = Math.max(0, question.limitMin);
           question.limitMin = Math.min(
             question.limitMin,
-            question.limitMax ?? Infinity
+            question.limitMax ?? question.choices.length
           );
         }
       }
