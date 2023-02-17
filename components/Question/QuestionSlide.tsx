@@ -45,7 +45,7 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !data || !draft) {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <Spinner />
@@ -55,10 +55,6 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
 
   if (error) {
     return <ErrorMessage>{error.message}</ErrorMessage>;
-  }
-
-  if (!data || !draft) {
-    return <ErrorMessage>Not found!</ErrorMessage>;
   }
 
   return (
