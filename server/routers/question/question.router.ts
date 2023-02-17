@@ -41,6 +41,23 @@ export const questionRouter = router({
 
       const { userId, ...question } = rawQuestion;
 
+      if (question.type === "multipleChoice") {
+        if (question.limitMax) {
+          question.limitMax = Math.max(0, question.limitMax);
+          question.limitMax = Math.min(
+            question.limitMax,
+            question.choices.length
+          );
+        }
+        if (question.limitMin) {
+          question.limitMin = Math.max(0, question.limitMin);
+          question.limitMin = Math.min(
+            question.limitMin,
+            question.limitMax ?? Infinity
+          );
+        }
+      }
+
       if (userId !== user.id) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }

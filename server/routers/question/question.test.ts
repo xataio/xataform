@@ -3,7 +3,7 @@ import { Mock } from "ts-mockery";
 import { describe, expect, it, vitest } from "vitest";
 import { Database } from "../../services/database";
 import { questionRouter } from "./question.router";
-import { Question } from "./question.schemas";
+import { Question, QuestionOfType } from "./question.schemas";
 
 describe("question router", () => {
   describe("get", () => {
@@ -72,6 +72,125 @@ describe("question router", () => {
       expect(() => router.get({ questionId: "somebody" })).rejects.toThrowError(
         "NOT_FOUND"
       );
+    });
+
+    describe("multipleChoice", () => {
+      const getMultipleChoice = (options: {
+        limitMin?: number;
+        limitMax?: number;
+        choicesCount: number;
+      }) =>
+        questionRouter
+          .createCaller({
+            user: Mock.of<User>({ id: "fabien0102" }),
+            db: Mock.of<Database>({
+              getQuestion: async () => {
+                return {
+                  id: "test",
+                  type: "multipleChoice",
+                  formId: "test",
+                  description: null,
+                  illustration: null,
+                  order: 0,
+                  otherOption: false,
+                  randomize: false,
+                  required: false,
+                  title: "Multiple choice",
+                  userId: "fabien0102",
+                  choices: new Array(options.choicesCount)
+                    .fill("choice ")
+                    .map((i, index) => `${i} ${index}`),
+                  limitMax: options.limitMax,
+                  limitMin: options.limitMin,
+                } satisfies QuestionOfType<"multipleChoice"> & {
+                  id: string;
+                  userId: string;
+                  formId: string;
+                };
+              },
+            }),
+          })
+          .get({ questionId: "text" });
+
+      it("should cap the limitMax to choices length", async () => {
+        const question = await getMultipleChoice({
+          choicesCount: 10,
+          limitMax: 20,
+        });
+
+        if (question.type !== "multipleChoice")
+          throw new Error("Should be multiple choice question");
+
+        expect(question.limitMax).toBe(10);
+      });
+
+      it("should cap the limitMin to limitMax", async () => {
+        const question = await getMultipleChoice({
+          choicesCount: 10,
+          limitMax: 5,
+          limitMin: 10,
+        });
+
+        if (question.type !== "multipleChoice")
+          throw new Error("Should be multiple choice question");
+
+        expect(question.limitMax).toBe(5);
+        expect(question.limitMin).toBe(5);
+      });
+
+      it("should cap the limitMin & limitMax to choices length", async () => {
+        const question = await getMultipleChoice({
+          choicesCount: 1,
+          limitMax: 5,
+          limitMin: 10,
+        });
+
+        if (question.type !== "multipleChoice")
+          throw new Error("Should be multiple choice question");
+
+        expect(question.limitMax).toBe(1);
+        expect(question.limitMin).toBe(1);
+      });
+
+      it("should remove negative values", async () => {
+        const question = await getMultipleChoice({
+          choicesCount: 10,
+          limitMax: -5,
+          limitMin: -10,
+        });
+
+        if (question.type !== "multipleChoice")
+          throw new Error("Should be multiple choice question");
+
+        expect(question.limitMax).toBe(0);
+        expect(question.limitMin).toBe(0);
+      });
+
+      it("should returns legit values", async () => {
+        const question = await getMultipleChoice({
+          choicesCount: 10,
+          limitMax: 8,
+          limitMin: 2,
+        });
+
+        if (question.type !== "multipleChoice")
+          throw new Error("Should be multiple choice question");
+
+        expect(question.limitMax).toBe(8);
+        expect(question.limitMin).toBe(2);
+      });
+
+      it("should returns min only", async () => {
+        const question = await getMultipleChoice({
+          choicesCount: 10,
+          limitMin: 2,
+        });
+
+        if (question.type !== "multipleChoice")
+          throw new Error("Should be multiple choice question");
+
+        expect(question.limitMin).toBe(2);
+      });
     });
   });
 
