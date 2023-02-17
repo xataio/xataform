@@ -42,14 +42,14 @@ export const questionSchema = z.discriminatedUnion("type", [
   // Contact Info
   questionCommunProps.extend({
     type: z.literal("contactInfo"),
-    firstName: contactOptionSchema.default({ enabled: true, required: false }),
-    lastName: contactOptionSchema.default({ enabled: true, required: false }),
-    phoneNumber: contactOptionSchema.default({
+    firstName: contactOptionSchema.catch({ enabled: true, required: false }),
+    lastName: contactOptionSchema.catch({ enabled: true, required: false }),
+    phoneNumber: contactOptionSchema.catch({
       enabled: true,
       required: false,
     }),
-    email: contactOptionSchema.default({ enabled: true, required: false }),
-    company: contactOptionSchema.default({ enabled: true, required: false }),
+    email: contactOptionSchema.catch({ enabled: true, required: false }),
+    company: contactOptionSchema.catch({ enabled: true, required: false }),
   }),
 
   // Address
