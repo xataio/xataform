@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
-import clsx from "clsx";
 import { Button } from "components/Button";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import Editor from "@monaco-editor/react";
 
 export type EditChoicesDialogProps = {
   onSave: (choices: string[]) => void;
@@ -16,10 +16,13 @@ export function EditChoicesDialog({
   onClose,
   choices,
 }: EditChoicesDialogProps) {
+  const actionsRef = useRef<HTMLDivElement>(null);
+
   const [value, setValue] = useState(choices.join("\n"));
   useEffect(() => {
     setValue(choices.join("\n"));
   }, [choices]);
+
   const hasChanged = value !== choices.join("\n");
 
   return (
@@ -61,20 +64,44 @@ export function EditChoicesDialog({
                   Write or paste your choices below. Each choice must be on
                   separate line.
                 </Dialog.Description>
-                <textarea
-                  autoFocus
-                  className={clsx(
-                    "scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 scrollbar-thumb-rounded",
-                    "h-52 w-full resize-none rounded p-2 outline-none ring-1 ring-slate-600 ring-offset-2"
-                  )}
-                  placeholder={`Your choices go here
-One per line
-Like this
-😎`}
+                <Editor
                   value={value}
-                  onChange={(e) => setValue(e.currentTarget.value)}
+                  onChange={(v) => setValue(v || "")}
+                  onMount={(editor) => {
+                    // Focus & set the cursor at the end
+                    editor.focus();
+                    editor.setPosition({
+                      lineNumber: Infinity,
+                      column: Infinity,
+                    });
+
+                    // Override tab behaviour
+                    const TabKey = 2;
+                    editor.addCommand(TabKey, () => {
+                      if (!actionsRef.current) return;
+                      const firstFocusableElement = Array.from(
+                        actionsRef.current.children
+                      ).find(isFocusableButton);
+
+                      if (firstFocusableElement) {
+                        firstFocusableElement.focus();
+                      }
+                    });
+                  }}
+                  options={{
+                    lineDecorationsWidth: 0,
+                    lineNumbersMinChars: 3,
+                    scrollbar: {
+                      verticalSliderSize: 8,
+                    },
+                    minimap: {
+                      enabled: false,
+                    },
+                    overviewRulerLanes: 0,
+                  }}
+                  className="mb-2 h-52 rounded ring-1 ring-slate-400 ring-offset-1"
                 />
-                <div className="mt-2 flex flex-row gap-2">
+                <div className="mt-2 flex flex-row gap-2" ref={actionsRef}>
                   <Button
                     disabled={!hasChanged}
                     onClick={() =>
@@ -110,3 +137,10 @@ Like this
     </Transition.Root>
   );
 }
+
+/**
+ * Typeguard to filter focusable HTML Button element.
+ */
+const isFocusableButton = (element: Element): element is HTMLButtonElement => {
+  return element instanceof HTMLButtonElement && element.disabled === false;
+};
