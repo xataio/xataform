@@ -110,9 +110,28 @@ describe("question router", () => {
             };
           }
 
+          if (id === "lastQuestion") {
+            return {
+              id,
+              type: "shortText",
+              title: "Question",
+              order: 0,
+              maxLength: null,
+              required: false,
+              description: null,
+              illustration: null,
+              userId: "fabien0102",
+              formId: "lastQuestion",
+            };
+          }
+
           return null;
         },
         deleteQuestion: async (id: string) => id,
+        getQuestionsCount: async ({ formId }) => {
+          if (formId === "lastQuestion") return 1;
+          return 10;
+        },
       }),
     });
 
@@ -135,6 +154,12 @@ describe("question router", () => {
       expect(() =>
         router.delete({ questionId: "somebody" })
       ).rejects.toThrowError("NOT_FOUND");
+    });
+
+    it("should throw PRECONDITION_FAILED if this is the last question", async () => {
+      expect(() =>
+        router.delete({ questionId: "lastQuestion" })
+      ).rejects.toThrowError("You can't delete the last question");
     });
   });
 

@@ -58,6 +58,9 @@ describe("form router", () => {
           async getQuestionsCount() {
             return 10;
           },
+          async createQuestion(q) {
+            return { question: q, id: "new" };
+          },
         }),
       });
 

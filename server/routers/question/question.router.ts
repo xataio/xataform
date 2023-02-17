@@ -67,6 +67,7 @@ export const questionRouter = router({
         if (question.userId !== user.id) {
           throw new TRPCError({ code: "NOT_FOUND" });
         }
+
         const count = await db.getQuestionsCount({
           formId: question.formId,
           userId: question.userId,
