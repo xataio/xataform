@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../../trpc";
 import { Question, questionSchema } from "./question.schemas";
+import { readFile } from "fs/promises";
+import path from "path";
 
 type QuestionWithId = Question & { id: string };
 
@@ -102,4 +104,38 @@ export const questionRouter = router({
         return { questionId, deleted: true };
       }
     ),
+
+  getXataUrl: protectedProcedure
+    .input(z.object({ questionId: z.string() }))
+    .query(async ({ input: { questionId } }) => {
+      const xataRcPath = path.join(process.cwd(), ".xatarc");
+      const xataRcRaw = await readFile(xataRcPath, "utf-8");
+      const { databaseURL } = z
+        .object({ databaseURL: z.string() })
+        .parse(JSON.parse(xataRcRaw));
+
+      const { pathname, host } = new URL(databaseURL);
+
+      const workspace = host.split(".")[0];
+      const region = host.split(".")[1];
+      const db = pathname.slice("/db/".length);
+      const q = encodeURIComponent(
+        JSON.stringify({
+          filters: [
+            {
+              id: 0,
+              field: "id",
+              condition: "is",
+              keyword: questionId,
+              andOr: "and",
+            },
+          ],
+          groups: [],
+          sorts: [],
+          hiddenColumns: [],
+        })
+      );
+
+      return `https://app.xata.io/workspaces/${workspace}/dbs/${db}:${region}/branches/main/tables/question?q=${q}`;
+    }),
 });

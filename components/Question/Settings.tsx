@@ -9,6 +9,7 @@ export type SettingsProps = {
   questionId: string;
 };
 export function Settings({ formId, questionId }: SettingsProps) {
+  const { data: xataUrl } = trpc.question.getXataUrl.useQuery({ questionId });
   const { data } = trpc.question.get.useQuery({ questionId });
   const { data: questions } = trpc.form.summary.useQuery({ formId });
   const { deleteQuestion } = useDeleteQuestion({ formId });
@@ -60,6 +61,25 @@ export function Settings({ formId, questionId }: SettingsProps) {
           {hasIllustration ? "Remove illustration" : "Add illustation"}
         </Button>
       </div>
+      <h2 className="mt-4 mb-2 w-full border-b border-b-slate-400">Inspect</h2>
+      <ul className="flex flex-col gap-2">
+        {data &&
+          Object.entries(data).map(([key, value]) => (
+            <li key={key} className="flex gap-2 text-sm">
+              <label className="font-medium text-indigo-800">{key}</label>
+              <input type="text" defaultValue={JSON.stringify(value)} />
+            </li>
+          ))}
+      </ul>
+      <a
+        target="_blank"
+        rel="noreferrer"
+        className="text-indigo-500 underline"
+        href={xataUrl ?? ""}
+        // href={`https://app.xata.io/workspaces/fabien-ph3r1h/dbs/xataform-6:eu-west-1/branches/main/tables/question?q=%7B%22filters%22%3A%5B%7B%22id%22%3A0%2C%22field%22%3A%22id%22%2C%22condition%22%3A%22is%22%2C%22keyword%22%3A%22${data?.id}%22%2C%22andOr%22%3A%22and%22%7D%5D%2C%22groups%22%3A%5B%5D%2C%22sorts%22%3A%5B%5D%2C%22hiddenColumns%22%3A%5B%5D%7D`}
+      >
+        Open in xata
+      </a>
     </div>
   );
 }
