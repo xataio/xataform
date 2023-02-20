@@ -40,6 +40,9 @@ const AnswerMultipleChoice = dynamic(() => import("./AnswerMultipleChoice"), {
 const AnswerContactInfo = dynamic(() => import("./AnswerContactInfo"), {
   loading: Spinner,
 });
+const AnswerRanking = dynamic(() => import("./AnswerRanking"), {
+  loading: Spinner,
+});
 
 // Transforms `AnswerProps<T>` to `AnswerProps<"shortText"> | AnswerProps<"longText"> | …`
 // This is to enable proper type narrowing in our component switch cases
@@ -71,6 +74,8 @@ export function Answer(props: AnswerPropsUnion<QuestionType>) {
       return <AnswerMultipleChoice {...props} />;
     case "contactInfo":
       return <AnswerContactInfo {...props} />;
+    case "ranking":
+      return <AnswerRanking {...props} />;
   }
 
   return <div className="col-start-2 mt-8">🥲 Not implemented!</div>;
