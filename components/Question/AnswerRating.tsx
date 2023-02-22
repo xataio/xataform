@@ -1,6 +1,5 @@
 import clsx from "clsx";
-import { useRef, useState } from "react";
-import { Rating } from "@smastrom/react-rating";
+import { useState } from "react";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
