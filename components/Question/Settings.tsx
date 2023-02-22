@@ -65,7 +65,10 @@ export function Settings({ formId, questionId }: SettingsProps) {
       <ul className="flex flex-col gap-2">
         {data &&
           Object.entries(data).map(([key, value]) => (
-            <li key={`${data.id}-${key}`} className="flex gap-2 text-sm">
+            <li
+              key={`${data.id}-${key}-${value}`}
+              className="flex gap-2 text-sm"
+            >
               <label className="font-medium text-indigo-800">{key}</label>
               <input type="text" defaultValue={JSON.stringify(value)} />
             </li>
