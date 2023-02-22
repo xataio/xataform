@@ -18,7 +18,8 @@ export function AnswerWrapper(props: {
       <div
         className={clsx(
           "pr-4 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-thumb-rounded",
-          "-m-1 max-h-72 overflow-auto p-1"
+          "-m-1 max-h-72 overflow-auto p-1",
+          "flex flex-col gap-4"
         )}
       >
         {props.children}
