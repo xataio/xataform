@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
-function AnswerEmail(props: AnswerProps<"yesNo">) {
+function AnswerYesNo(props: AnswerProps<"yesNo">) {
   return (
     <AnswerWrapper layout={props.layout}>
       <RadioGroup className="flex flex-col gap-2">
@@ -15,7 +15,7 @@ function AnswerEmail(props: AnswerProps<"yesNo">) {
   );
 }
 
-export default AnswerEmail;
+export default AnswerYesNo;
 
 function Option({ value, children }: { value: string; children: string }) {
   return (
