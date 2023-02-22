@@ -65,7 +65,7 @@ export function Settings({ formId, questionId }: SettingsProps) {
       <ul className="flex flex-col gap-2">
         {data &&
           Object.entries(data).map(([key, value]) => (
-            <li key={key} className="flex gap-2 text-sm">
+            <li key={`${data.id}-${key}`} className="flex gap-2 text-sm">
               <label className="font-medium text-indigo-800">{key}</label>
               <input type="text" defaultValue={JSON.stringify(value)} />
             </li>
@@ -76,7 +76,6 @@ export function Settings({ formId, questionId }: SettingsProps) {
         rel="noreferrer"
         className="text-indigo-500 underline"
         href={xataUrl ?? ""}
-        // href={`https://app.xata.io/workspaces/fabien-ph3r1h/dbs/xataform-6:eu-west-1/branches/main/tables/question?q=%7B%22filters%22%3A%5B%7B%22id%22%3A0%2C%22field%22%3A%22id%22%2C%22condition%22%3A%22is%22%2C%22keyword%22%3A%22${data?.id}%22%2C%22andOr%22%3A%22and%22%7D%5D%2C%22groups%22%3A%5B%5D%2C%22sorts%22%3A%5B%5D%2C%22hiddenColumns%22%3A%5B%5D%7D`}
       >
         Open in xata
       </a>
