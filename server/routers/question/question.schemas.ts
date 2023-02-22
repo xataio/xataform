@@ -125,7 +125,7 @@ export const questionSchema = z.discriminatedUnion("type", [
   questionCommunProps.extend({
     type: z.literal("rating"),
     required: z.boolean().default(false),
-    steps: z.number().min(1).max(10).int().default(1),
+    steps: z.number().min(3).max(10).int().default(5),
   }),
 
   // Matrix

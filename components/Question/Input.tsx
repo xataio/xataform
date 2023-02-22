@@ -38,6 +38,7 @@ export function Input({
         disabled={disabled}
         className={clsx(
           "border-b border-indigo-200 bg-white pb-0.5 text-lg placeholder:text-indigo-200",
+          "focus:outline-none",
           className
         )}
         placeholder={placeholder}
