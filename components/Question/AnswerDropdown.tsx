@@ -63,7 +63,7 @@ function AnswerDropdown({
         <div className="relative w-full">
           <Combobox.Input
             placeholder="Type or select an option"
-            className="w-full border-b border-indigo-200 bg-white pl-2 pb-0.5 text-lg text-indigo-800 placeholder:text-indigo-200 focus:border-b-indigo-400 focus:outline-none"
+            className="w-full border-0 border-b border-indigo-200 bg-white pl-2 pb-0.5 text-lg text-indigo-800 placeholder:text-indigo-200 focus:border-b-indigo-400 focus:outline-none"
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -122,7 +122,7 @@ function AnswerDropdown({
         </Transition>
       </Combobox>
       {admin ? (
-        <div className="absolute right-0 mt-2 text-xs text-indigo-500">
+        <div className="-mt-2 self-end text-xs text-indigo-500">
           {choices.length === 0 && "No option in list"}
           {choices.length === 1 && "1 option in list"}
           {choices.length > 1 && `${choices.length} options in list`}

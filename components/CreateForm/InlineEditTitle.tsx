@@ -21,7 +21,7 @@ export function InlineEditTitle({ title, onSubmit }: InlineEditTitleProps) {
         className="rounded border-2 border-transparent bg-transparent p-1 text-sm selection:bg-indigo-700 focus:border-indigo-400 focus:bg-indigo-500 focus:text-white focus:outline-none hover:border-indigo-400 hover:bg-indigo-500 hover:text-white"
         value={draftTitle}
         onChange={(e) => setDraftTitle(e.currentTarget.value)}
-        onKeyDown={(e) => {
+        onKeyUp={(e) => {
           if (e.key === "Enter") {
             e.currentTarget.blur();
           }
