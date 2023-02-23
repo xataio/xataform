@@ -80,7 +80,7 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
         <input
           aria-label="title"
           type="text"
-          className="text-xl outline-none placeholder:font-light placeholder:italic placeholder:text-slate-300"
+          className="border-0 text-xl placeholder:font-light placeholder:italic placeholder:text-slate-300 focus:ring-0"
           placeholder="Your question here."
           onChange={(e) =>
             setDraft((prev) => ({ ...prev, title: e.target.value }))
@@ -95,7 +95,9 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
           className={clsx(
             "col-start-2 mt-1",
             "font-light outline-none",
-            "placeholder:italic"
+            "placeholder:italic",
+            "border-0",
+            "focus:ring-0"
           )}
           aria-label="description"
           placeholder="Description (optional)"
