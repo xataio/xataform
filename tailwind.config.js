@@ -16,5 +16,6 @@ module.exports = {
   plugins: [
     require("@headlessui/tailwindcss"),
     require("tailwind-scrollbar")({ nocompatible: true }),
+    require("@tailwindcss/forms"),
   ],
 };
