@@ -133,8 +133,8 @@ export const questionSchema = z.discriminatedUnion("type", [
     type: z.literal("matrix"),
     required: z.boolean().default(false),
     multipleSelection: z.boolean().default(false),
-    rows: z.array(z.string()).default([]),
-    columns: z.array(z.string()).default([]),
+    rows: z.array(z.string()).default([""]),
+    columns: z.array(z.string()).default(["😥", "😐", "😃", "😍"]),
   }),
 
   // Date
