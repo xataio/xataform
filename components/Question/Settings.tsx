@@ -1,56 +1,48 @@
 import { Button } from "components/Button";
-import { useDeleteQuestion } from "hooks/useDeleteQuestion";
+import { useGetQuestion } from "hooks/useGetQuestion";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
-import { useEffect, useState } from "react";
 import { trpc } from "utils/trpc";
+import { DeleteQuestionButton } from "./DeleteQuestionButton";
+import { QuestionSettings } from "./QuestionSettings";
 
 export type SettingsProps = {
   formId: string;
   questionId: string;
 };
+
 export function Settings({ formId, questionId }: SettingsProps) {
   const { data: xataUrl } = trpc.question.getXataUrl.useQuery({ questionId });
-  const { data } = trpc.question.get.useQuery({ questionId });
+  const { question } = useGetQuestion({ questionId, formId });
   const { data: questions } = trpc.form.summary.useQuery({ formId });
-  const { deleteQuestion } = useDeleteQuestion({ formId });
   const { updateQuestion } = useUpdateQuestion({ formId });
 
-  const hasIllustration = Boolean(data?.illustration);
-
-  const [areYouSure, setAreYouSure] = useState(false);
-  useEffect(() => {
-    const timerId = setTimeout(() => setAreYouSure(false), 2000);
-    return () => clearTimeout(timerId);
-  }, [areYouSure]);
+  const hasIllustration = Boolean(question?.illustration);
 
   return (
     <div className="p-4">
-      <h1>Settings</h1>
+      <h1 className="font-medium">Settings</h1>
       <div className="mt-4 flex flex-col items-start gap-2">
-        <Button
+        {question && (
+          <QuestionSettings
+            {...question}
+            formId={formId}
+            questionId={questionId}
+          />
+        )}
+        <DeleteQuestionButton
+          formId={formId}
+          questionId={questionId}
           disabled={!questions || questions.length <= 1}
-          icon={areYouSure ? "warning" : "trash"}
-          variant={areYouSure ? "warning" : undefined}
-          onClick={() => {
-            if (areYouSure) {
-              deleteQuestion({ questionId });
-              setAreYouSure(false);
-            } else {
-              setAreYouSure(true);
-            }
-          }}
-        >
-          {areYouSure ? "Click to confirm" : "Delete question"}
-        </Button>
+        />
         <Button
           icon="photo"
-          isLoading={!data}
+          isLoading={!question}
           onClick={() => {
-            if (!data) return;
+            if (!question) return;
             updateQuestion({
               questionId,
               question: {
-                ...data,
+                ...question,
                 illustration: hasIllustration
                   ? ""
                   : "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80",
@@ -63,14 +55,14 @@ export function Settings({ formId, questionId }: SettingsProps) {
       </div>
       <h2 className="mt-4 mb-2 w-full border-b border-b-slate-400">Inspect</h2>
       <ul className="flex flex-col gap-2">
-        {data &&
-          Object.entries(data).map(([key, value]) => (
+        {question &&
+          Object.entries(question).map(([key, value]) => (
             <li
-              key={`${data.id}-${key}-${value}`}
+              key={`${question.id}-${key}-${value}`}
               className="flex gap-2 text-sm"
             >
               <label className="font-medium text-indigo-800">{key}</label>
-              <input type="text" defaultValue={JSON.stringify(value)} />
+              <span>{JSON.stringify(value)}</span>
             </li>
           ))}
       </ul>
