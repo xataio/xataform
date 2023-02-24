@@ -253,7 +253,7 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
             {props.columns.map((column, columnIndex) => (
               <div key={`cell-${columnIndex}-${rowIndex}`}>
                 <input
-                  type="radio"
+                  type={props.multipleSelection ? "checkbox" : "radio"}
                   disabled={props.admin}
                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   value={column}
