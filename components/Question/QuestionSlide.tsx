@@ -2,10 +2,10 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { ErrorMessage } from "components/ErrorMessage";
 import { Spinner } from "components/Spinner";
+import { useGetQuestion } from "hooks/useGetQuestion";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
 import Image from "next/image";
 import { KeyboardEvent, useEffect, useState } from "react";
-import { trpc } from "utils/trpc";
 import { Answer } from "./Answer";
 
 export type QuestionSlideProps = {
@@ -15,29 +15,24 @@ export type QuestionSlideProps = {
 
 export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
   const { updateQuestion } = useUpdateQuestion({ formId });
-  const { data, isLoading, error } = trpc.question.get.useQuery(
-    { questionId },
-    {
-      enabled: Boolean(questionId),
-    }
-  );
+  const { question, isLoading, error } = useGetQuestion({ formId, questionId });
 
-  const [draft, setDraft] = useState(data!);
+  const [draft, setDraft] = useState(question!);
   useEffect(() => {
-    if (data)
+    if (question)
       setDraft((prev) => ({
-        ...data,
-        title: prev?.title ?? data.title,
-        description: prev?.description ?? data.description,
+        ...question,
+        title: prev?.title ?? question.title,
+        description: prev?.description ?? question.description,
       }));
-  }, [data]);
+  }, [question]);
 
   const onBlur = () =>
     updateQuestion({ questionId: questionId, question: draft });
   const onKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     // Undo
-    if (e.key === "Escape" && data) {
-      setDraft(data);
+    if (e.key === "Escape" && question) {
+      setDraft(question);
     }
     // Validate the input
     if (e.key === "Enter") {
@@ -45,7 +40,7 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
     }
   };
 
-  if (isLoading || !data || !draft) {
+  if (isLoading || !question || !draft) {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <Spinner />
@@ -61,34 +56,51 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
     <div
       className={clsx(
         "h-full items-center",
-        data.illustration ? "grid grid-cols-2" : "flex justify-center"
+        question.illustration ? "grid grid-cols-2" : "flex justify-center"
       )}
     >
       <div
         className={clsx(
           "grid grid-cols-header p-10",
-          !data.illustration && "w-full p-28"
+          !question.illustration && "w-full p-28"
         )}
       >
         {/* Question number */}
         <div className="text mr-2 flex flex-row items-center gap-1 text-indigo-600">
-          {data.order + 1}
+          {question.order + 1}
           <ArrowRightIcon className="h-4 w-4" />
         </div>
 
         {/* Title */}
-        <input
-          aria-label="title"
-          type="text"
-          className="border-0 text-xl placeholder:font-light placeholder:italic placeholder:text-slate-300 focus:ring-0"
-          placeholder="Your question here."
-          onChange={(e) =>
-            setDraft((prev) => ({ ...prev, title: e.target.value }))
-          }
-          value={draft.title}
-          onKeyUp={onKeyUp}
-          onBlur={onBlur}
-        />
+        <div className="relative">
+          <input
+            required={"required" in question && question.required}
+            aria-label="title"
+            type="text"
+            className={clsx(
+              "border-0 text-xl placeholder:font-light placeholder:italic placeholder:text-slate-300 focus:ring-0"
+            )}
+            placeholder={
+              "Your question here." +
+              ("required" in question && question.required ? " *" : "")
+            }
+            onChange={(e) =>
+              setDraft((prev) => ({ ...prev, title: e.target.value }))
+            }
+            value={draft.title}
+            onKeyUp={onKeyUp}
+            onBlur={onBlur}
+          />
+          {"required" in question && question.required && draft.title ? (
+            <div
+              className={`pointer-events-none absolute left-0 top-0 py-2 px-3 text-xl text-red-600`}
+              aria-hidden="true"
+            >
+              <span className="mr-1 text-transparent">{draft.title}</span>
+              <span>*</span>
+            </div>
+          ) : null}
+        </div>
 
         {/* Description */}
         <input
@@ -111,22 +123,22 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
         />
 
         <Answer
-          {...data}
+          {...question}
           questionId={questionId}
           formId={formId}
-          layout={data.illustration ? "split" : "full"}
+          layout={question.illustration ? "split" : "full"}
           admin
         />
       </div>
 
       {/* Illustation */}
-      {data.illustration ? (
+      {question.illustration ? (
         <div className="relative h-full border">
           <Image
             fill
             className="object-cover"
             alt="todo"
-            src={data.illustration}
+            src={question.illustration}
           />
         </div>
       ) : null}

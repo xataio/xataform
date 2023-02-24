@@ -3,10 +3,12 @@ import { Button } from "components/Button";
 import { QuestionSlide } from "components/Question/QuestionSlide";
 import { Settings } from "components/Question/Settings";
 import { useAddMockQuestions } from "hooks/useAddMockQuestions";
+import { useFormSummary } from "hooks/useFormSummary";
 import { useToggle } from "hooks/useToggle";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef } from "react";
 import { useLayoutEffect } from "react";
+import { questionSchema } from "server/routers/question/question.schemas";
 import { trpc } from "utils/trpc";
 import { ContentPanel } from "./ContentPanel";
 
@@ -16,21 +18,7 @@ export type CreateFormMainProps = {
 
 export function CreateFormMain({ formId }: CreateFormMainProps) {
   const { addMockQuestions } = useAddMockQuestions();
-  const { data: questions, error } = trpc.form.summary.useQuery(
-    { formId },
-    {
-      placeholderData: [
-        {
-          id: "placeholder",
-          description: null,
-          illustration: null,
-          order: 0,
-          title: "Loading…",
-          type: "shortText",
-        },
-      ],
-    }
-  );
+  const { questions } = useFormSummary({ formId });
 
   // Panels control
   const [isContentPanelOpen, toggleContentPanelOpen] = useToggle(true);
