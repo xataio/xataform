@@ -44,3 +44,8 @@ html {
 #tooltip[data-popper-placement^="right"] > #arrow {
   left: -4px;
 }
+
+/* Fix conflict between monaco editor & tailwindcss/forms */
+.monaco-editor textarea:focus {
+  box-shadow: none;
+}
