@@ -1,7 +1,6 @@
 import { camel } from "case";
 import clsx from "clsx";
 import { HTMLInputTypeAttribute } from "react";
-import { AnswerLayout } from "./AnswerProps";
 
 export type InputProps = {
   type: HTMLInputTypeAttribute;
