@@ -1,17 +1,14 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
-import React, { useState } from "react";
-import { createPortal } from "react-dom";
-import { usePopper } from "react-popper";
 
-export type DropdownSettingItemProps<T extends string> = {
+export type DropdownSettingItemProps<T extends string | number> = {
   value: T;
   onChange: (value: T) => void;
   choices: T[];
 };
 
-export function DropdownSettingItem<T extends string>({
+export function DropdownSettingItem<T extends string | number>({
   value,
   onChange,
   choices,
@@ -64,7 +61,7 @@ export function DropdownSettingItem<T extends string>({
                       <span
                         className={`absolute inset-y-0 left-0 flex items-center pl-3`}
                       >
-                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                        <CheckIcon className="h-4 w-4" aria-hidden="true" />
                       </span>
                     </>
                   ) : null}
