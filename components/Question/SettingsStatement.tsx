@@ -1,3 +1,4 @@
+import { InputSettingItem } from "components/InputSettingItem";
 import { Toggle } from "components/Toggle";
 import { useUpdateQuestionOption } from "hooks/useUpdateQuestionOption";
 import { SettingsProps } from "./SettingsProps";
@@ -16,12 +17,17 @@ export default function SettingsStatement({
   return (
     <>
       <Toggle
-        label="Has quotation marks"
+        label="Quotation marks"
         value={question.hasQuotationMarks}
         onChange={updateOption("hasQuotationMarks")}
       />
-      {/* TODO: implement quotation marks */}
-      {/* TODO: buttonText */}
+      <h3 className="text-sm text-slate-700">Button</h3>
+      <InputSettingItem
+        label="Button"
+        value={question.buttonText}
+        onChange={updateOption("buttonText")}
+        maxLength={24}
+      />
     </>
   );
 }

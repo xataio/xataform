@@ -11,7 +11,7 @@ function AnswerStatement(props: AnswerProps<"statement">) {
       )}
     >
       <div className="flex flex-row items-center gap-2">
-        <Button>Continue</Button>
+        <Button>{props.buttonText || "Continue"}</Button>
         <div className="text-xs">
           press <b>Enter</b>↵
         </div>
