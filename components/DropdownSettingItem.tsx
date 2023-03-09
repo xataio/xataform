@@ -17,7 +17,7 @@ export function DropdownSettingItem<T extends string | number>({
     <Listbox
       value={value}
       onChange={onChange}
-      className="block w-full focus-within:z-10"
+      className="block w-full ui-open:z-10"
       as="div"
     >
       <div className="relative w-full">

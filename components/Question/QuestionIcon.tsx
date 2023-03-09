@@ -25,9 +25,10 @@ import { QuestionType } from "server/routers/question/question.schemas";
 export type QuestionIconProps = {
   type: QuestionType;
   order?: number;
+  className?: string;
 };
 
-export function QuestionIcon({ type, order }: QuestionIconProps) {
+export function QuestionIcon({ type, order, className }: QuestionIconProps) {
   const { Icon, color } = variant[type];
 
   return (
@@ -35,7 +36,7 @@ export function QuestionIcon({ type, order }: QuestionIconProps) {
       className={clsx(
         color,
         "flex flex-row items-center gap-2 rounded py-0.5 px-2 text-slate-800",
-        "bg-"
+        className
       )}
     >
       <Icon className="h-4 w-4" />

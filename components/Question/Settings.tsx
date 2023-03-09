@@ -1,9 +1,11 @@
 import { Button } from "components/Button";
 import { useGetQuestion } from "hooks/useGetQuestion";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
+import { questionSchema } from "server/routers/question/question.schemas";
 import { trpc } from "utils/trpc";
 import { DeleteQuestionButton } from "./DeleteQuestionButton";
 import { QuestionSettings } from "./QuestionSettings";
+import { QuestionTypeDropdown } from "./QuestionTypeDropdown";
 
 export type SettingsProps = {
   formId: string;
@@ -20,8 +22,22 @@ export function Settings({ formId, questionId }: SettingsProps) {
 
   return (
     <div className="p-4">
-      <h1 className="font-medium">Settings</h1>
-      <div className="mt-4 flex flex-col items-start gap-2">
+      <h2 className="font-medium">Type</h2>
+      <QuestionTypeDropdown
+        value={question?.type ?? "address"}
+        onChange={(type) => {
+          const questionWithDefaults = questionSchema.parse({
+            ...question,
+            type,
+          });
+          updateQuestion({
+            questionId,
+            question: questionWithDefaults,
+          });
+        }}
+      />
+      <h1 className="mt-4 font-medium">Settings</h1>
+      <div className="mt-1 flex flex-col items-start gap-2">
         {question && (
           <QuestionSettings
             {...question}
@@ -29,6 +45,7 @@ export function Settings({ formId, questionId }: SettingsProps) {
             questionId={questionId}
           />
         )}
+        <h1 className="mt-4 font-medium">Admin</h1>
         <DeleteQuestionButton
           formId={formId}
           questionId={questionId}
@@ -53,8 +70,8 @@ export function Settings({ formId, questionId }: SettingsProps) {
           {hasIllustration ? "Remove illustration" : "Add illustation"}
         </Button>
       </div>
-      <h2 className="mt-4 mb-2 w-full border-b border-b-slate-400">Inspect</h2>
-      <ul className="flex flex-col gap-2">
+      <h1 className="mt-4 font-medium">Debug</h1>
+      <ul className="mt-1 flex flex-col gap-2">
         {question &&
           Object.entries(question).map(([key, value]) => (
             <li
