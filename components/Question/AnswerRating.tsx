@@ -6,10 +6,16 @@ import { AnswerWrapper } from "./AnswerWrapper";
 import { StarIcon } from "@heroicons/react/20/solid";
 
 function AnswerRating(props: AnswerProps<"rating">) {
-  const [rating, setRating] = useState(2);
+  const [rating, setRating] = useState(0);
 
   return (
-    <AnswerWrapper layout={props.layout}>
+    <AnswerWrapper
+      layout={props.layout}
+      onSubmit={() => {
+        if (props.admin) return;
+        props.onSubmit(rating);
+      }}
+    >
       <fieldset
         aria-label={`Rating: ${rating} out of ${props.steps} stars`}
         className="w-fit outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"

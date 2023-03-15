@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { Placement } from "@popperjs/core";
 import clsx from "clsx";
-import { useState } from "react";
+import { ButtonHTMLAttributes, useState } from "react";
 import { usePopper } from "react-popper";
 
 export type ButtonProps = ButtonPropsWithoutIcon | ButtonWithIconProps;
@@ -23,6 +23,7 @@ type ButtonPropsCommun = {
   variant?: "ghost" | "secondary" | "warning";
   isLoading?: boolean;
   disabled?: boolean;
+  type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
 };
 
 type ButtonPropsWithoutIcon = ButtonPropsCommun & {
@@ -91,7 +92,7 @@ export function Button(props: ButtonProps) {
       <button
         ref={setReferenceElement}
         disabled={disabled}
-        type="button"
+        type={props.type ?? "button"}
         className={clsx(
           "inline-flex items-center rounded border border-transparent px-2.5 py-1.5 text-xs font-medium leading-4 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2",
           colorClasses,

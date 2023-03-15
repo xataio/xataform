@@ -211,6 +211,18 @@ export const formRouter = router({
 
       return { formId };
     }),
+
+  publish: protectedProcedure
+    .input(z.object({ formId: z.string() }))
+    .mutation(async ({ ctx: { revalidate, db }, input: { formId } }) => {
+      await db.publishForm(formId);
+
+      revalidate(`/form/${formId}`);
+
+      return {
+        revalidate: true,
+      };
+    }),
 });
 
 const isOrderCorrect = (questions: { order: number }[]) =>

@@ -1,16 +1,33 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 import { Input } from "./Input";
 import { kebab } from "case";
 
 function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
+  const [answer, setAnswer] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    company: "",
+  });
+
   const [firstName, lastName] = useMemo(() => {
     return getDadJokeName().split(" ");
   }, []);
 
+  const setField = (field: keyof typeof answer) => (value: string) =>
+    setAnswer((prev) => ({ ...prev, [field]: value }));
+
   return (
-    <AnswerWrapper layout={props.layout}>
+    <AnswerWrapper
+      layout={props.layout}
+      onSubmit={() => {
+        if (props.admin) return;
+        props.onSubmit(answer);
+      }}
+    >
       {props.firstName.enabled && (
         <Input
           label="First name"
@@ -19,6 +36,8 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
           disabled={props.admin}
           className="w-full"
           placeholder={firstName}
+          value={answer.firstName}
+          onChange={setField("firstName")}
         />
       )}
       {props.lastName.enabled && (
@@ -29,6 +48,8 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
           disabled={props.admin}
           className="w-full"
           placeholder={lastName}
+          value={answer.lastName}
+          onChange={setField("lastName")}
         />
       )}
       {props.phoneNumber.enabled && (
@@ -39,6 +60,8 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
           disabled={props.admin}
           className="w-full"
           placeholder="+34 1 23 45 67 89"
+          value={answer.phoneNumber}
+          onChange={setField("phoneNumber")}
         />
       )}
       {props.email.enabled && (
@@ -49,6 +72,8 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
           disabled={props.admin}
           className="w-full"
           placeholder={`${kebab(firstName + " " + lastName)}@xata.io`}
+          value={answer.email}
+          onChange={setField("email")}
         />
       )}
       {props.company.enabled && (
@@ -59,6 +84,8 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
           disabled={props.admin}
           className="w-full"
           placeholder="Xata"
+          value={answer.company}
+          onChange={setField("company")}
         />
       )}
     </AnswerWrapper>

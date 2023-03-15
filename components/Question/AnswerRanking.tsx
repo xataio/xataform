@@ -19,7 +19,6 @@ import { EditChoicesDialog } from "./EditChoicesDialog";
 function AnswerRanking({
   layout,
   choices,
-  admin,
   formId,
   questionId,
 
@@ -48,7 +47,11 @@ function AnswerRanking({
   return (
     <AnswerWrapper
       layout={layout}
-      onClick={admin ? () => setIsEditingChoices(true) : undefined}
+      onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
+      onSubmit={() => {
+        if (question.admin) return;
+        question.onSubmit(rankedChoices);
+      }}
     >
       <EditChoicesDialog
         isOpen={isEditingChoices}
@@ -69,7 +72,7 @@ function AnswerRanking({
       <p aria-live="polite" className="mb-1 text-xs text-indigo-700">
         Drag and drop to rank options
       </p>
-      {rankedChoices.length === 0 && admin ? (
+      {rankedChoices.length === 0 && question.admin ? (
         <div className="w-fit rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700">
           Click to add your choices
         </div>

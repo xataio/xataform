@@ -7,9 +7,14 @@ export function AnswerWrapper(props: {
   children: React.ReactNode;
   layout: AnswerLayout;
   onClick?: () => void;
+  onSubmit: () => void;
 }) {
   return (
-    <div
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        props.onSubmit();
+      }}
       className={clsx(
         props.layout === "split" ? "w-fit" : "w-full",
         "relative col-start-2 mt-8 flex flex-col gap-4"
@@ -32,11 +37,11 @@ export function AnswerWrapper(props: {
         />
       )}
       <div className="flex flex-row items-center gap-2">
-        <Button>OK ✓</Button>
+        <Button type="submit">OK ✓</Button>
         <div className="text-xs">
           press <b>Enter</b>↵
         </div>
       </div>
-    </div>
+    </form>
   );
 }

@@ -165,6 +165,11 @@ export const database = {
     return { ...form, id: createdRecord.id };
   },
 
+  async publishForm(formId: string) {
+    const createdRecord = await xata.db.form.update(formId, { status: "live" });
+    return { ...createdRecord };
+  },
+
   async listForms(props: {
     userId: string;
     filters?: { status: Form["status"] };
@@ -178,6 +183,20 @@ export const database = {
           size: MAX_ITEMS,
         },
       });
+
+    const parsedRecords = z
+      .array(
+        formSchema.extend({
+          id: z.string(),
+        })
+      )
+      .parse(records);
+
+    return parsedRecords;
+  },
+
+  async listPublishedForms() {
+    const records = await xata.db.form.filter(notExists("deletedAt")).getAll();
 
     const parsedRecords = z
       .array(
@@ -212,6 +231,48 @@ export const database = {
         })
       )
       .parse(records);
+  },
+
+  async listPublishedQuestions(props: { formId: string }) {
+    const { records } = await xata.db.question
+      .filter(notExists("deletedAt"))
+      .filter("form", props.formId)
+      .filter("form.status", "live")
+      .getPaginated({
+        pagination: {
+          size: MAX_ITEMS,
+        },
+        sort: {
+          order: "asc",
+        },
+      });
+
+    return z
+      .array(
+        z.intersection(
+          questionSchema,
+          z.object({ questionId: z.string(), formId: z.string() })
+        )
+      )
+      .parse(
+        records.map((raw) => {
+          const { type, userId, description, order, title, illustration, id } =
+            raw;
+
+          const record: unknown = {
+            questionId: id,
+            formId: props.formId,
+            type,
+            userId,
+            description,
+            order,
+            title,
+            illustration,
+            ...(raw as any)[type],
+          };
+          return record;
+        })
+      );
   },
 
   async getFormsCount({ userId }: { userId: string }) {

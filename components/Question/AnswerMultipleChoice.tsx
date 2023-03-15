@@ -1,5 +1,4 @@
-import { Combobox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { CheckIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
 import { useMemo, useState } from "react";
@@ -10,7 +9,6 @@ import { EditChoicesDialog } from "./EditChoicesDialog";
 function AnswerMultipleChoice({
   layout,
   choices,
-  admin,
   formId,
   questionId,
 
@@ -31,7 +29,11 @@ function AnswerMultipleChoice({
   return (
     <AnswerWrapper
       layout={layout}
-      onClick={admin ? () => setIsEditingChoices(true) : undefined}
+      onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
+      onSubmit={() => {
+        if (question.admin) return;
+        question.onSubmit(answer);
+      }}
     >
       <EditChoicesDialog
         isOpen={isEditingChoices}
@@ -52,7 +54,7 @@ function AnswerMultipleChoice({
       <p aria-live="polite" className="mb-1 text-xs text-indigo-700">
         {getStatement(question.limitMin, question.limitMax, choices.length)}
       </p>
-      {orderedChoices.length === 0 && admin ? (
+      {orderedChoices.length === 0 && question.admin ? (
         <div className="w-fit rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700">
           Click to add your choices
         </div>

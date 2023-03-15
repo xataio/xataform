@@ -23,6 +23,7 @@ export default function FormCreate({
     }
   );
   const { renameForm } = useRenameForm();
+  const { mutate: publish, isLoading } = trpc.form.publish.useMutation();
 
   return (
     <Box>
@@ -61,10 +62,21 @@ export default function FormCreate({
           </Link> */}
         </div>
         <>
-          <Button icon="preview" variant="ghost">
-            Preview
+          <Link
+            href={{
+              pathname: "/form/[formId]",
+              query: {
+                formId: form.id,
+              },
+            }}
+          >
+            <Button icon="preview" variant="ghost">
+              Preview
+            </Button>
+          </Link>
+          <Button variant="ghost" onClick={() => publish({ formId: form.id })}>
+            {isLoading ? "Publishing…" : "Publish"}
           </Button>
-          <Button variant="ghost">Publish</Button>
         </>
       </Header>
       <CreateFormMain formId={form.id} />
@@ -74,7 +86,7 @@ export default function FormCreate({
 
 export const getServerSideProps: GetServerSideProps<{
   form: RouterOutputs["form"]["get"];
-}> = async ({ req, params }) => {
+}> = async ({ res, req, params }) => {
   if (!params || typeof params.formId !== "string") {
     return {
       redirect: {
@@ -87,6 +99,9 @@ export const getServerSideProps: GetServerSideProps<{
   const trpcForm = formRouter.createCaller({
     user: await auth.getUser(req),
     db: database,
+    revalidate: async () => {
+      /* not used in this context */
+    },
   });
 
   try {

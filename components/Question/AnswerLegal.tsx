@@ -1,13 +1,25 @@
 import { RadioGroup } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
+import { useState } from "react";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerLegal(props: AnswerProps<"legal">) {
+  const [answer, setAnswer] = useState<"yes" | "no">();
   return (
-    <AnswerWrapper layout={props.layout}>
-      <RadioGroup className="flex flex-col gap-2">
+    <AnswerWrapper
+      layout={props.layout}
+      onSubmit={() => {
+        if (props.admin || answer === undefined) return;
+        props.onSubmit(answer === "yes");
+      }}
+    >
+      <RadioGroup
+        className="flex flex-col gap-2"
+        value={answer}
+        onChange={setAnswer}
+      >
         <Option value="yes">I accept</Option>
         <Option value="no">I don’t accept</Option>
       </RadioGroup>

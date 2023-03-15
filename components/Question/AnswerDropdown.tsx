@@ -10,7 +10,6 @@ import { EditChoicesDialog } from "./EditChoicesDialog";
 function AnswerDropdown({
   layout,
   choices,
-  admin,
   formId,
   questionId,
 
@@ -42,7 +41,11 @@ function AnswerDropdown({
   return (
     <AnswerWrapper
       layout={layout}
-      onClick={admin ? () => setIsEditingChoices(true) : undefined}
+      onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
+      onSubmit={() => {
+        if (question.admin) return;
+        question.onSubmit(answer);
+      }}
     >
       <EditChoicesDialog
         isOpen={isEditingChoices}
@@ -59,7 +62,7 @@ function AnswerDropdown({
           });
         }}
       />
-      <Combobox value={answer} onChange={setAnswer} disabled={admin}>
+      <Combobox value={answer} onChange={setAnswer} disabled={question.admin}>
         <div className="relative w-full">
           <Combobox.Input
             placeholder="Type or select an option"
@@ -121,7 +124,7 @@ function AnswerDropdown({
           </Combobox.Options>
         </Transition>
       </Combobox>
-      {admin ? (
+      {question.admin ? (
         <div className="-mt-2 self-end text-xs text-indigo-500">
           {choices.length === 0 && "No option in list"}
           {choices.length === 1 && "1 option in list"}

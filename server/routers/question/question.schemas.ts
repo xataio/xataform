@@ -58,7 +58,7 @@ export const questionSchema = z.discriminatedUnion("type", [
     addressRequired: z.boolean().default(false),
     address2Required: z.boolean().default(false),
     cityTownRequired: z.boolean().default(false),
-    stateRegionProviceRequired: z.boolean().default(false),
+    stateRegionProvinceRequired: z.boolean().default(false),
     zipCodeRequired: z.boolean().default(false),
     countryRequired: z.boolean().default(false),
   }),

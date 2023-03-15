@@ -1,13 +1,25 @@
 import { RadioGroup } from "@headlessui/react";
 import clsx from "clsx";
+import { useState } from "react";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerOpinionScale(props: AnswerProps<"opinionScale">) {
+  const [answer, setAnswer] = useState("");
+
   const count = props.max - props.min + 1;
 
   return (
-    <AnswerWrapper layout="full">
+    <AnswerWrapper
+      layout="full"
+      onSubmit={() => {
+        if (props.admin) return;
+        const answerAsNumber = Number.parseInt(answer);
+        if (Number.isFinite(answerAsNumber)) {
+          props.onSubmit(answerAsNumber);
+        }
+      }}
+    >
       <div
         style={{
           maxWidth: count * (56 + 8),
@@ -18,6 +30,8 @@ function AnswerOpinionScale(props: AnswerProps<"opinionScale">) {
           style={{
             gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))`,
           }}
+          value={answer}
+          onChange={setAnswer}
         >
           {new Array(count).fill(0).map((_, index) => (
             <Option

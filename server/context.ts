@@ -5,10 +5,11 @@ import { database } from "./services/database";
 
 export const createContext = async ({
   req,
+  res,
 }: trpcNext.CreateNextContextOptions) => {
   const user = await auth.getUser(req);
 
-  return { user, db: database };
+  return { user, db: database, revalidate: res.revalidate };
 };
 
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;

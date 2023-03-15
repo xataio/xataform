@@ -21,5 +21,42 @@ type EditingAnswerProps<T extends QuestionType> = CommonProps<T> & {
 
 type SubmitAnswerProps<T extends QuestionType> = CommonProps<T> & {
   admin: false;
-  onSubmit: (answer: string) => void;
+  onSubmit: (answer: AnswerType<T>) => void;
 };
+
+type AnswerType<T extends QuestionType> = {
+  multipleChoice: string[];
+  contactInfo: {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    company: string;
+  };
+  address: {
+    address: string;
+    address2: string;
+    cityTown: string;
+    stateRegionProvince: string;
+    zipCode: string;
+    country: string;
+  };
+  phoneNumber: string;
+  shortText: string;
+  longText: string;
+  statement: null;
+  ranking: {
+    value: string;
+    rank: number;
+  }[];
+  yesNo: boolean;
+  email: string;
+  opinionScale: number;
+  rating: number;
+  matrix: Record<string, string[] | string>;
+  date: string;
+  number: number;
+  dropdown: string;
+  legal: boolean;
+  website: string;
+}[T];

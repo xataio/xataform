@@ -14,6 +14,16 @@ import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerMatrix(props: AnswerProps<"matrix">) {
+  const [answer, setAnswer] = useState(
+    props.rows.reduce(
+      (mem, row) => ({
+        ...mem,
+        [row]: props.multipleSelection ? ([] as string[]) : "",
+      }),
+      {} as Record<string, string[] | string>
+    )
+  );
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [firstColumnWidth, setFirstColumnWidth] = useState(100);
   const { updateQuestion } = useUpdateQuestion({ formId: props.formId });
@@ -89,11 +99,6 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
     };
 
   const removeRow = (index: number) => () => {
-    console.log({
-      index,
-      rows: props.rows,
-      next: [...props.rows.slice(0, index), ...props.rows.slice(index + 1)],
-    });
     updateQuestion({
       questionId: props.questionId,
       question: {
@@ -124,7 +129,13 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
   };
 
   return (
-    <AnswerWrapper layout={props.layout}>
+    <AnswerWrapper
+      layout={props.layout}
+      onSubmit={() => {
+        if (props.admin) return;
+        props.onSubmit(answer);
+      }}
+    >
       {props.admin && (
         <button
           onClick={addColumn}
@@ -156,42 +167,51 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
                 "w-full"
               )}
             >
-              <button
-                disabled={columns.length <= 1}
-                onClick={removeColumn(columnIndex)}
-                aria-label="Delete column"
-                className={clsx(
-                  "disabled:cursor-not-allowed",
-                  "group m-1 flex items-center justify-center p-1 first-letter:first-line:rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                )}
-              >
-                <XMarkIcon className="h-4 w-4 rounded-full bg-indigo-600 text-white group-disabled:bg-slate-300" />
-              </button>
-              <input
-                type="text"
-                className={clsx(
-                  "text-center",
-                  "w-full",
-                  "border-0 p-0 pr-6",
-                  "focus:ring-0",
-                  "placeholder:font-light placeholder:italic placeholder:text-indigo-300"
-                )}
-                value={column}
-                onChange={(e) =>
-                  setColumns((prev) =>
-                    prev.map((i, index) =>
-                      index === columnIndex ? e.target.value : i
-                    )
-                  )
-                }
-                onBlur={updateColumn(columnIndex)}
-                onKeyUp={(e) => {
-                  if (e.key === "Enter") {
-                    e.currentTarget.blur();
-                  }
-                }}
-                placeholder={`Col ${columnIndex + 1}`}
-              />
+              {props.admin ? (
+                <>
+                  <button
+                    disabled={columns.length <= 1}
+                    onClick={removeColumn(columnIndex)}
+                    aria-label="Delete column"
+                    className={clsx(
+                      "disabled:cursor-not-allowed",
+                      "group m-1 flex items-center justify-center p-1 first-letter:first-line:rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    )}
+                  >
+                    <XMarkIcon className="h-4 w-4 rounded-full bg-indigo-600 text-white group-disabled:bg-slate-300" />
+                  </button>
+                  <input
+                    type="text"
+                    className={clsx(
+                      "text-center",
+                      "w-full",
+                      "border-0 p-0 pl-6",
+                      "focus:ring-0",
+                      "placeholder:font-light placeholder:italic placeholder:text-indigo-300"
+                    )}
+                    value={column}
+                    onChange={(e) =>
+                      setColumns((prev) =>
+                        prev.map((i, index) =>
+                          index === columnIndex ? e.target.value : i
+                        )
+                      )
+                    }
+                    onBlur={updateColumn(columnIndex)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") e.preventDefault();
+                    }}
+                    onKeyUp={(e) => {
+                      if (e.key === "Enter") {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    placeholder={`Col ${columnIndex + 1}`}
+                  />
+                </>
+              ) : (
+                column
+              )}
             </div>
           ))}
         </div>
@@ -239,6 +259,9 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
                     )
                   }
                   onBlur={updateRow(rowIndex)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.preventDefault();
+                  }}
                   onKeyUp={(e) => {
                     if (e.key === "Enter") {
                       e.currentTarget.blur();
@@ -256,9 +279,30 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
                   type={props.multipleSelection ? "checkbox" : "radio"}
                   disabled={props.admin}
                   className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                  value={column}
                   name={row}
                   aria-label={column}
+                  onChange={() => {
+                    if (props.multipleSelection) {
+                      setAnswer((prev) => {
+                        const prevValue = prev[row];
+                        if (typeof prevValue === "string") {
+                          throw new Error(
+                            "answer should be an array in multipleSelection mode"
+                          );
+                        }
+
+                        const nextValue = prevValue.includes(column)
+                          ? prevValue.filter((i) => i !== column)
+                          : [...prevValue, column];
+                        return { ...prev, [row]: nextValue };
+                      });
+                    } else {
+                      setAnswer((prev) => ({
+                        ...prev,
+                        [row]: column,
+                      }));
+                    }
+                  }}
                 />
               </div>
             ))}
