@@ -32,8 +32,8 @@ export default function SettingsAddress({
       />
       <AddressSettingItem
         label="State/Region/Province"
-        value={question.stateRegionProviceRequired}
-        onChange={updateOption("stateRegionProviceRequired")}
+        value={question.stateRegionProvinceRequired}
+        onChange={updateOption("stateRegionProvinceRequired")}
       />
       <AddressSettingItem
         label="Zip/Post code"
