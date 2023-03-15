@@ -11,7 +11,7 @@ export function useCreateForm() {
         const previousForms = utils.form.list.getData();
         const optimisticForm: RouterOutputs["form"]["list"][-1] = {
           title: newForm.title,
-          status: newForm.status ?? "draft",
+          status: "draft",
           id: "optimistic_" + self.crypto.randomUUID(),
         };
 

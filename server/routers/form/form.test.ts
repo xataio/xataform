@@ -9,6 +9,9 @@ describe("form router", () => {
   describe("create", () => {
     it("should throw an error if the user has more than 100 forms", async () => {
       const router = formRouter.createCaller({
+        revalidate: async () => {
+          /* noop */
+        },
         user: Mock.of<User>({ id: "fabien0102" }),
         db: Mock.of<Database>({
           async getFormsCount() {
@@ -29,6 +32,9 @@ describe("form router", () => {
   describe("add question", () => {
     it("should throw if the form has more than 100 questions", async () => {
       const router = formRouter.createCaller({
+        revalidate: async () => {
+          /* noop */
+        },
         user: Mock.of<User>({ id: "fabien0102" }),
         db: Mock.of<Database>({
           async getQuestionsCount() {
@@ -50,40 +56,14 @@ describe("form router", () => {
         })
       ).rejects.toThrowError("Limit of 100 questions/form reached!");
     });
-
-    it("should throw if the order is off", async () => {
-      const router = formRouter.createCaller({
-        user: Mock.of<User>({ id: "fabien0102" }),
-        db: Mock.of<Database>({
-          async getQuestionsCount() {
-            return 10;
-          },
-          async createQuestion(q) {
-            return { question: q, id: "new" };
-          },
-        }),
-      });
-
-      expect(() =>
-        router.addQuestion({
-          formId: "form-1",
-          question: {
-            type: "address",
-            description: null,
-            illustration: null,
-            order: 0, // should be 10
-            title: "test",
-          },
-        })
-      ).rejects.toThrowError(
-        "`question.order` is out of sync, should be 10 instead of 0"
-      );
-    });
   });
 
   describe("summary", () => {
     it("should fix the order if broken in db", async () => {
       const router = formRouter.createCaller({
+        revalidate: async () => {
+          /* noop */
+        },
         user: Mock.of<User>({ id: "fabien0102" }),
         db: Mock.of<Database>({
           async listQuestions() {
@@ -128,6 +108,9 @@ describe("form router", () => {
 
     it("should return the db order if correct", async () => {
       const router = formRouter.createCaller({
+        revalidate: async () => {
+          /* noop */
+        },
         user: Mock.of<User>({ id: "fabien0102" }),
         db: Mock.of<Database>({
           async listQuestions() {

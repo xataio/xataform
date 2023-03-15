@@ -83,7 +83,7 @@ export default function Form(
               {...question}
               layout={question.illustration ? "split" : "full"}
               admin={false}
-              onSubmit={(val) => alert(JSON.stringify(val))}
+              onSubmit={(val: any) => alert(JSON.stringify(val))}
             />
           </div>
 

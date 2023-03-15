@@ -8,6 +8,9 @@ import { Question, QuestionOfType } from "./question.schemas";
 describe("question router", () => {
   describe("get", () => {
     const router = questionRouter.createCaller({
+      revalidate: async () => {
+        /* noop */
+      },
       user: Mock.of<User>({ id: "fabien0102" }),
       db: Mock.of<Database>({
         getQuestion: async (id) => {
@@ -82,6 +85,9 @@ describe("question router", () => {
       }) =>
         questionRouter
           .createCaller({
+            revalidate: async () => {
+              /* noop */
+            },
             user: Mock.of<User>({ id: "fabien0102" }),
             db: Mock.of<Database>({
               getQuestion: async () => {
@@ -208,6 +214,9 @@ describe("question router", () => {
 
   describe("delete", () => {
     const router = questionRouter.createCaller({
+      revalidate: async () => {
+        /* noop */
+      },
       user: Mock.of<User>({ id: "fabien0102" }),
       db: Mock.of<Database>({
         getQuestion: async (id) => {
@@ -308,6 +317,9 @@ describe("question router", () => {
     const updateQuestion = vitest.fn();
 
     const router = questionRouter.createCaller({
+      revalidate: async () => {
+        /* noop */
+      },
       user: Mock.of<User>({ id: "fabien0102" }),
       db: Mock.of<Database>({
         getQuestion: async (id) => {
