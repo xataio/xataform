@@ -36,8 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# nextjs-routes
-nextjs-routes.d.ts
-
 # productivity
 todo.md
