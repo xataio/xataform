@@ -1,4 +1,5 @@
-import { notExists } from "@xata.io/client";
+import { notExists, XataApiClient, buildClient } from "@xata.io/client";
+import { getXataColumn } from "utils/getXataColumn";
 import { z } from "zod";
 import { getXataClient } from "../../utils/xata";
 import { Form, formSchema } from "../routers/form/form.schemas";
@@ -165,9 +166,45 @@ export const database = {
     return { ...form, id: createdRecord.id };
   },
 
-  async publishForm(formId: string) {
+  async publishForm({ formId }: { formId: string; userId: string }) {
     const createdRecord = await xata.db.form.update(formId, { status: "live" });
+    if (createdRecord === null) throw new Error("Form can't be publish");
+
+    const xataApi = new XataApiClient();
+    const options = {
+      branch: "main",
+      database: "xataform-answers",
+      region: "eu-west-1",
+      workspace: "fabien-ph3r1h",
+      table: formId,
+    };
+
+    const questions = await this.listPublishedQuestions({ formId });
+
+    await xataApi.tables.createTable(options);
+    await xataApi.tables.setTableSchema({
+      ...options,
+      schema: {
+        columns: questions.map(getXataColumn).filter(valueOnly),
+      },
+    });
     return { ...createdRecord };
+  },
+
+  async submitFormAnswers({
+    formId,
+    payload,
+  }: {
+    formId: string;
+    payload: any;
+  }) {
+    const Client = buildClient();
+    const answerDb = new Client<Record<string, any>>({
+      databaseURL:
+        "https://fabien-ph3r1h.eu-west-1.xata.sh/db/xataform-answers",
+    });
+
+    answerDb.db[formId].create(payload);
   },
 
   async listForms(props: {
@@ -335,3 +372,7 @@ export const database = {
 };
 
 export type Database = typeof database;
+
+function valueOnly<T>(value: T | undefined): value is T {
+  return Boolean(value);
+}

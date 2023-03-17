@@ -80,7 +80,7 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
         <Input
           label="Company"
           required={props.company.required}
-          type="email"
+          type="text"
           disabled={props.admin}
           className="w-full"
           placeholder="Xata"

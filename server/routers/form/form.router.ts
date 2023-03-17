@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { protectedProcedure, router } from "../../trpc";
+import { protectedProcedure, publicProcedure, router } from "../../trpc";
 import {
   questionCommunProps,
   questionSchema,
@@ -214,13 +214,23 @@ export const formRouter = router({
 
   publish: protectedProcedure
     .input(z.object({ formId: z.string() }))
-    .mutation(async ({ ctx: { revalidate, db }, input: { formId } }) => {
-      await db.publishForm(formId);
+    .mutation(async ({ ctx: { revalidate, db, user }, input: { formId } }) => {
+      await db.publishForm({ formId, userId: user.id });
 
       revalidate(`/form/${formId}`);
 
       return {
         revalidate: true,
+      };
+    }),
+
+  submitFormAnswer: publicProcedure
+    .input(z.object({ formId: z.string(), payload: z.any() }))
+    .mutation(async ({ ctx: { db }, input: { formId, payload } }) => {
+      await db.submitFormAnswers({ formId, payload });
+
+      return {
+        submitted: true,
       };
     }),
 });

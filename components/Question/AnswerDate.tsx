@@ -39,15 +39,20 @@ function AnswerDate(props: AnswerProps<"date">) {
       layout={props.layout}
       onSubmit={() => {
         if (props.admin) return;
-        if (props.format === "DDMMYY") {
-          props.onSubmit(
-            `${answer.day}${props.separator}${answer.month}${props.separator}${answer.year}`
-          );
-        } else {
-          props.onSubmit(
-            `${answer.month}${props.separator}${answer.day}${props.separator}${answer.year}`
-          );
-        }
+        console.log(
+          `${digits(answer.year, 4)}-${digits(answer.month, 2)}-${digits(
+            answer.day,
+            2
+          )}`
+        );
+        props.onSubmit(
+          new Date(
+            `${digits(answer.year, 4)}-${digits(answer.month, 2)}-${digits(
+              answer.day,
+              2
+            )}`
+          ).toISOString()
+        );
       }}
     >
       <div className="flex flex-row items-end gap-2">
@@ -138,6 +143,10 @@ function DatePart({
       />
     </div>
   );
+}
+
+function digits(value: string | number, i: number) {
+  return ("0".repeat(i) + value).slice(-i);
 }
 
 export default AnswerDate;

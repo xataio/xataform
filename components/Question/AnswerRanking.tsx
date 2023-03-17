@@ -50,7 +50,7 @@ function AnswerRanking({
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;
-        question.onSubmit(rankedChoices);
+        question.onSubmit(rankedChoices.map((i) => i.value));
       }}
     >
       <EditChoicesDialog

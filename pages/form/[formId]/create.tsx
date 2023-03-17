@@ -12,6 +12,7 @@ import { Header } from "components/Header";
 import Link from "next/link";
 import { InlineEditTitle } from "components/CreateForm/InlineEditTitle";
 import { useRenameForm } from "hooks/useRenameForm";
+import { toast } from "react-toastify";
 
 export default function FormCreate({
   form: initialForm,
@@ -23,7 +24,16 @@ export default function FormCreate({
     }
   );
   const { renameForm } = useRenameForm();
-  const { mutate: publish, isLoading } = trpc.form.publish.useMutation();
+  const { mutate: publish, isLoading } = trpc.form.publish.useMutation({
+    onError(err) {
+      toast.error(err.message);
+    },
+  });
+  const { mutate: submit } = trpc.form.submitFormAnswer.useMutation({
+    onError(err) {
+      toast.error(err.message);
+    },
+  });
 
   return (
     <Box>
@@ -62,6 +72,13 @@ export default function FormCreate({
           </Link> */}
         </div>
         <>
+          <Button
+            variant="ghost"
+            icon="warning"
+            onClick={() => submit({ formId: form.id, payload: {} })}
+          >
+            Playground
+          </Button>
           <Link
             href={{
               pathname: "/form/[formId]",

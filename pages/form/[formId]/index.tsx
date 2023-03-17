@@ -1,5 +1,7 @@
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { camel } from "case";
 import clsx from "clsx";
+import { Button } from "components/Button";
 import { Answer } from "components/Question/Answer";
 import {
   InferGetStaticPropsType,
@@ -9,7 +11,10 @@ import {
 } from "next";
 import Image from "next/image";
 import { RoutedQuery } from "nextjs-routes";
+import { useState } from "react";
+import { toast } from "react-toastify";
 import { database } from "server/services/database";
+import { trpc } from "utils/trpc";
 
 export async function getStaticPaths() {
   const publishedForms = await database.listPublishedForms();
@@ -37,13 +42,21 @@ export async function getStaticProps(
   }
 
   return {
-    props: { questions },
+    props: { questions, formId },
   } satisfies GetStaticPropsResult<any>;
 }
 
 export default function Form(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
+  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const { mutate: submit } = trpc.form.submitFormAnswer.useMutation({
+    onError(err) {
+      toast.error(err.message);
+    },
+  });
+
+  console.log(answers);
   return (
     <div>
       {props.questions.map((question) => (
@@ -83,7 +96,13 @@ export default function Form(
               {...question}
               layout={question.illustration ? "split" : "full"}
               admin={false}
-              onSubmit={(val: any) => alert(JSON.stringify(val))}
+              onSubmit={(val: any) => {
+                if (question.type === "statement") return;
+                setAnswers((prev) => ({
+                  ...prev,
+                  [question.order + "-" + camel(question.title)]: val,
+                }));
+              }}
             />
           </div>
 
@@ -100,6 +119,18 @@ export default function Form(
           ) : null}
         </div>
       ))}
+      <div className="flex items-center justify-center p-4">
+        <Button
+          onClick={() =>
+            submit({
+              formId: props.formId,
+              payload: answers,
+            })
+          }
+        >
+          Submit
+        </Button>
+      </div>
     </div>
   );
 }

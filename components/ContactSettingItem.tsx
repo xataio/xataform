@@ -1,7 +1,7 @@
 import { Switch } from "@headlessui/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
-import { FocusEvent, KeyboardEvent, MouseEvent, useState } from "react";
+import { FocusEvent, MouseEvent, useState } from "react";
 import { usePopper } from "react-popper";
 import { OptionalIcon } from "./OptionalIcon";
 import { RequiredIcon } from "./RequiredIcon";

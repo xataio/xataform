@@ -45,10 +45,7 @@ type AnswerType<T extends QuestionType> = {
   shortText: string;
   longText: string;
   statement: null;
-  ranking: {
-    value: string;
-    rank: number;
-  }[];
+  ranking: string[];
   yesNo: boolean;
   email: string;
   opinionScale: number;
