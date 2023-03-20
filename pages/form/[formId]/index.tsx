@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import { camel } from "case";
+import slugify from "slugify";
 import clsx from "clsx";
 import { Button } from "components/Button";
 import { Answer } from "components/Question/Answer";
@@ -33,7 +33,9 @@ export async function getStaticProps(
   context: GetStaticPropsContext<RoutedQuery<"/form/[formId]">>
 ) {
   const formId = context.params?.formId ?? "unknown";
-  const questions = await database.listPublishedQuestions({ formId });
+  const { questions, version } = await database.listPublishedQuestions({
+    formId,
+  });
 
   if (questions.length === 0) {
     return {
@@ -42,7 +44,7 @@ export async function getStaticProps(
   }
 
   return {
-    props: { questions, formId },
+    props: { questions, formId, version },
   } satisfies GetStaticPropsResult<any>;
 }
 
@@ -100,7 +102,13 @@ export default function Form(
                 if (question.type === "statement") return;
                 setAnswers((prev) => ({
                   ...prev,
-                  [question.order + "-" + camel(question.title)]: val,
+                  [question.order +
+                  "-" +
+                  slugify(question.title, {
+                    lower: true,
+                    strict: true,
+                    trim: true,
+                  })]: val,
                 }));
               }}
             />
@@ -124,6 +132,7 @@ export default function Form(
           onClick={() =>
             submit({
               formId: props.formId,
+              version: props.version,
               payload: answers,
             })
           }

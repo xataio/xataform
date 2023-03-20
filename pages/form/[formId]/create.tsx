@@ -72,13 +72,6 @@ export default function FormCreate({
           </Link> */}
         </div>
         <>
-          <Button
-            variant="ghost"
-            icon="warning"
-            onClick={() => submit({ formId: form.id, payload: {} })}
-          >
-            Playground
-          </Button>
           <Link
             href={{
               pathname: "/form/[formId]",

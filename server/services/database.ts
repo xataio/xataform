@@ -166,36 +166,65 @@ export const database = {
     return { ...form, id: createdRecord.id };
   },
 
-  async publishForm({ formId }: { formId: string; userId: string }) {
-    const createdRecord = await xata.db.form.update(formId, { status: "live" });
-    if (createdRecord === null) throw new Error("Form can't be publish");
+  async publishForm({ formId, userId }: { formId: string; userId: string }) {
+    // Mark the form as `live` and bump the version
+    const updatedForm = await xata.db.form.update(formId, {
+      status: "live",
+      version: { $increment: 1 },
+    });
+    if (updatedForm === null) throw new Error("Form can't be publish");
 
+    // Copy the questions to `publishedQuestions`
+    const { records: questions } = await xata.db.question
+      .filter(notExists("deletedAt"))
+      .filter("form", formId)
+      .filter("userId", userId)
+      .getPaginated({
+        pagination: {
+          size: MAX_ITEMS,
+        },
+        sort: {
+          order: "asc",
+        },
+      });
+
+    await xata.db.publishedQuestion.create(
+      questions.map(({ id, createdAt, updatedAt, deletedAt, ...i }) => ({
+        ...i,
+        version: updatedForm.version,
+      }))
+    );
+
+    // Create the answer table with the current schema
     const xataApi = new XataApiClient();
     const options = {
       branch: "main",
       database: "xataform-answers",
       region: "eu-west-1",
       workspace: "fabien-ph3r1h",
-      table: formId,
+      table: `${formId}-v${updatedForm.version}`,
     };
-
-    const questions = await this.listPublishedQuestions({ formId });
 
     await xataApi.tables.createTable(options);
     await xataApi.tables.setTableSchema({
       ...options,
       schema: {
-        columns: questions.map(getXataColumn).filter(valueOnly),
+        columns: [
+          { name: "createdAt", type: "datetime", defaultValue: "now" },
+          ...questions.map(getXataColumn).filter(valueOnly),
+        ],
       },
     });
-    return { ...createdRecord };
+    return { ...updatedForm };
   },
 
   async submitFormAnswers({
     formId,
     payload,
+    version,
   }: {
     formId: string;
+    version: number;
     payload: any;
   }) {
     const Client = buildClient();
@@ -204,7 +233,7 @@ export const database = {
         "https://fabien-ph3r1h.eu-west-1.xata.sh/db/xataform-answers",
     });
 
-    answerDb.db[formId].create(payload);
+    answerDb.db[`${formId}-v${version}`].create(payload);
   },
 
   async listForms(props: {
@@ -271,10 +300,13 @@ export const database = {
   },
 
   async listPublishedQuestions(props: { formId: string }) {
-    const { records } = await xata.db.question
+    const form = await xata.db.form.read(props.formId);
+    if (form === null) throw new Error("Form not found!");
+    const { records } = await xata.db.publishedQuestion
       .filter(notExists("deletedAt"))
       .filter("form", props.formId)
       .filter("form.status", "live")
+      .filter("version", form.version)
       .getPaginated({
         pagination: {
           size: MAX_ITEMS,
@@ -284,32 +316,42 @@ export const database = {
         },
       });
 
-    return z
-      .array(
-        z.intersection(
-          questionSchema,
-          z.object({ questionId: z.string(), formId: z.string() })
+    return {
+      version: form.version,
+      questions: z
+        .array(
+          z.intersection(
+            questionSchema,
+            z.object({ questionId: z.string(), formId: z.string() })
+          )
         )
-      )
-      .parse(
-        records.map((raw) => {
-          const { type, userId, description, order, title, illustration, id } =
-            raw;
+        .parse(
+          records.map((raw) => {
+            const {
+              type,
+              userId,
+              description,
+              order,
+              title,
+              illustration,
+              id,
+            } = raw;
 
-          const record: unknown = {
-            questionId: id,
-            formId: props.formId,
-            type,
-            userId,
-            description,
-            order,
-            title,
-            illustration,
-            ...(raw as any)[type],
-          };
-          return record;
-        })
-      );
+            const record: unknown = {
+              questionId: id,
+              formId: props.formId,
+              type,
+              userId,
+              description,
+              order,
+              title,
+              illustration,
+              ...(raw as any)[type],
+            };
+            return record;
+          })
+        ),
+    };
   },
 
   async getFormsCount({ userId }: { userId: string }) {

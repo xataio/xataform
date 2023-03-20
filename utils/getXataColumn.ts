@@ -1,5 +1,6 @@
-import { camel } from "case";
-import { Question } from "server/routers/question/question.schemas";
+import { SelectedPick } from "@xata.io/client";
+import slugify from "slugify";
+import { QuestionRecord } from "./xata";
 
 type Column = {
   name: string;
@@ -17,8 +18,17 @@ type Column = {
   columns?: Column[];
 };
 
-export function getXataColumn(question: Question): Column | undefined {
-  const name = question.order + "-" + camel(question.title);
+export function getXataColumn(
+  question: Readonly<SelectedPick<QuestionRecord, ["*"]>>
+): Column | undefined {
+  const name =
+    question.order +
+    "-" +
+    slugify(question.title, {
+      lower: true,
+      strict: true,
+      trim: true,
+    });
   switch (question.type) {
     case "multipleChoice":
       return { name, type: "multiple" };
@@ -69,9 +79,9 @@ export function getXataColumn(question: Question): Column | undefined {
       return {
         name,
         type: "object",
-        columns: question.rows.map((row) => ({
+        columns: question.matrix?.rows?.map((row) => ({
           name: row,
-          type: question.multipleSelection ? "multiple" : "string",
+          type: question.matrix?.multipleSelection ? "multiple" : "string",
         })),
       };
     case "date":

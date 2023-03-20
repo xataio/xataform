@@ -225,9 +225,11 @@ export const formRouter = router({
     }),
 
   submitFormAnswer: publicProcedure
-    .input(z.object({ formId: z.string(), payload: z.any() }))
-    .mutation(async ({ ctx: { db }, input: { formId, payload } }) => {
-      await db.submitFormAnswers({ formId, payload });
+    .input(
+      z.object({ formId: z.string(), version: z.number(), payload: z.any() })
+    )
+    .mutation(async ({ ctx: { db }, input: { formId, payload, version } }) => {
+      await db.submitFormAnswers({ formId, version, payload });
 
       return {
         submitted: true,
