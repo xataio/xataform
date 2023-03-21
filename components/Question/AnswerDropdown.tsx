@@ -2,7 +2,7 @@ import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { useUpdateQuestion } from "hooks/useUpdateQuestion";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 import { EditChoicesDialog } from "./EditChoicesDialog";
@@ -12,6 +12,7 @@ function AnswerDropdown({
   choices,
   formId,
   questionId,
+  isLastQuestion,
 
   ...question
 }: AnswerProps<"dropdown">) {
@@ -41,11 +42,13 @@ function AnswerDropdown({
   return (
     <AnswerWrapper
       layout={layout}
+      isLastAnswer={isLastQuestion}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;
         question.onSubmit(answer);
       }}
+      className="!overflow-visible"
     >
       <EditChoicesDialog
         isOpen={isEditingChoices}
@@ -62,7 +65,13 @@ function AnswerDropdown({
           });
         }}
       />
-      <Combobox value={answer} onChange={setAnswer} disabled={question.admin}>
+      <Combobox
+        value={answer}
+        onChange={setAnswer}
+        disabled={question.admin}
+        as="div"
+        className="relative block ui-open:z-10"
+      >
         <div className="relative w-full">
           <Combobox.Input
             placeholder="Type or select an option"
@@ -84,11 +93,12 @@ function AnswerDropdown({
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-95 opacity-0"
           afterLeave={() => setQuery("")}
+          as={Fragment}
         >
           <Combobox.Options
             className={clsx(
               "scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 scrollbar-thumb-rounded",
-              "absolute mt-1 max-h-52 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+              "absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             )}
           >
             {filteredChoices.length === 0 && query !== "" ? (

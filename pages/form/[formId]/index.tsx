@@ -15,6 +15,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { database } from "server/services/database";
 import { trpc } from "utils/trpc";
+import { Transition } from "@headlessui/react";
 
 export async function getStaticPaths() {
   const publishedForms = await database.listPublishedForms();
@@ -51,6 +52,7 @@ export async function getStaticProps(
 export default function Form(
   props: InferGetStaticPropsType<typeof getStaticProps>
 ) {
+  const [slideNumber, setSlideNumber] = useState(1);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const { mutate: submit } = trpc.form.submitFormAnswer.useMutation({
     onError(err) {
@@ -58,14 +60,16 @@ export default function Form(
     },
   });
 
-  console.log(answers);
   return (
-    <div>
-      {props.questions.map((question) => (
+    <div className="h-screen overflow-hidden">
+      {props.questions.map((question, i) => (
         <div
           key={question.questionId}
+          style={{ top: `calc(100vh * -${slideNumber - 1})` }}
           className={clsx(
-            "h-full items-center",
+            "relative transition-all duration-700",
+            "h-screen",
+            "items-center",
             question.illustration ? "grid grid-cols-2" : "flex justify-center"
           )}
         >
@@ -97,19 +101,31 @@ export default function Form(
             <Answer
               {...question}
               layout={question.illustration ? "split" : "full"}
+              isLastQuestion={i === props.questions.length - 1}
               admin={false}
               onSubmit={(val: any) => {
-                if (question.type === "statement") return;
-                setAnswers((prev) => ({
-                  ...prev,
-                  [question.order +
-                  "-" +
-                  slugify(question.title, {
-                    lower: true,
-                    strict: true,
-                    trim: true,
-                  })]: val,
-                }));
+                if (question.type !== "statement") {
+                  setAnswers((prev) => ({
+                    ...prev,
+                    [question.order +
+                    "-" +
+                    slugify(question.title, {
+                      lower: true,
+                      strict: true,
+                      trim: true,
+                    })]: val,
+                  }));
+                }
+
+                if (i === props.questions.length - 1) {
+                  submit({
+                    formId: props.formId,
+                    version: props.version,
+                    payload: answers,
+                  });
+                } else {
+                  setSlideNumber((i) => i + 1);
+                }
               }}
             />
           </div>
@@ -127,19 +143,23 @@ export default function Form(
           ) : null}
         </div>
       ))}
-      <div className="flex items-center justify-center p-4">
-        <Button
-          onClick={() =>
-            submit({
-              formId: props.formId,
-              version: props.version,
-              payload: answers,
-            })
-          }
-        >
-          Submit
-        </Button>
+      <div
+        className={clsx(
+          "absolute bottom-3 -translate-x-full text-sm text-indigo-600",
+          "transition-all duration-200"
+        )}
+        style={{
+          left: `calc(${(slideNumber / props.questions.length) * 100}vw)`,
+        }}
+      >
+        {slideNumber}/{props.questions.length}
       </div>
+      <div
+        className="absolute bottom-0 h-2 bg-indigo-600 transition-all duration-200"
+        style={{
+          width: `calc(${(slideNumber / props.questions.length) * 100}vw)`,
+        }}
+      />
     </div>
   );
 }

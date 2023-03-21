@@ -10,6 +10,7 @@ function AnswerLegal(props: AnswerProps<"legal">) {
   return (
     <AnswerWrapper
       layout={props.layout}
+      isLastAnswer={props.isLastQuestion}
       onSubmit={() => {
         if (props.admin || answer === undefined) return;
         props.onSubmit(answer === "yes");

@@ -23,6 +23,7 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
   return (
     <AnswerWrapper
       layout={props.layout}
+      isLastAnswer={props.isLastQuestion}
       onSubmit={() => {
         if (props.admin) return;
         props.onSubmit(answer);

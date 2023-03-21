@@ -8,6 +8,8 @@ export function AnswerWrapper(props: {
   layout: AnswerLayout;
   onClick?: () => void;
   onSubmit: () => void;
+  className?: string;
+  isLastAnswer: boolean;
 }) {
   return (
     <form
@@ -23,8 +25,9 @@ export function AnswerWrapper(props: {
       <div
         className={clsx(
           "pr-4 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-thumb-rounded",
-          "-m-1 max-h-72 overflow-auto p-1",
-          "flex flex-col gap-4"
+          "-m-1 max-h-full overflow-auto p-1",
+          "flex flex-col gap-4",
+          props.className
         )}
       >
         {props.children}
@@ -37,7 +40,7 @@ export function AnswerWrapper(props: {
         />
       )}
       <div className="flex flex-row items-center gap-2">
-        <Button type="submit">OK ✓</Button>
+        <Button type="submit">{props.isLastAnswer ? "Submit" : "OK ✓"}</Button>
         <div className="text-xs">
           press <b>Enter</b>↵
         </div>

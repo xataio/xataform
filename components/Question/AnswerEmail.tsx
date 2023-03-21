@@ -8,6 +8,7 @@ function AnswerEmail(props: AnswerProps<"email">) {
   return (
     <AnswerWrapper
       layout={props.layout}
+      isLastAnswer={props.isLastQuestion}
       onSubmit={() => {
         if (props.admin) return;
         props.onSubmit(answer);

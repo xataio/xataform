@@ -21,6 +21,7 @@ function AnswerRanking({
   choices,
   formId,
   questionId,
+  isLastQuestion,
 
   ...question
 }: AnswerProps<"ranking">) {
@@ -47,6 +48,7 @@ function AnswerRanking({
   return (
     <AnswerWrapper
       layout={layout}
+      isLastAnswer={isLastQuestion}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;
@@ -99,8 +101,7 @@ function AnswerRanking({
               {...droppableProvided.droppableProps}
               className={clsx(
                 "w-fit pr-2",
-                "scrollbar-thin  scrollbar-thumb-slate-400 scrollbar-thumb-rounded",
-                "h-52"
+                "scrollbar-thin  scrollbar-thumb-slate-400 scrollbar-thumb-rounded"
               )}
               style={{
                 overflow: "auto",

@@ -13,6 +13,7 @@ type CommonProps<T extends QuestionType> = QuestionOfType<T> & {
   layout: AnswerLayout;
   questionId: string;
   formId: string;
+  isLastQuestion: boolean;
 };
 
 type EditingAnswerProps<T extends QuestionType> = CommonProps<T> & {
@@ -21,7 +22,7 @@ type EditingAnswerProps<T extends QuestionType> = CommonProps<T> & {
 
 type SubmitAnswerProps<T extends QuestionType> = CommonProps<T> & {
   admin: false;
-  onSubmit: (answer: AnswerType<T>) => void;
+  onSubmit: (answer: AnswerType<T> | null) => void;
 };
 
 type AnswerType<T extends QuestionType> = {

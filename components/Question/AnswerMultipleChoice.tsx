@@ -11,6 +11,7 @@ function AnswerMultipleChoice({
   choices,
   formId,
   questionId,
+  isLastQuestion,
 
   ...question
 }: AnswerProps<"multipleChoice">) {
@@ -29,6 +30,7 @@ function AnswerMultipleChoice({
   return (
     <AnswerWrapper
       layout={layout}
+      isLastAnswer={isLastQuestion}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;

@@ -37,14 +37,14 @@ function AnswerDate(props: AnswerProps<"date">) {
   return (
     <AnswerWrapper
       layout={props.layout}
+      isLastAnswer={props.isLastQuestion}
       onSubmit={() => {
         if (props.admin) return;
-        console.log(
-          `${digits(answer.year, 4)}-${digits(answer.month, 2)}-${digits(
-            answer.day,
-            2
-          )}`
-        );
+        if (!answer.day || !answer.month || !answer.year) {
+          props.onSubmit(null);
+          return;
+        }
+
         props.onSubmit(
           new Date(
             `${digits(answer.year, 4)}-${digits(answer.month, 2)}-${digits(
