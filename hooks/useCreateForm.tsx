@@ -13,6 +13,7 @@ export function useCreateForm() {
           title: newForm.title,
           status: "draft",
           id: "optimistic_" + self.crypto.randomUUID(),
+          version: 0,
         };
 
         utils.form.list.setData(undefined, (prev) =>

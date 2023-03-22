@@ -17,9 +17,10 @@ import { AddQuestionDialog } from "./AddQuestionDialog";
 export type ContentPanelProps = {
   formId: string;
   questions: RouterOutputs["form"]["summary"];
+  ending: RouterOutputs["ending"]["get"];
 };
 
-export function ContentPanel({ formId, questions }: ContentPanelProps) {
+export function ContentPanel({ formId, questions, ending }: ContentPanelProps) {
   const router = useRouter();
   const { reorderQuestions } = useReorderQuestions();
 
@@ -104,6 +105,30 @@ export function ContentPanel({ formId, questions }: ContentPanelProps) {
           )}
         </Droppable>
       </DragDropContext>
+      <header className="p-2 text-sm font-medium">
+        <h1>Ending</h1>
+      </header>
+      <div
+        onClick={() =>
+          router.push(
+            {
+              pathname: router.pathname,
+              query: { ...router.query, questionId: "ending" },
+            },
+            undefined,
+            { shallow: true }
+          )
+        }
+        className={clsx(
+          "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus-visible:bg-indigo-100",
+          "flex select-none flex-row items-center gap-4 px-2 py-4 hover:bg-indigo-100",
+          "cursor-pointer",
+          router.query.questionId === "ending" && "bg-slate-200"
+        )}
+      >
+        <QuestionIcon type="statement" order="A" />
+        <h2 className="truncate text-sm">{ending.title}</h2>
+      </div>
     </>
   );
 }

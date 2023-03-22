@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Button } from "components/Button";
+import Ending from "components/Question/Ending";
 import { QuestionSlide } from "components/Question/QuestionSlide";
 import { Settings } from "components/Question/Settings";
 import { useAddMockQuestions } from "hooks/useAddMockQuestions";
@@ -8,7 +9,6 @@ import { useToggle } from "hooks/useToggle";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef } from "react";
 import { useLayoutEffect } from "react";
-import { questionSchema } from "server/routers/question/question.schemas";
 import { trpc } from "utils/trpc";
 import { ContentPanel } from "./ContentPanel";
 
@@ -19,6 +19,7 @@ export type CreateFormMainProps = {
 export function CreateFormMain({ formId }: CreateFormMainProps) {
   const { addMockQuestions } = useAddMockQuestions();
   const { questions } = useFormSummary({ formId });
+  const { data: ending } = trpc.ending.get.useQuery({ formId });
 
   // Panels control
   const [isContentPanelOpen, toggleContentPanelOpen] = useToggle(true);
@@ -57,9 +58,9 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
         ? router.query.questionId
         : null;
 
-    const isValidQuestionId = Boolean(
-      questions.find((i) => i.id === questionId)
-    );
+    const isValidQuestionId =
+      questionId === "ending" ||
+      Boolean(questions.find((i) => i.id === questionId));
 
     if (!isValidQuestionId) {
       router.push(
@@ -76,7 +77,13 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
   return (
     <div className="flex h-full justify-between overflow-hidden">
       <Panel isOpen={isContentPanelOpen}>
-        <ContentPanel formId={formId} questions={questions || []} />
+        <ContentPanel
+          formId={formId}
+          questions={questions || []}
+          ending={
+            ending || { title: "Loading…", subtitle: null, id: "loading" }
+          }
+        />
       </Panel>
       <section className="flex w-full flex-col overflow-hidden border-x border-slate-200 bg-slate-100 p-4">
         <div
@@ -87,12 +94,20 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
             className="absolute h-[512px] w-[1024px] overflow-hidden rounded-md bg-white shadow"
             ref={slideRef}
           >
-            {typeof router.query.questionId === "string" ? (
+            {typeof router.query.questionId === "string" &&
+            router.query.questionId.startsWith("rec_") ? (
               <QuestionSlide
                 key={router.query.questionId}
                 questionId={router.query.questionId}
                 formId={formId}
+                isLastQuestion={
+                  router.query.questionId ===
+                  (questions?.at(-1) ?? { id: "" }).id
+                }
               />
+            ) : null}
+            {router.query.questionId === "ending" ? (
+              <Ending formId={formId} />
             ) : null}
           </div>
         </div>
@@ -114,22 +129,26 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
                 Add mock questions
               </div>
             ) : null}
-            <Button
-              icon={isQuestionPanelOpen ? "sidebar-right" : "sidebar-left"}
-              onClick={toggleQuestionPanelOpen}
-              iconOnly
-              variant="secondary"
-            >
-              {isQuestionPanelOpen ? "Close sidebar" : "Open sidebar"}
-            </Button>
+            {typeof router.query.questionId === "string" &&
+            router.query.questionId.startsWith("rec_") ? (
+              <Button
+                icon={isQuestionPanelOpen ? "sidebar-right" : "sidebar-left"}
+                onClick={toggleQuestionPanelOpen}
+                iconOnly
+                variant="secondary"
+              >
+                {isQuestionPanelOpen ? "Close sidebar" : "Open sidebar"}
+              </Button>
+            ) : null}
           </div>
         </div>
       </section>
-      <Panel isOpen={isQuestionPanelOpen}>
-        {typeof router.query.questionId === "string" ? (
+      {typeof router.query.questionId === "string" &&
+      router.query.questionId.startsWith("rec_") ? (
+        <Panel isOpen={isQuestionPanelOpen}>
           <Settings formId={formId} questionId={router.query.questionId} />
-        ) : null}
-      </Panel>
+        </Panel>
+      ) : null}
     </div>
   );
 }

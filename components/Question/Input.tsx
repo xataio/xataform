@@ -67,7 +67,7 @@ export function Input({
         }}
         disabled={disabled}
         className={clsx(
-          "border-0 border-b border-indigo-200 bg-white pb-0.5 text-lg placeholder:text-indigo-200",
+          "border-0 border-b border-indigo-200 bg-transparent pb-0.5 text-lg placeholder:text-indigo-200",
           "focus:outline-none",
           "p-1 pb-0.5",
           className

@@ -24,7 +24,7 @@ import { QuestionType } from "server/routers/question/question.schemas";
 
 export type QuestionIconProps = {
   type: QuestionType;
-  order?: number;
+  order?: number | string;
   className?: string;
 };
 
@@ -40,7 +40,7 @@ export function QuestionIcon({ type, order, className }: QuestionIconProps) {
       )}
     >
       <Icon className="h-4 w-4" />
-      {typeof order === "number" && (
+      {(typeof order === "number" || typeof order === "string") && (
         <div className="min-w-[16px] text-right text-sm font-medium">
           {order}
         </div>

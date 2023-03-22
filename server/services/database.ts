@@ -166,6 +166,60 @@ export const database = {
     return { ...form, id: createdRecord.id };
   },
 
+  async createEnding({
+    formId,
+    title,
+    subtitle,
+    userId,
+  }: {
+    formId: string;
+    title: string;
+    subtitle?: string;
+    userId: string;
+  }) {
+    const createdRecord = await xata.db.ending.create({
+      form: formId,
+      title,
+      subtitle,
+      userId,
+    });
+
+    return createdRecord;
+  },
+
+  async getEnding({ formId }: { formId: string }) {
+    const ending = await xata.db.ending
+      .filter({
+        form: formId,
+      })
+      .getFirst();
+
+    return z
+      .object({
+        id: z.string(),
+        title: z.string().default("Thanks for everything"),
+        subtitle: z.string().nullable().default(null),
+      })
+      .parse(ending);
+  },
+
+  async updateEnding({
+    endingId,
+    title,
+    subtitle,
+  }: {
+    endingId: string;
+    title: string;
+    subtitle?: string;
+  }) {
+    const updatedRecord = await xata.db.ending.update(endingId, {
+      title,
+      subtitle,
+    });
+
+    return updatedRecord;
+  },
+
   async publishForm({ formId, userId }: { formId: string; userId: string }) {
     // Mark the form as `live` and bump the version
     const updatedForm = await xata.db.form.update(formId, {

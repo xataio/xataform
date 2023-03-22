@@ -29,11 +29,6 @@ export default function FormCreate({
       toast.error(err.message);
     },
   });
-  const { mutate: submit } = trpc.form.submitFormAnswer.useMutation({
-    onError(err) {
-      toast.error(err.message);
-    },
-  });
 
   return (
     <Box>

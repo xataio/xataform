@@ -24,6 +24,7 @@ describe("form router", () => {
         router.create({
           status: "draft",
           title: "test",
+          version: 0,
         })
       ).rejects.toThrowError("Limit of 100 forms reached!");
     });

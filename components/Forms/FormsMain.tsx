@@ -41,6 +41,7 @@ export function FormsMain() {
             await createForm({
               title,
               status: "draft",
+              version: 0,
             });
           }
           if (modal?.type === "rename") {

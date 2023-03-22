@@ -70,6 +70,12 @@ export const formRouter = router({
         userId: user.id,
       });
 
+      db.createEnding({
+        formId: createdForm.id,
+        title: "Thanks for your time!",
+        userId: user.id,
+      });
+
       return createdForm;
     }),
 

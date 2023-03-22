@@ -11,9 +11,14 @@ import { Answer } from "./Answer";
 export type QuestionSlideProps = {
   formId: string;
   questionId: string;
+  isLastQuestion: boolean;
 };
 
-export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
+export function QuestionSlide({
+  formId,
+  questionId,
+  isLastQuestion,
+}: QuestionSlideProps) {
   const { updateQuestion } = useUpdateQuestion({ formId });
   const { question, isLoading, error } = useGetQuestion({ formId, questionId });
 
@@ -127,6 +132,7 @@ export function QuestionSlide({ formId, questionId }: QuestionSlideProps) {
           questionId={questionId}
           formId={formId}
           layout={question.illustration ? "split" : "full"}
+          isLastQuestion={isLastQuestion}
           admin
         />
       </div>
