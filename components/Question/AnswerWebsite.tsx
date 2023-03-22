@@ -9,6 +9,7 @@ function AnswerWebsite(props: AnswerProps<"website">) {
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin) return;
         props.onSubmit(answer);

@@ -9,6 +9,7 @@ function AnswerNumber(props: AnswerProps<"number">) {
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin || answer === undefined) return;
         props.onSubmit(answer);

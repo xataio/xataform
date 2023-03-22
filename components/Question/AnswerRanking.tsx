@@ -22,6 +22,7 @@ function AnswerRanking({
   formId,
   questionId,
   isLastQuestion,
+  onFocus,
 
   ...question
 }: AnswerProps<"ranking">) {
@@ -49,6 +50,7 @@ function AnswerRanking({
     <AnswerWrapper
       layout={layout}
       isLastAnswer={isLastQuestion}
+      onFocus={onFocus}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;

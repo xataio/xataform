@@ -13,6 +13,7 @@ function AnswerOpinionScale(props: AnswerProps<"opinionScale">) {
     <AnswerWrapper
       layout="full"
       isLastAnswer={props.isLastQuestion}
+      onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin) return;
         const answerAsNumber = Number.parseInt(answer);

@@ -11,6 +11,7 @@ function AnswerYesNo(props: AnswerProps<"yesNo">) {
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin || answer === undefined) return;
         props.onSubmit(answer === "yes");

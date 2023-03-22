@@ -13,6 +13,7 @@ function AnswerDropdown({
   formId,
   questionId,
   isLastQuestion,
+  onFocus,
 
   ...question
 }: AnswerProps<"dropdown">) {
@@ -43,6 +44,7 @@ function AnswerDropdown({
     <AnswerWrapper
       layout={layout}
       isLastAnswer={isLastQuestion}
+      onFocus={onFocus}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;

@@ -7,6 +7,7 @@ export function AnswerWrapper(props: {
   children: React.ReactNode;
   layout: AnswerLayout;
   onClick?: () => void;
+  onFocus?: () => void;
   onSubmit: () => void;
   className?: string;
   isLastAnswer: boolean;
@@ -17,6 +18,7 @@ export function AnswerWrapper(props: {
         e.preventDefault();
         props.onSubmit();
       }}
+      onFocus={props.onFocus}
       className={clsx(
         props.layout === "split" ? "w-fit" : "w-full",
         "relative col-start-2 mt-8 flex flex-col gap-4"
@@ -47,4 +49,8 @@ export function AnswerWrapper(props: {
       </div>
     </form>
   );
+}
+
+function FocusTrap(props: { onFocus: () => void }) {
+  return <div tabIndex={0} onFocus={props.onFocus} />;
 }

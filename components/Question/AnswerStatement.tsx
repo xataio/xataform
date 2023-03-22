@@ -9,6 +9,7 @@ function AnswerStatement(props: AnswerProps<"statement">) {
         props.layout === "split" ? "w-fit" : "w-full",
         "col-start-2 mt-8"
       )}
+      onFocus={props.onFocus}
       onSubmit={(e) => {
         e.preventDefault();
         if (props.admin) return;
@@ -16,7 +17,9 @@ function AnswerStatement(props: AnswerProps<"statement">) {
       }}
     >
       <div className="flex flex-row items-center gap-2">
-        <Button type="submit">{props.buttonText || "Continue"}</Button>
+        <Button type="submit">
+          {props.buttonText || (props.isLastQuestion ? "Submit" : "Continue")}
+        </Button>
         <div className="text-xs">
           press <b>Enter</b>↵
         </div>

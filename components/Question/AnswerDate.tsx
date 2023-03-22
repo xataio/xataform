@@ -38,6 +38,7 @@ function AnswerDate(props: AnswerProps<"date">) {
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin) return;
         if (!answer.day || !answer.month || !answer.year) {

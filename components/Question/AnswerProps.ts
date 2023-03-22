@@ -14,6 +14,7 @@ type CommonProps<T extends QuestionType> = QuestionOfType<T> & {
   questionId: string;
   formId: string;
   isLastQuestion: boolean;
+  onFocus?: () => void;
 };
 
 type EditingAnswerProps<T extends QuestionType> = CommonProps<T> & {

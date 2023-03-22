@@ -9,6 +9,7 @@ function AnswerShortText(props: AnswerProps<"shortText">) {
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin) return;
         props.onSubmit(answer);

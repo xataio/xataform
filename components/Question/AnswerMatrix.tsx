@@ -132,6 +132,7 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin) return;
         props.onSubmit(answer);
@@ -155,8 +156,8 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
         )}
       >
         {/* Header */}
-        <div className="fixed h-6 w-screen bg-white" aria-hidden="true" />
-        <div className="sticky top-0 z-10 grid bg-white" style={rowStyle}>
+        <div className="fixed h-6 w-screen bg-slate-50" aria-hidden="true" />
+        <div className="sticky top-0 z-10 grid bg-slate-50" style={rowStyle}>
           {columns.map((column, columnIndex) => (
             <div
               key={`column-${columnIndex}`}
