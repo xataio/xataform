@@ -431,6 +431,45 @@
       ]
     },
     {
+      "name": "form",
+      "columns": [
+        {
+          "name": "createdAt",
+          "type": "datetime",
+          "notNull": true,
+          "defaultValue": "now"
+        },
+        {
+          "name": "updatedAt",
+          "type": "datetime",
+          "notNull": true,
+          "defaultValue": "now"
+        },
+        {
+          "name": "deletedAt",
+          "type": "datetime"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "userId",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        }
+      ]
+    },
+    {
       "name": "publishedQuestion",
       "columns": [
         {
@@ -857,11 +896,17 @@
           "link": {
             "table": "form"
           }
+        },
+        {
+          "name": "version",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
         }
       ]
     },
     {
-      "name": "form",
+      "name": "ending",
       "columns": [
         {
           "name": "createdAt",
@@ -870,26 +915,27 @@
           "defaultValue": "now"
         },
         {
-          "name": "updatedAt",
-          "type": "datetime",
-          "notNull": true,
-          "defaultValue": "now"
+          "name": "form",
+          "type": "link",
+          "link": {
+            "table": "form"
+          }
         },
         {
-          "name": "deletedAt",
-          "type": "datetime"
+          "name": "subtitle",
+          "type": "string"
         },
         {
           "name": "title",
-          "type": "string"
-        },
-        {
-          "name": "status",
-          "type": "string"
+          "type": "string",
+          "notNull": true,
+          "defaultValue": ""
         },
         {
           "name": "userId",
-          "type": "string"
+          "type": "string",
+          "notNull": true,
+          "defaultValue": ""
         }
       ]
     }

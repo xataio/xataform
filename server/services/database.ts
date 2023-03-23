@@ -1,4 +1,5 @@
 import { notExists, XataApiClient, buildClient } from "@xata.io/client";
+import { answersDatabase, answersDatabaseOptions } from "utils/answers";
 import { getXataColumn } from "utils/getXataColumn";
 import { z } from "zod";
 import { getXataClient } from "../../utils/xata";
@@ -252,10 +253,7 @@ export const database = {
     // Create the answer table with the current schema
     const xataApi = new XataApiClient();
     const options = {
-      branch: "main",
-      database: "xataform-answers",
-      region: "eu-west-1",
-      workspace: "fabien-ph3r1h",
+      ...answersDatabaseOptions,
       table: `${formId}-v${updatedForm.version}`,
     };
 
@@ -281,13 +279,7 @@ export const database = {
     version: number;
     payload: any;
   }) {
-    const Client = buildClient();
-    const answerDb = new Client<Record<string, any>>({
-      databaseURL:
-        "https://fabien-ph3r1h.eu-west-1.xata.sh/db/xataform-answers",
-    });
-
-    answerDb.db[`${formId}-v${version}`].create(payload);
+    answersDatabase.db[`${formId}-v${version}`].create(payload);
   },
 
   async listForms(props: {
@@ -316,7 +308,10 @@ export const database = {
   },
 
   async listPublishedForms() {
-    const records = await xata.db.form.filter(notExists("deletedAt")).getAll();
+    const records = await xata.db.form
+      .filter(notExists("deletedAt"))
+      .filter({ status: "live" })
+      .getAll();
 
     const parsedRecords = z
       .array(
