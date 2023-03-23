@@ -10,15 +10,22 @@ import {
   useRef,
   useState,
 } from "react";
+import slugify from "slugify";
 import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerMatrix(props: AnswerProps<"matrix">) {
   const [answer, setAnswer] = useState(
     props.rows.reduce(
-      (mem, row) => ({
+      (mem, row, i) => ({
         ...mem,
-        [row]: props.multipleSelection ? ([] as string[]) : "",
+        [row
+          ? slugify(row, {
+              lower: true,
+              strict: true,
+              trim: true,
+            })
+          : `row${i + 1}`]: props.multipleSelection ? ([] as string[]) : "",
       }),
       {} as Record<string, string[] | string>
     )
@@ -284,6 +291,14 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
                   name={row}
                   aria-label={column}
                   onChange={() => {
+                    const rowSlug = row
+                      ? slugify(row, {
+                          lower: true,
+                          strict: true,
+                          trim: true,
+                        })
+                      : `row${rowIndex + 1}`;
+
                     if (props.multipleSelection) {
                       setAnswer((prev) => {
                         const prevValue = prev[row];
@@ -296,12 +311,12 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
                         const nextValue = prevValue.includes(column)
                           ? prevValue.filter((i) => i !== column)
                           : [...prevValue, column];
-                        return { ...prev, [row]: nextValue };
+                        return { ...prev, [rowSlug]: nextValue };
                       });
                     } else {
                       setAnswer((prev) => ({
                         ...prev,
-                        [row]: column,
+                        [rowSlug]: column,
                       }));
                     }
                   }}
