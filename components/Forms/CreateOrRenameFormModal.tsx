@@ -8,6 +8,7 @@ export type CreateOrRenameFormModalProps = {
   onSubmit: (title: string) => void;
   isLoading: boolean;
   prevTitle?: string; // rename an existing title
+  type: "create" | "rename" | undefined;
 };
 
 export function CreateOrRenameFormModal({
@@ -16,9 +17,18 @@ export function CreateOrRenameFormModal({
   onSubmit,
   isLoading,
   prevTitle = "",
+  ...props
 }: CreateOrRenameFormModalProps) {
   const [title, setTitle] = useState(prevTitle);
-  useEffect(() => setTitle(prevTitle), [prevTitle]);
+  useEffect(() => {
+    if (props.type) setTitle(prevTitle);
+  }, [prevTitle, props.type]);
+
+  // Avoid glitch on close (we are keeping the state for the final transition)
+  const [type, setType] = useState(props.type);
+  useEffect(() => {
+    if (props.type) setType(props.type);
+  }, [props.type]);
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -53,11 +63,11 @@ export function CreateOrRenameFormModal({
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      {prevTitle
+                      {type === "rename"
                         ? "Rename this XataForm"
                         : "Start a new XataForm"}
                     </Dialog.Title>
-                    {!prevTitle ? (
+                    {type === "create" ? (
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
                           Give a title to your form to get started

@@ -33,6 +33,7 @@ export function FormsMain() {
     <>
       <CreateOrRenameFormModal
         isOpen={modal?.type === "create" || modal?.type === "rename"}
+        type={modal?.type}
         prevTitle={modal?.type === "rename" ? modal.prevTitle : undefined}
         onClose={() => setModal(null)}
         isLoading={isFormCreating}
@@ -42,6 +43,7 @@ export function FormsMain() {
               title,
               status: "draft",
               version: 0,
+              responses: 0,
             });
           }
           if (modal?.type === "rename") {
