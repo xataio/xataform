@@ -7,12 +7,14 @@ export type FormCardProps = {
   form: RouterOutputs["form"]["list"][-1];
   onRename: () => void;
   onDelete: () => void;
+  onDuplicate: () => void;
 } & React.PropsWithChildren;
 
 export function FormCard({
   form,
   onRename,
   onDelete,
+  onDuplicate,
   ...props
 }: FormCardProps) {
   return (
@@ -60,7 +62,7 @@ export function FormCard({
             },
             {
               title: "Duplicate",
-              onClick: () => {}, // TODO
+              onClick: onDuplicate,
             },
             "---",
             {

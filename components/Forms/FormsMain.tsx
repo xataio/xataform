@@ -27,23 +27,31 @@ export function FormsMain() {
     | null
     | { type: "create" }
     | { type: "rename"; formId: string; prevTitle: string }
+    | { type: "duplicate"; formId: string; prevTitle: string }
   >(null);
 
   return (
     <>
       <CreateOrRenameFormModal
-        isOpen={modal?.type === "create" || modal?.type === "rename"}
+        isOpen={modal !== null}
         type={modal?.type}
-        prevTitle={modal?.type === "rename" ? modal.prevTitle : undefined}
+        prevTitle={
+          modal?.type === "rename" || modal?.type === "duplicate"
+            ? modal.prevTitle
+            : undefined
+        }
         onClose={() => setModal(null)}
         isLoading={isFormCreating}
         onSubmit={async (title) => {
+          if (modal?.type === "duplicate") {
+            await createForm({
+              form: { title, status: "draft", version: 0, responses: 0 },
+              copyFrom: modal.formId,
+            });
+          }
           if (modal?.type === "create") {
             await createForm({
-              title,
-              status: "draft",
-              version: 0,
-              responses: 0,
+              form: { title, status: "draft", version: 0, responses: 0 },
             });
           }
           if (modal?.type === "rename") {
@@ -78,13 +86,20 @@ export function FormsMain() {
               <FormCard
                 key={form.id}
                 form={form}
-                onRename={() => {
+                onDuplicate={() =>
+                  setModal({
+                    type: "duplicate",
+                    formId: form.id,
+                    prevTitle: form.title,
+                  })
+                }
+                onRename={() =>
                   setModal({
                     type: "rename",
                     formId: form.id,
                     prevTitle: form.title,
-                  });
-                }}
+                  })
+                }
                 onDelete={() => deleteForm({ formId: form.id })}
               />
             ))}

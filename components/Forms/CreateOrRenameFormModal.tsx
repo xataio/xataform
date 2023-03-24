@@ -8,7 +8,7 @@ export type CreateOrRenameFormModalProps = {
   onSubmit: (title: string) => void;
   isLoading: boolean;
   prevTitle?: string; // rename an existing title
-  type: "create" | "rename" | undefined;
+  type: "create" | "rename" | "duplicate" | undefined;
 };
 
 export function CreateOrRenameFormModal({
@@ -63,9 +63,9 @@ export function CreateOrRenameFormModal({
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      {type === "rename"
-                        ? "Rename this XataForm"
-                        : "Start a new XataForm"}
+                      {type === "rename" && "Rename this XataForm"}
+                      {type === "create" && "Start a new XataForm"}
+                      {type === "duplicate" && "Duplicate a XataForm"}
                     </Dialog.Title>
                     {type === "create" ? (
                       <div className="mt-2">

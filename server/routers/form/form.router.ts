@@ -43,8 +43,8 @@ export const formRouter = router({
    * Create a new form
    */
   create: protectedProcedure
-    .input(formSchema)
-    .mutation(async ({ ctx: { user, db }, input }) => {
+    .input(z.object({ form: formSchema, copyFrom: z.string().optional() }))
+    .mutation(async ({ ctx: { user, db }, input: { form, copyFrom } }) => {
       const count = await db.getFormsCount({ userId: user.id });
       if (count >= 100) {
         throw new TRPCError({
@@ -54,27 +54,42 @@ export const formRouter = router({
       }
 
       const createdForm = await db.createForm({
-        ...input,
+        ...form,
         userId: user.id,
       });
 
-      db.createQuestion({
-        formId: createdForm.id,
-        type: "shortText",
-        description: "",
-        illustration: null,
-        maxLength: null,
-        order: 0,
-        required: false,
-        title: "My first question",
-        userId: user.id,
-      });
+      if (copyFrom) {
+        db.copyQuestions({
+          fromFormId: copyFrom,
+          toFormId: createdForm.id,
+          userId: user.id,
+        });
+        const ending = await db.getEnding({ formId: copyFrom });
+        db.createEnding({
+          formId: createdForm.id,
+          title: ending.title,
+          subtitle: ending.subtitle || undefined,
+          userId: user.id,
+        });
+      } else {
+        db.createQuestion({
+          formId: createdForm.id,
+          type: "shortText",
+          description: "",
+          illustration: null,
+          maxLength: null,
+          order: 0,
+          required: false,
+          title: "My first question",
+          userId: user.id,
+        });
 
-      db.createEnding({
-        formId: createdForm.id,
-        title: "Thanks for your time!",
-        userId: user.id,
-      });
+        db.createEnding({
+          formId: createdForm.id,
+          title: "Thanks for your time!",
+          userId: user.id,
+        });
+      }
 
       return createdForm;
     }),

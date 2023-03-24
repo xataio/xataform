@@ -406,6 +406,32 @@ export const database = {
     };
   },
 
+  async copyQuestions(props: {
+    fromFormId: string;
+    toFormId: string;
+    userId: string;
+  }) {
+    const { records } = await xata.db.question
+      .filter(notExists("deletedAt"))
+      .filter("form", props.fromFormId)
+      .filter("userId", props.userId)
+      .getPaginated({
+        pagination: {
+          size: MAX_ITEMS,
+        },
+        sort: {
+          order: "asc",
+        },
+      });
+
+    await xata.db.question.create(
+      records.map(({ id, form, createdAt, updatedAt, ...r }) => ({
+        ...r,
+        form: props.toFormId,
+      }))
+    );
+  },
+
   async getFormsCount({ userId }: { userId: string }) {
     const {
       aggs: { count },
