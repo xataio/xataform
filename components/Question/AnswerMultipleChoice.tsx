@@ -19,6 +19,7 @@ function AnswerMultipleChoice({
   const { updateQuestion } = useUpdateQuestion({ formId });
 
   const [answer, setAnswer] = useState<string[]>([]);
+  const [other, setOther] = useState("");
   const [isEditingChoices, setIsEditingChoices] = useState(false);
 
   const orderedChoices = useMemo(() => {
@@ -36,7 +37,7 @@ function AnswerMultipleChoice({
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;
-        question.onSubmit(answer);
+        question.onSubmit(other ? [...answer, other] : answer);
       }}
     >
       <EditChoicesDialog
@@ -101,6 +102,31 @@ function AnswerMultipleChoice({
             </li>
           );
         })}
+        {question.otherOption ? (
+          <li
+            role="checkbox"
+            aria-checked={Boolean(other)}
+            className={clsx(
+              "focus:outline-none focus:ring-2 hover:bg-indigo-200",
+              "flex w-40 cursor-pointer flex-row items-center justify-between gap-2 rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700",
+              Boolean(other) &&
+                "bg-indigo-200 font-medium ring-1 ring-indigo-700"
+            )}
+          >
+            <input
+              type="text"
+              value={other}
+              onChange={(e) => setOther(e.target.value)}
+              className={clsx(
+                "placeholder:text-indigo-700",
+                "m-0 w-full border-none bg-transparent p-0",
+                "focus:ring-0"
+              )}
+              placeholder="Other"
+            />
+            {Boolean(other) && <CheckIcon className="h-4 w-4" />}
+          </li>
+        ) : null}
       </ul>
     </AnswerWrapper>
   );
