@@ -37,7 +37,11 @@ export function FormCard({
         </h1>
       </Link>
       <div className="flex justify-between p-4">
-        <p className="text-sm text-slate-400">No responses</p>
+        <p className="text-sm text-slate-400">
+          {form.responses === 0 && "No responses"}
+          {form.responses === 1 && "1 response"}
+          {form.responses > 1 && `${form.responses} responses`}
+        </p>
         <Menu
           items={[
             {

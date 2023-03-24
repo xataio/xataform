@@ -279,7 +279,10 @@ export const database = {
     version: number;
     payload: any;
   }) {
-    answersDatabase.db[`${formId}-v${version}`].create(payload);
+    await answersDatabase.db[`${formId}-v${version}`].create(payload);
+    await xata.db.form.update(formId, {
+      responses: { $increment: 1 },
+    });
   },
 
   async listForms(props: {
