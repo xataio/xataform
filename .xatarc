@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://XataForm-kh171g.eu-west-1.xata.sh/db/xataform",
+  "codegen": {
+    "output": "utils/xata.ts"
+  }
+}
