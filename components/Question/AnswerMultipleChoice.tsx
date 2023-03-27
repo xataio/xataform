@@ -56,78 +56,82 @@ function AnswerMultipleChoice({
           });
         }}
       />
-      <p aria-live="polite" className="mb-1 text-xs text-indigo-700">
-        {getStatement(question.limitMin, question.limitMax, choices.length)}
-      </p>
-      {orderedChoices.length === 0 && question.admin ? (
-        <div className="w-fit rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700">
-          Click to add your choices
-        </div>
-      ) : null}
-      <ul
-        aria-label={question.title}
-        role="group"
-        className="flex flex-wrap gap-2"
-      >
-        {orderedChoices.map((choice) => {
-          const checked = answer.includes(choice);
-          return (
-            <li
-              key={choice}
-              role="checkbox"
-              aria-checked={checked}
-              tabIndex={0}
-              onClick={() =>
-                setAnswer((prev) =>
-                  checked ? prev.filter((i) => i !== choice) : [...prev, choice]
-                )
-              }
-              onKeyUp={(e) => {
-                if (e.key === " " /* Space */) {
+      <div>
+        <p aria-live="polite" className="mb-1 text-xs text-indigo-700">
+          {getStatement(question.limitMin, question.limitMax, choices.length)}
+        </p>
+        {orderedChoices.length === 0 && question.admin ? (
+          <div className="w-fit rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700">
+            Click to add your choices
+          </div>
+        ) : null}
+        <ul
+          aria-label={question.title}
+          role="group"
+          className="flex flex-wrap gap-2"
+        >
+          {orderedChoices.map((choice) => {
+            const checked = answer.includes(choice);
+            return (
+              <li
+                key={choice}
+                role="checkbox"
+                aria-checked={checked}
+                tabIndex={0}
+                onClick={() =>
                   setAnswer((prev) =>
                     checked
                       ? prev.filter((i) => i !== choice)
                       : [...prev, choice]
-                  );
+                  )
                 }
-              }}
+                onKeyUp={(e) => {
+                  if (e.key === " " /* Space */) {
+                    setAnswer((prev) =>
+                      checked
+                        ? prev.filter((i) => i !== choice)
+                        : [...prev, choice]
+                    );
+                  }
+                }}
+                className={clsx(
+                  "focus:outline-none focus:ring-2 hover:bg-indigo-200",
+                  "flex w-40 cursor-pointer flex-row items-center justify-between gap-2 rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700",
+                  checked && "bg-indigo-200 font-medium ring-1 ring-indigo-700"
+                )}
+              >
+                <span>{choice}</span>
+                {checked && <CheckIcon className="h-4 w-4" />}
+              </li>
+            );
+          })}
+          {question.otherOption ? (
+            <li
+              role="checkbox"
+              aria-checked={Boolean(other)}
               className={clsx(
                 "focus:outline-none focus:ring-2 hover:bg-indigo-200",
                 "flex w-40 cursor-pointer flex-row items-center justify-between gap-2 rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700",
-                checked && "bg-indigo-200 font-medium ring-1 ring-indigo-700"
+                Boolean(other) &&
+                  "bg-indigo-200 font-medium ring-1 ring-indigo-700"
               )}
             >
-              <span>{choice}</span>
-              {checked && <CheckIcon className="h-4 w-4" />}
+              <input
+                type="text"
+                value={other}
+                onChange={(e) => setOther(e.target.value)}
+                className={clsx(
+                  "placeholder:text-indigo-700",
+                  "m-0 w-full border-none bg-transparent p-0",
+                  "focus:ring-0"
+                )}
+                placeholder="Other"
+              />
+              {Boolean(other) && <CheckIcon className="h-4 w-4" />}
             </li>
-          );
-        })}
-        {question.otherOption ? (
-          <li
-            role="checkbox"
-            aria-checked={Boolean(other)}
-            className={clsx(
-              "focus:outline-none focus:ring-2 hover:bg-indigo-200",
-              "flex w-40 cursor-pointer flex-row items-center justify-between gap-2 rounded border border-indigo-700 bg-indigo-100 px-2 py-1 text-indigo-700",
-              Boolean(other) &&
-                "bg-indigo-200 font-medium ring-1 ring-indigo-700"
-            )}
-          >
-            <input
-              type="text"
-              value={other}
-              onChange={(e) => setOther(e.target.value)}
-              className={clsx(
-                "placeholder:text-indigo-700",
-                "m-0 w-full border-none bg-transparent p-0",
-                "focus:ring-0"
-              )}
-              placeholder="Other"
-            />
-            {Boolean(other) && <CheckIcon className="h-4 w-4" />}
-          </li>
-        ) : null}
-      </ul>
+          ) : null}
+        </ul>
+      </div>
     </AnswerWrapper>
   );
 }

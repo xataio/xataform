@@ -22,6 +22,7 @@ function AnswerRating(props: AnswerProps<"rating">) {
         aria-label={`Rating: ${rating} out of ${props.steps} stars`}
         className="w-fit outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"
         tabIndex={0}
+        disabled={props.admin}
         onKeyUp={(e) => {
           if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
             setRating((prev) => {
@@ -46,7 +47,9 @@ function AnswerRating(props: AnswerProps<"rating">) {
             style={{
               zIndex: props.steps - index,
             }}
-            onClick={() => setRating(index + 1)}
+            onClick={() => {
+              props.admin === false && setRating(index + 1);
+            }}
           >
             {new Array(index + 1).fill(0).map((_, i) => (
               <StarIcon

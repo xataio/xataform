@@ -50,7 +50,3 @@ export function AnswerWrapper(props: {
     </form>
   );
 }
-
-function FocusTrap(props: { onFocus: () => void }) {
-  return <div tabIndex={0} onFocus={props.onFocus} />;
-}

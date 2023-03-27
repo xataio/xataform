@@ -163,7 +163,6 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
         )}
       >
         {/* Header */}
-        <div className="fixed h-6 w-screen bg-slate-50" aria-hidden="true" />
         <div className="sticky top-0 z-10 grid bg-slate-50" style={rowStyle}>
           {columns.map((column, columnIndex) => (
             <div
@@ -193,6 +192,7 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
                     type="text"
                     className={clsx(
                       "text-center",
+                      "bg-transparent",
                       "w-full",
                       "border-0 p-0 pl-6",
                       "focus:ring-0",

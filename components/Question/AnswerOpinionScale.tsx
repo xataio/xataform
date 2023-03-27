@@ -34,6 +34,7 @@ function AnswerOpinionScale(props: AnswerProps<"opinionScale">) {
           }}
           value={answer}
           onChange={setAnswer}
+          disabled={props.admin}
         >
           {new Array(count).fill(0).map((_, index) => (
             <Option

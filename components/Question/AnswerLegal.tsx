@@ -21,6 +21,7 @@ function AnswerLegal(props: AnswerProps<"legal">) {
         className="flex flex-col gap-2"
         value={answer}
         onChange={setAnswer}
+        disabled={props.admin}
       >
         <Option value="yes">I accept</Option>
         <Option value="no">I don’t accept</Option>

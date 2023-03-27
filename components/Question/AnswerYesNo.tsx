@@ -21,6 +21,7 @@ function AnswerYesNo(props: AnswerProps<"yesNo">) {
         className="flex flex-col gap-2"
         value={answer}
         onChange={setAnswer}
+        disabled={props.admin}
       >
         <Option value="yes">Yes</Option>
         <Option value="no">No</Option>
