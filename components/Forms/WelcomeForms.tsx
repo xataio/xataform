@@ -16,7 +16,7 @@ export function WelcomeForms(props: WelcomeFormsProps) {
         It’s time to create something amazing!
       </p>
       <Button icon="add" onClick={props.onCreateClick}>
-        Create xataform
+        Create form
       </Button>
     </div>
   );

@@ -37,7 +37,7 @@ export function ContentPanel({ formId, questions, ending }: ContentPanelProps) {
             formId,
             question: {
               type: questionType,
-              title: "New question",
+              title: "",
               order: questions?.length ?? 100,
               description: null,
               illustration: null,

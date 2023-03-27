@@ -66,7 +66,7 @@ export function FormsMain() {
       <header className="flex items-center justify-between border-b border-b-slate-200 px-4 py-2 shadow">
         <h1 className="text-lg">My forms</h1>
         <Button icon="add" onClick={() => setModal({ type: "create" })}>
-          Create xataform
+          Create form
         </Button>
       </header>
       <main

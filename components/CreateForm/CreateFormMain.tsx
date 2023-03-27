@@ -23,7 +23,7 @@ export function CreateFormMain({ formId }: CreateFormMainProps) {
 
   // Panels control
   const [isContentPanelOpen, toggleContentPanelOpen] = useToggle(true);
-  const [isQuestionPanelOpen, toggleQuestionPanelOpen] = useToggle(false);
+  const [isQuestionPanelOpen, toggleQuestionPanelOpen] = useToggle(true);
 
   const slideContainerRef = useRef<HTMLDivElement>(null);
   const slideRef = useRef<HTMLDivElement>(null);
