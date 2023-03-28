@@ -5,6 +5,7 @@ import { Input } from "./Input";
 import { kebab } from "case";
 
 function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
+  const [showRequired, setShowRequired] = useState(false);
   const [answer, setAnswer] = useState({
     firstName: "",
     lastName: "",
@@ -17,16 +18,59 @@ function AnswerContactInfo(props: AnswerProps<"contactInfo">) {
     return getDadJokeName().split(" ");
   }, []);
 
-  const setField = (field: keyof typeof answer) => (value: string) =>
+  const setField = (field: keyof typeof answer) => (value: string) => {
+    setShowRequired(false);
     setAnswer((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
       onFocus={props.onFocus}
+      showRequired={showRequired}
       onSubmit={() => {
         if (props.admin) return;
+        if (
+          answer.firstName === "" &&
+          props.firstName.enabled &&
+          props.firstName.required
+        ) {
+          setShowRequired(true);
+          return;
+        }
+        if (
+          answer.lastName === "" &&
+          props.lastName.enabled &&
+          props.lastName.required
+        ) {
+          setShowRequired(true);
+          return;
+        }
+        if (
+          answer.phoneNumber === "" &&
+          props.phoneNumber.enabled &&
+          props.phoneNumber.required
+        ) {
+          setShowRequired(true);
+          return;
+        }
+        if (
+          answer.email === "" &&
+          props.email.enabled &&
+          props.email.required
+        ) {
+          setShowRequired(true);
+          return;
+        }
+        if (
+          answer.company === "" &&
+          props.company.enabled &&
+          props.company.required
+        ) {
+          setShowRequired(true);
+          return;
+        }
         props.onSubmit(answer);
       }}
     >

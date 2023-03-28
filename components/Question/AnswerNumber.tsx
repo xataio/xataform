@@ -4,15 +4,21 @@ import { AnswerWrapper } from "./AnswerWrapper";
 import { Input } from "./Input";
 
 function AnswerNumber(props: AnswerProps<"number">) {
+  const [showRequired, setShowRequired] = useState(false);
   const [answer, setAnswer] = useState<number>();
   return (
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      showRequired={showRequired}
       onFocus={props.onFocus}
       onSubmit={() => {
-        if (props.admin || answer === undefined) return;
-        props.onSubmit(answer);
+        if (props.admin) return;
+        if (props.required && answer === undefined) {
+          setShowRequired(true);
+          return;
+        }
+        props.onSubmit(answer ?? null);
       }}
     >
       <Input
@@ -21,7 +27,10 @@ function AnswerNumber(props: AnswerProps<"number">) {
         className="w-full"
         placeholder="Type your answer here…"
         value={answer}
-        onChange={setAnswer}
+        onChange={(value) => {
+          setShowRequired(false);
+          setAnswer(value);
+        }}
       />
     </AnswerWrapper>
   );

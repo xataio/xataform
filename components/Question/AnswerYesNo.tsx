@@ -6,21 +6,31 @@ import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerYesNo(props: AnswerProps<"yesNo">) {
+  const [showRequired, setShowRequired] = useState(false);
   const [answer, setAnswer] = useState<"yes" | "no">();
+
   return (
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      showRequired={showRequired}
       onFocus={props.onFocus}
       onSubmit={() => {
-        if (props.admin || answer === undefined) return;
-        props.onSubmit(answer === "yes");
+        if (props.admin) return;
+        if (props.required && answer === undefined) {
+          setShowRequired(true);
+          return;
+        }
+        props.onSubmit(answer ? answer === "yes" : null);
       }}
     >
       <RadioGroup
         className="flex flex-col gap-2"
         value={answer}
-        onChange={setAnswer}
+        onChange={(value: "yes" | "no") => {
+          setShowRequired(false);
+          setAnswer(value);
+        }}
         disabled={props.admin}
       >
         <Option value="yes">Yes</Option>

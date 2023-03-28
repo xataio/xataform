@@ -1,3 +1,4 @@
+import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { Button } from "components/Button";
 import React from "react";
@@ -11,6 +12,7 @@ export function AnswerWrapper(props: {
   onSubmit: () => void;
   className?: string;
   isLastAnswer: boolean;
+  showRequired: boolean;
 }) {
   return (
     <form
@@ -41,12 +43,26 @@ export function AnswerWrapper(props: {
           onClick={props.onClick}
         />
       )}
-      <div className="flex flex-row items-center gap-2">
-        <Button type="submit">{props.isLastAnswer ? "Submit" : "OK ✓"}</Button>
-        <div className="text-xs">
-          press <b>Enter</b>↵
+      {props.showRequired ? (
+        <RequiredMessage />
+      ) : (
+        <div className="flex flex-row items-center gap-2">
+          <Button type="submit">
+            {props.isLastAnswer ? "Submit" : "OK ✓"}
+          </Button>
+          <div className="text-xs">
+            press <b>Enter</b>↵
+          </div>
         </div>
-      </div>
+      )}
     </form>
   );
 }
+
+const RequiredMessage = () => (
+  <div className="flex w-fit items-center gap-1 rounded bg-red-100 py-1 px-3 text-sm text-red-800">
+    <ExclamationTriangleIcon className="h-4 w-4" />
+    <b>Oops!</b>
+    <span>Please make a selection</span>
+  </div>
+);

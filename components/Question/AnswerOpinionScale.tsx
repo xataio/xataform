@@ -5,6 +5,7 @@ import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerOpinionScale(props: AnswerProps<"opinionScale">) {
+  const [showRequired, setShowRequired] = useState(false);
   const [answer, setAnswer] = useState("");
 
   const count = props.max - props.min + 1;
@@ -13,13 +14,16 @@ function AnswerOpinionScale(props: AnswerProps<"opinionScale">) {
     <AnswerWrapper
       layout="full"
       isLastAnswer={props.isLastQuestion}
+      showRequired={showRequired}
       onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin) return;
         const answerAsNumber = Number.parseInt(answer);
-        if (Number.isFinite(answerAsNumber)) {
-          props.onSubmit(answerAsNumber);
+        if (props.required && !Number.isFinite(answerAsNumber)) {
+          setShowRequired(true);
+          return;
         }
+        props.onSubmit(Number.isFinite(answerAsNumber) ? answerAsNumber : null);
       }}
     >
       <div
@@ -33,7 +37,10 @@ function AnswerOpinionScale(props: AnswerProps<"opinionScale">) {
             gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))`,
           }}
           value={answer}
-          onChange={setAnswer}
+          onChange={(value) => {
+            setShowRequired(false);
+            setAnswer(value);
+          }}
           disabled={props.admin}
         >
           {new Array(count).fill(0).map((_, index) => (

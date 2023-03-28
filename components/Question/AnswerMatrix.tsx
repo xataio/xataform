@@ -15,6 +15,7 @@ import { AnswerProps } from "./AnswerProps";
 import { AnswerWrapper } from "./AnswerWrapper";
 
 function AnswerMatrix(props: AnswerProps<"matrix">) {
+  const [showRequired, setShowRequired] = useState(false);
   const [answer, setAnswer] = useState(
     props.rows.reduce(
       (mem, row, i) => ({
@@ -140,8 +141,20 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
       onFocus={props.onFocus}
+      showRequired={showRequired}
       onSubmit={() => {
         if (props.admin) return;
+        if (
+          props.required &&
+          Object.values(answer).reduce(
+            (mem, i) =>
+              mem || typeof i === "string" ? i === "" : i.length === 0,
+            false
+          )
+        ) {
+          setShowRequired(true);
+          return;
+        }
         props.onSubmit(answer);
       }}
     >

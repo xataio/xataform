@@ -16,6 +16,7 @@ function AnswerMultipleChoice({
 
   ...question
 }: AnswerProps<"multipleChoice">) {
+  const [showRequired, setShowRequired] = useState(false);
   const { updateQuestion } = useUpdateQuestion({ formId });
 
   const [answer, setAnswer] = useState<string[]>([]);
@@ -33,10 +34,18 @@ function AnswerMultipleChoice({
     <AnswerWrapper
       layout={layout}
       isLastAnswer={isLastQuestion}
+      showRequired={showRequired}
       onFocus={onFocus}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;
+        if (
+          question.required &&
+          (other ? [...answer, other] : answer).length === 0
+        ) {
+          setShowRequired(true);
+          return;
+        }
         question.onSubmit(other ? [...answer, other] : answer);
       }}
     >
@@ -78,15 +87,17 @@ function AnswerMultipleChoice({
                 role="checkbox"
                 aria-checked={checked}
                 tabIndex={0}
-                onClick={() =>
+                onClick={() => {
+                  setShowRequired(false);
                   setAnswer((prev) =>
                     checked
                       ? prev.filter((i) => i !== choice)
                       : [...prev, choice]
-                  )
-                }
+                  );
+                }}
                 onKeyUp={(e) => {
                   if (e.key === " " /* Space */) {
+                    setShowRequired(false);
                     setAnswer((prev) =>
                       checked
                         ? prev.filter((i) => i !== choice)
@@ -119,7 +130,10 @@ function AnswerMultipleChoice({
               <input
                 type="text"
                 value={other}
-                onChange={(e) => setOther(e.target.value)}
+                onChange={(e) => {
+                  setShowRequired(false);
+                  setOther(e.target.value);
+                }}
                 className={clsx(
                   "placeholder:text-indigo-700",
                   "m-0 w-full border-none bg-transparent p-0",

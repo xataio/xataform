@@ -19,6 +19,7 @@ function AnswerDropdown({
 }: AnswerProps<"dropdown">) {
   const { updateQuestion } = useUpdateQuestion({ formId });
 
+  const [showRequired, setShowRequired] = useState(false);
   const [answer, setAnswer] = useState("");
   const [query, setQuery] = useState("");
   const [isEditingChoices, setIsEditingChoices] = useState(false);
@@ -44,10 +45,15 @@ function AnswerDropdown({
     <AnswerWrapper
       layout={layout}
       isLastAnswer={isLastQuestion}
+      showRequired={showRequired}
       onFocus={onFocus}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
         if (question.admin) return;
+        if (question.required && answer === "") {
+          setShowRequired(true);
+          return;
+        }
         question.onSubmit(answer);
       }}
       className="!overflow-visible"
@@ -69,7 +75,10 @@ function AnswerDropdown({
       />
       <Combobox
         value={answer}
-        onChange={setAnswer}
+        onChange={(value: string) => {
+          setShowRequired(false);
+          setAnswer(value);
+        }}
         disabled={question.admin}
         as="div"
         className="relative block ui-open:z-10"
@@ -77,7 +86,7 @@ function AnswerDropdown({
         <div className="relative w-full">
           <Combobox.Input
             placeholder="Type or select an option"
-            className="w-full border-0 border-b border-indigo-200 bg-white pl-2 pb-0.5 text-lg text-indigo-800 placeholder:text-indigo-200 focus:border-b-indigo-400 focus:outline-none"
+            className="w-full border-0 border-b border-indigo-200 bg-transparent bg-white pl-2 pb-0.5 text-lg text-indigo-800 placeholder:text-indigo-200 focus:border-b-indigo-400 focus:outline-none"
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">

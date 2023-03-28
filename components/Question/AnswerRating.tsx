@@ -11,6 +11,7 @@ function AnswerRating(props: AnswerProps<"rating">) {
   return (
     <AnswerWrapper
       layout={props.layout}
+      showRequired={false /** Not relevant with the current UX */}
       isLastAnswer={props.isLastQuestion}
       onFocus={props.onFocus}
       onSubmit={() => {

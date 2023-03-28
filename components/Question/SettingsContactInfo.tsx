@@ -32,6 +32,11 @@ export default function SettingsContactInfo({
         onChange={updateOption("phoneNumber")}
       />
       <ContactSettingItem
+        label="Email"
+        value={question.email}
+        onChange={updateOption("email")}
+      />
+      <ContactSettingItem
         label="Company"
         value={question.company}
         onChange={updateOption("company")}

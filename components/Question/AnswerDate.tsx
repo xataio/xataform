@@ -10,13 +10,15 @@ const clamp = (value: string, min: number, max: number) =>
     : "";
 
 function AnswerDate(props: AnswerProps<"date">) {
+  const [showRequired, setShowRequired] = useState(false);
   const [answer, setAnswer] = useState({
     day: "",
     month: "",
     year: "",
   });
 
-  const setField = (field: keyof typeof answer) => (value: string) =>
+  const setField = (field: keyof typeof answer) => (value: string) => {
+    setShowRequired(false);
     setAnswer((prev) => {
       switch (field) {
         case "day":
@@ -33,14 +35,20 @@ function AnswerDate(props: AnswerProps<"date">) {
           };
       }
     });
+  };
 
   return (
     <AnswerWrapper
       layout={props.layout}
       isLastAnswer={props.isLastQuestion}
+      showRequired={showRequired}
       onFocus={props.onFocus}
       onSubmit={() => {
         if (props.admin) return;
+        if (props.required && (!answer.day || !answer.month || !answer.year)) {
+          setShowRequired(true);
+          return;
+        }
         if (!answer.day || !answer.month || !answer.year) {
           props.onSubmit(null);
           return;

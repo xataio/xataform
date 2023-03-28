@@ -50,6 +50,7 @@ function AnswerRanking({
     <AnswerWrapper
       layout={layout}
       isLastAnswer={isLastQuestion}
+      showRequired={false /* Not relevant with the current UX */}
       onFocus={onFocus}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
       onSubmit={() => {
