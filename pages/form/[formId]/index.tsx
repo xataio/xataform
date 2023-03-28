@@ -130,6 +130,25 @@ export default function Form(
                 }
 
                 if (i === props.questions.length - 1) {
+                  // Check if every required question are filled
+                  for (const q of props.questions) {
+                    if ("required" in q && q.required) {
+                      const key =
+                        q.order +
+                        "-" +
+                        slugify(q.title, {
+                          lower: true,
+                          strict: true,
+                          trim: true,
+                        });
+                      if (answers[key] === null || answers[key] === undefined) {
+                        setSlideNumber(q.order + 1);
+                        return;
+                      }
+                    }
+                  }
+
+                  // Submit the form
                   submit({
                     formId: props.formId,
                     version: props.version,
@@ -164,7 +183,6 @@ export default function Form(
           ) : null}
         </div>
       ))}
-
       {/* Ending */}
       <div
         style={{ top: `calc(100vh * -${slideNumber - 1})` }}
@@ -182,7 +200,6 @@ export default function Form(
           </h2>
         ) : null}
       </div>
-
       {/* Slide number */}
       {slideNumber <= props.questions.length ? (
         <>
