@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@clerk/backend-core": "^2.13.2",
-    "@clerk/nextjs": "^4.6.13",
+    "@clerk/nextjs": "^4.11.13",
     "@headlessui/react": "^1.7.7",
     "@headlessui/tailwindcss": "^0.1.2",
     "@heroicons/react": "^2.0.14",
