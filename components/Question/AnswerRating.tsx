@@ -8,20 +8,22 @@ import { StarIcon } from "@heroicons/react/20/solid";
 function AnswerRating(props: AnswerProps<"rating">) {
   const [rating, setRating] = useState(0);
 
+  const onSubmit = () => {
+    if (props.admin) return;
+    props.onSubmit(rating);
+  };
+
   return (
     <AnswerWrapper
       layout={props.layout}
       showRequired={false /** Not relevant with the current UX */}
       isLastAnswer={props.isLastQuestion}
       onFocus={props.onFocus}
-      onSubmit={() => {
-        if (props.admin) return;
-        props.onSubmit(rating);
-      }}
+      onSubmit={onSubmit}
     >
       <fieldset
         aria-label={`Rating: ${rating} out of ${props.steps} stars`}
-        className="w-fit outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"
+        className="w-fit outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
         tabIndex={0}
         disabled={props.admin}
         onKeyUp={(e) => {
@@ -35,6 +37,9 @@ function AnswerRating(props: AnswerProps<"rating">) {
               }
               return prev;
             });
+          }
+          if (e.key === "Enter") {
+            onSubmit();
           }
         }}
       >

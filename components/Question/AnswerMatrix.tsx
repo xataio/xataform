@@ -295,47 +295,49 @@ function AnswerMatrix(props: AnswerProps<"matrix">) {
             ) : (
               <div>{row || `Row ${rowIndex + 1}`}</div>
             )}
-            {props.columns.map((column, columnIndex) => (
-              <div key={`cell-${columnIndex}-${rowIndex}`}>
-                <input
-                  type={props.multipleSelection ? "checkbox" : "radio"}
-                  disabled={props.admin}
-                  className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                  name={row}
-                  aria-label={column}
-                  onChange={() => {
-                    const rowSlug = row
-                      ? slugify(row, {
-                          lower: true,
-                          strict: true,
-                          trim: true,
-                        })
-                      : `row${rowIndex + 1}`;
+            {props.columns.map((column, columnIndex) => {
+              const rowSlug = row
+                ? slugify(row, {
+                    lower: true,
+                    strict: true,
+                    trim: true,
+                  })
+                : `row${rowIndex + 1}`;
 
-                    if (props.multipleSelection) {
-                      setAnswer((prev) => {
-                        const prevValue = prev[row];
-                        if (typeof prevValue === "string") {
-                          throw new Error(
-                            "answer should be an array in multipleSelection mode"
-                          );
-                        }
+              return (
+                <div key={`cell-${columnIndex}-${rowIndex}`}>
+                  <input
+                    type={props.multipleSelection ? "checkbox" : "radio"}
+                    disabled={props.admin}
+                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    name={rowSlug}
+                    aria-label={column}
+                    onChange={() => {
+                      if (props.multipleSelection) {
+                        setAnswer((prev) => {
+                          const prevValue = prev[rowSlug];
+                          if (typeof prevValue === "string") {
+                            throw new Error(
+                              "answer should be an array in multipleSelection mode"
+                            );
+                          }
 
-                        const nextValue = prevValue.includes(column)
-                          ? prevValue.filter((i) => i !== column)
-                          : [...prevValue, column];
-                        return { ...prev, [rowSlug]: nextValue };
-                      });
-                    } else {
-                      setAnswer((prev) => ({
-                        ...prev,
-                        [rowSlug]: column,
-                      }));
-                    }
-                  }}
-                />
-              </div>
-            ))}
+                          const nextValue = prevValue.includes(column)
+                            ? prevValue.filter((i) => i !== column)
+                            : [...prevValue, column];
+                          return { ...prev, [rowSlug]: nextValue };
+                        });
+                      } else {
+                        setAnswer((prev) => ({
+                          ...prev,
+                          [rowSlug]: column,
+                        }));
+                      }
+                    }}
+                  />
+                </div>
+              );
+            })}
           </fieldset>
         ))}
       </div>

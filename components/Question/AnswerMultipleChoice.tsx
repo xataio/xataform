@@ -30,6 +30,18 @@ function AnswerMultipleChoice({
     return choices;
   }, [choices, question.randomize]);
 
+  const onSubmit = () => {
+    if (question.admin) return;
+    if (
+      question.required &&
+      (other ? [...answer, other] : answer).length === 0
+    ) {
+      setShowRequired(true);
+      return;
+    }
+    question.onSubmit(other ? [...answer, other] : answer);
+  };
+
   return (
     <AnswerWrapper
       layout={layout}
@@ -37,17 +49,7 @@ function AnswerMultipleChoice({
       showRequired={showRequired}
       onFocus={onFocus}
       onClick={question.admin ? () => setIsEditingChoices(true) : undefined}
-      onSubmit={() => {
-        if (question.admin) return;
-        if (
-          question.required &&
-          (other ? [...answer, other] : answer).length === 0
-        ) {
-          setShowRequired(true);
-          return;
-        }
-        question.onSubmit(other ? [...answer, other] : answer);
-      }}
+      onSubmit={onSubmit}
     >
       <EditChoicesDialog
         isOpen={isEditingChoices}
@@ -103,6 +105,9 @@ function AnswerMultipleChoice({
                         ? prev.filter((i) => i !== choice)
                         : [...prev, choice]
                     );
+                  }
+                  if (e.key === "Enter") {
+                    onSubmit();
                   }
                 }}
                 className={clsx(
