@@ -26,7 +26,7 @@ function AnswerYesNo(props: AnswerProps<"yesNo">) {
     >
       <RadioGroup
         className="flex flex-col gap-2"
-        value={answer}
+        value={answer ?? ""}
         onChange={(value: "yes" | "no") => {
           setShowRequired(false);
           setAnswer(value);

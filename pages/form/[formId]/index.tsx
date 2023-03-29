@@ -73,7 +73,9 @@ export default function Form(
     const $element = $currentSlide.querySelector(
       "input, [tabindex], [role=radio], [role=checkbox]"
     );
-    if ($element instanceof HTMLElement) $element.focus();
+    if ($element instanceof HTMLElement) {
+      requestAnimationFrame(() => $element.focus());
+    }
   }, [slideNumber, $questions]);
 
   return (
