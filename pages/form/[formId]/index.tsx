@@ -10,7 +10,7 @@ import {
 } from "next";
 import Image from "next/image";
 import { RoutedQuery } from "nextjs-routes";
-import { useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { database } from "server/services/database";
 import { trpc } from "utils/trpc";
@@ -54,12 +54,27 @@ export default function Form(
 ) {
   const $questions = useRef<HTMLDivElement>(null);
   const [slideNumber, setSlideNumber] = useState(1);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const { mutate: submit } = trpc.form.submitFormAnswer.useMutation({
     onError(err) {
       toast.error(err.message);
     },
   });
+
+  useEffect(() => {
+    // Focus the first element of the current slide if the focus is away
+    if (!$questions.current) return;
+    const $forms = $questions.current.querySelectorAll("form");
+    const $currentSlide = $forms[slideNumber - 1];
+    if (!$currentSlide || $currentSlide.contains(document.activeElement)) {
+      return;
+    }
+    const $element = $currentSlide.querySelector(
+      "input, [tabindex], [role=radio], [role=checkbox]"
+    );
+    if ($element instanceof HTMLElement) $element.focus();
+  }, [slideNumber, $questions]);
 
   return (
     <div className="h-screen overflow-hidden" ref={$questions}>
@@ -104,6 +119,8 @@ export default function Form(
             <Answer
               {...question}
               onFocus={() => {
+                if (hasSubmitted) return;
+
                 // Prevent focusing something out of the screen
                 setSlideNumber(question.order + 1);
                 if ($questions.current) {
@@ -116,6 +133,8 @@ export default function Form(
               isLastQuestion={i === props.questions.length - 1}
               admin={false}
               onSubmit={async (val: any) => {
+                if (hasSubmitted) return;
+
                 if (question.type !== "statement") {
                   setAnswers((prev) => ({
                     ...prev,
@@ -163,6 +182,7 @@ export default function Form(
                       })]: val,
                     },
                   });
+                  setHasSubmitted(true);
                 }
 
                 setSlideNumber((i) => i + 1);
