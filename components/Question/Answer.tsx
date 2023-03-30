@@ -1,63 +1,24 @@
 import { QuestionType } from "server/routers/question/question.schemas";
 import { AnswerProps } from "./AnswerProps";
-import dynamic from "next/dynamic";
-import { Spinner } from "components/Spinner";
 
-// Lazy load every answers
-const AnswerShortText = dynamic(() => import("./AnswerShortText"), {
-  loading: Spinner,
-});
-const AnswerLongText = dynamic(() => import("./AnswerLongText"), {
-  loading: Spinner,
-});
-const AnswerEmail = dynamic(() => import("./AnswerEmail"), {
-  loading: Spinner,
-});
-const AnswerNumber = dynamic(() => import("./AnswerNumber"), {
-  loading: Spinner,
-});
-const AnswerDate = dynamic(() => import("./AnswerDate"), {
-  loading: Spinner,
-});
-const AnswerStatement = dynamic(() => import("./AnswerStatement"), {
-  loading: Spinner,
-});
-const AnswerWebsite = dynamic(() => import("./AnswerWebsite"), {
-  loading: Spinner,
-});
-const AnswerYesNo = dynamic(() => import("./AnswerYesNo"), {
-  loading: Spinner,
-});
-const AnswerPhoneNumber = dynamic(() => import("./AnswerPhoneNumber"), {
-  loading: Spinner,
-});
-const AnswerDropdown = dynamic(() => import("./AnswerDropdown"), {
-  loading: Spinner,
-});
-const AnswerMultipleChoice = dynamic(() => import("./AnswerMultipleChoice"), {
-  loading: Spinner,
-});
-const AnswerContactInfo = dynamic(() => import("./AnswerContactInfo"), {
-  loading: Spinner,
-});
-const AnswerRanking = dynamic(() => import("./AnswerRanking"), {
-  loading: Spinner,
-});
-const AnswerRating = dynamic(() => import("./AnswerRating"), {
-  loading: Spinner,
-});
-const AnswerAddress = dynamic(() => import("./AnswerAddress"), {
-  loading: Spinner,
-});
-const AnswerOpinionScale = dynamic(() => import("./AnswerOpinionScale"), {
-  loading: Spinner,
-});
-const AnswerLegal = dynamic(() => import("./AnswerLegal"), {
-  loading: Spinner,
-});
-const AnswerMatrix = dynamic(() => import("./AnswerMatrix"), {
-  loading: Spinner,
-});
+import AnswerShortText from "./AnswerShortText";
+import AnswerLongText from "./AnswerLongText";
+import AnswerEmail from "./AnswerEmail";
+import AnswerNumber from "./AnswerNumber";
+import AnswerDate from "./AnswerDate";
+import AnswerStatement from "./AnswerStatement";
+import AnswerWebsite from "./AnswerWebsite";
+import AnswerYesNo from "./AnswerYesNo";
+import AnswerPhoneNumber from "./AnswerPhoneNumber";
+import AnswerDropdown from "./AnswerDropdown";
+import AnswerMultipleChoice from "./AnswerMultipleChoice";
+import AnswerContactInfo from "./AnswerContactInfo";
+import AnswerRanking from "./AnswerRanking";
+import AnswerRating from "./AnswerRating";
+import AnswerAddress from "./AnswerAddress";
+import AnswerOpinionScale from "./AnswerOpinionScale";
+import AnswerLegal from "./AnswerLegal";
+import AnswerMatrix from "./AnswerMatrix";
 
 // Transforms `AnswerProps<T>` to `AnswerProps<"shortText"> | AnswerProps<"longText"> | …`
 // This is to enable proper type narrowing in our component switch cases

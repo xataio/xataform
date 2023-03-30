@@ -1,64 +1,23 @@
-import dynamic from "next/dynamic";
-import { Spinner } from "components/Spinner";
 import { Question } from "server/routers/question/question.schemas";
 
-const SettingsMultipleChoice = dynamic(
-  () => import("./SettingsMultipleChoice"),
-  {
-    loading: Spinner,
-  }
-);
-const SettingsContactInfo = dynamic(() => import("./SettingsContactInfo"), {
-  loading: Spinner,
-});
-const SettingsAddress = dynamic(() => import("./SettingsAddress"), {
-  loading: Spinner,
-});
-const SettingsPhoneNumber = dynamic(() => import("./SettingsPhoneNumber"), {
-  loading: Spinner,
-});
-const SettingsShortText = dynamic(() => import("./SettingsShortText"), {
-  loading: Spinner,
-});
-const SettingsLongText = dynamic(() => import("./SettingsLongText"), {
-  loading: Spinner,
-});
-const SettingsStatement = dynamic(() => import("./SettingsStatement"), {
-  loading: Spinner,
-});
-const SettingsRanking = dynamic(() => import("./SettingsRanking"), {
-  loading: Spinner,
-});
-const SettingsYesNo = dynamic(() => import("./SettingsYesNo"), {
-  loading: Spinner,
-});
-const SettingsEmail = dynamic(() => import("./SettingsEmail"), {
-  loading: Spinner,
-});
-const SettingsOpinionScale = dynamic(() => import("./SettingsOpinionScale"), {
-  loading: Spinner,
-});
-const SettingsRating = dynamic(() => import("./SettingsRating"), {
-  loading: Spinner,
-});
-const SettingsMatrix = dynamic(() => import("./SettingsMatrix"), {
-  loading: Spinner,
-});
-const SettingsDate = dynamic(() => import("./SettingsDate"), {
-  loading: Spinner,
-});
-const SettingsNumber = dynamic(() => import("./SettingsNumber"), {
-  loading: Spinner,
-});
-const SettingsDropdown = dynamic(() => import("./SettingsDropdown"), {
-  loading: Spinner,
-});
-const SettingsLegal = dynamic(() => import("./SettingsLegal"), {
-  loading: Spinner,
-});
-const SettingsWebsite = dynamic(() => import("./SettingsWebsite"), {
-  loading: Spinner,
-});
+import SettingsMultipleChoice from "./SettingsMultipleChoice";
+import SettingsContactInfo from "./SettingsContactInfo";
+import SettingsAddress from "./SettingsAddress";
+import SettingsPhoneNumber from "./SettingsPhoneNumber";
+import SettingsShortText from "./SettingsShortText";
+import SettingsLongText from "./SettingsLongText";
+import SettingsStatement from "./SettingsStatement";
+import SettingsRanking from "./SettingsRanking";
+import SettingsYesNo from "./SettingsYesNo";
+import SettingsEmail from "./SettingsEmail";
+import SettingsOpinionScale from "./SettingsOpinionScale";
+import SettingsRating from "./SettingsRating";
+import SettingsMatrix from "./SettingsMatrix";
+import SettingsDate from "./SettingsDate";
+import SettingsNumber from "./SettingsNumber";
+import SettingsDropdown from "./SettingsDropdown";
+import SettingsLegal from "./SettingsLegal";
+import SettingsWebsite from "./SettingsWebsite";
 
 export function QuestionSettings(
   question: Question & { questionId: string; formId: string }
