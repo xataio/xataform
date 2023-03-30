@@ -62,9 +62,23 @@ export const database = {
   },
 
   async deleteQuestion(id: string) {
-    await xata.db.question.update(id, {
+    // Mark the question as deleted
+    const updatedQuestion = await xata.db.question.update(id, {
       deletedAt: new Date(),
     });
+
+    if (updatedQuestion === null || updatedQuestion.form === null)
+      throw new Error("The question wasn't deleted");
+
+    // Recalculate the questions order
+    const questions = await this.listQuestions({
+      formId: updatedQuestion.form.id,
+      userId: updatedQuestion.userId,
+    });
+    await xata.db.question.update(
+      questions.map((q, order) => ({ id: q.id, order }))
+    );
+
     return id;
   },
 

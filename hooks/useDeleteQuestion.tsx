@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { Question } from "server/routers/question/question.schemas";
 import { trpc } from "utils/trpc";
 
 export function useDeleteQuestion({ formId }: { formId: string }) {
@@ -10,15 +11,21 @@ export function useDeleteQuestion({ formId }: { formId: string }) {
       });
       await utils.form.summary.cancel({ formId });
 
-      const previousQuestion = utils.question.get.getData({
-        questionId: updatedQuestion.questionId,
-      });
       const previousSummary = utils.form.summary.getData({ formId });
-
-      utils.question.get.setData(
-        { questionId: updatedQuestion.questionId },
-        undefined
+      const previousQuestions = (previousSummary || []).map((i) =>
+        utils.question.get.getData({
+          questionId: i.id,
+        })
       );
+
+      previousQuestions
+        .filter((q): q is Question & { id: string } =>
+          Boolean(q && q.id !== updatedQuestion.questionId)
+        )
+        .forEach((q, order) => {
+          console.log(q, order);
+          utils.question.get.setData({ questionId: q.id }, { ...q, order });
+        });
 
       utils.form.summary.setData({ formId }, (prev) =>
         prev
@@ -30,22 +37,19 @@ export function useDeleteQuestion({ formId }: { formId: string }) {
 
       return {
         previousSummary,
-        previousQuestion,
+        previousQuestions,
       };
     },
-    onError(err, updatedQuestion, context) {
+    onError(err, _, context) {
       utils.form.summary.setData({ formId }, context?.previousSummary);
-      utils.question.get.setData(
-        { questionId: updatedQuestion.questionId },
-        context?.previousQuestion
-      );
+      context?.previousQuestions.forEach((q) => {
+        if (q) utils.question.get.setData({ questionId: q.id }, q);
+      });
       toast.error(err.message);
     },
-    onSettled(question) {
+    onSettled() {
       utils.form.summary.invalidate({ formId });
-      utils.question.get.invalidate(
-        question ? { questionId: question.questionId } : undefined
-      );
+      utils.question.get.invalidate(undefined);
     },
   });
 
