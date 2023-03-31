@@ -2,7 +2,6 @@ import { httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { inferReactQueryProcedureOptions } from "@trpc/react-query";
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
-import { formRouter } from "../server/routers/form/form.router";
 import type { AppRouter } from "../server/routers/_app";
 
 function getBaseUrl() {
