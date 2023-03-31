@@ -17,7 +17,6 @@ export function AnswerWrapper(props: {
   return (
     <form
       onSubmit={(e) => {
-        console.log("form submit", e);
         e.preventDefault();
         props.onSubmit();
       }}

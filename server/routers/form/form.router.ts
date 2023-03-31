@@ -245,6 +245,12 @@ export const formRouter = router({
       };
     }),
 
+  preview: protectedProcedure
+    .input(z.object({ formId: z.string() }))
+    .query(async ({ ctx: { db }, input: { formId } }) => {
+      return await db.previewForm({ formId });
+    }),
+
   submitFormAnswer: publicProcedure
     .input(
       z.object({ formId: z.string(), version: z.number(), payload: z.any() })

@@ -41,6 +41,7 @@ type ButtonWithIconProps = ButtonPropsCommun & {
     | "sidebar-left"
     | "sidebar-right"
     | "trash"
+    | "reset"
     | "photo"
     | "warning";
   iconOnly?: boolean;
@@ -105,6 +106,12 @@ export function Button(props: ButtonProps) {
         onBlur={() => setShowTooltip(false)}
         aria-label={props.children}
       >
+        {icon === "reset" ? (
+          <ArrowPathIcon
+            className={clsx({ "mr-2": !props.iconOnly }, "h-4 w-4")}
+            aria-hidden="true"
+          />
+        ) : null}
         {icon === "loading" ? (
           <ArrowPathIcon
             className={clsx(

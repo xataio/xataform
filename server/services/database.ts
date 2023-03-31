@@ -440,6 +440,59 @@ export const database = {
     };
   },
 
+  async previewForm({ formId }: { formId: string }) {
+    const { records } = await xata.db.question
+      .filter(notExists("deletedAt"))
+      .filter("form", formId)
+      .getPaginated({
+        pagination: {
+          size: MAX_ITEMS,
+        },
+        sort: {
+          order: "asc",
+        },
+      });
+
+    const ending = await this.getEnding({ formId });
+
+    return {
+      ending,
+      questions: z
+        .array(
+          z.intersection(
+            questionSchema,
+            z.object({ questionId: z.string(), formId: z.string() })
+          )
+        )
+        .parse(
+          records.map((raw) => {
+            const {
+              type,
+              userId,
+              description,
+              order,
+              title,
+              illustration,
+              id,
+            } = raw;
+
+            const record: unknown = {
+              questionId: id,
+              formId,
+              type,
+              userId,
+              description,
+              order,
+              title,
+              illustration,
+              ...(raw as any)[type],
+            };
+            return record;
+          })
+        ),
+    };
+  },
+
   async copyQuestions(props: {
     fromFormId: string;
     toFormId: string;
