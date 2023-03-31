@@ -207,7 +207,7 @@ export const formRouter = router({
       })
     )
     .mutation(async ({ ctx: { db }, input: { questions, formId } }) => {
-      await db.updateQuestions(questions);
+      await db.updateQuestions(questions, formId);
 
       return { questions, formId };
     }),

@@ -239,6 +239,12 @@ const tables = [
       { name: "userId", type: "string" },
       { name: "version", type: "int", notNull: true, defaultValue: "0" },
       { name: "responses", type: "int", notNull: true, defaultValue: "0" },
+      {
+        name: "unpublishedChanges",
+        type: "int",
+        notNull: true,
+        defaultValue: "0",
+      },
     ],
   },
   {

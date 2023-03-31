@@ -13,6 +13,7 @@ import Link from "next/link";
 import { InlineEditTitle } from "components/CreateForm/InlineEditTitle";
 import { useRenameForm } from "hooks/useRenameForm";
 import { toast } from "react-toastify";
+import { usePublishForm } from "hooks/usePublishForm";
 
 export default function FormCreate({
   form: initialForm,
@@ -24,11 +25,7 @@ export default function FormCreate({
     }
   );
   const { renameForm } = useRenameForm();
-  const { mutate: publish, isLoading } = trpc.form.publish.useMutation({
-    onError(err) {
-      toast.error(err.message);
-    },
-  });
+  const { publishForm, isFormPublishing } = usePublishForm();
 
   return (
     <Box>
@@ -79,8 +76,12 @@ export default function FormCreate({
               Preview
             </Button>
           </Link>
-          <Button variant="ghost" onClick={() => publish({ formId: form.id })}>
-            {isLoading ? "Publishing…" : "Publish"}
+          <Button
+            disabled={form.unpublishedChanges === 0}
+            variant="ghost"
+            onClick={() => publishForm({ formId: form.id })}
+          >
+            {isFormPublishing ? "Publishing…" : "Publish"}
           </Button>
         </>
       </Header>

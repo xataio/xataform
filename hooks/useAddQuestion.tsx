@@ -7,6 +7,8 @@ export function useAddQuestion() {
   const { mutateAsync: addQuestion } = trpc.form.addQuestion.useMutation({
     async onMutate(newQuestion) {
       await utils.form.summary.cancel();
+      await utils.form.get.cancel({ formId: newQuestion.formId });
+
       const previousQuestions = utils.form.summary.getData({
         formId: newQuestion.formId,
       });
@@ -17,6 +19,12 @@ export function useAddQuestion() {
 
       utils.form.summary.setData({ formId: newQuestion.formId }, (prev) =>
         prev ? [...prev, optimisticQuestion] : [optimisticQuestion]
+      );
+
+      utils.form.get.setData({ formId: newQuestion.formId }, (prev) =>
+        prev
+          ? { ...prev, unpublishedChanges: prev.unpublishedChanges + 1 }
+          : undefined
       );
 
       return {

@@ -10,6 +10,7 @@ export function useUpdateQuestion({ formId }: { formId: string }) {
         questionId: updatedQuestion.questionId,
       });
       await utils.form.summary.cancel({ formId });
+      await utils.form.get.cancel({ formId });
 
       const previousQuestion = utils.question.get.getData({
         questionId: updatedQuestion.questionId,
@@ -35,6 +36,12 @@ export function useUpdateQuestion({ formId }: { formId: string }) {
                 : i
             )
           : []
+      );
+
+      utils.form.get.setData({ formId }, (prev) =>
+        prev
+          ? { ...prev, unpublishedChanges: prev.unpublishedChanges + 1 }
+          : undefined
       );
 
       return {

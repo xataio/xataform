@@ -472,6 +472,12 @@
           "type": "int",
           "notNull": true,
           "defaultValue": "0"
+        },
+        {
+          "name": "unpublishedChanges",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
         }
       ]
     },

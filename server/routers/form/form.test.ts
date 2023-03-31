@@ -22,9 +22,13 @@ describe("form router", () => {
 
       expect(() =>
         router.create({
-          status: "draft",
-          title: "test",
-          version: 0,
+          form: {
+            status: "draft",
+            title: "test",
+            version: 0,
+            responses: 0,
+            unpublishedChanges: 0,
+          },
         })
       ).rejects.toThrowError("Limit of 100 forms reached!");
     });

@@ -62,7 +62,6 @@ export const database = {
   },
 
   async deleteQuestion(id: string) {
-    // Mark the question as deleted
     const updatedQuestion = await xata.db.question.update(id, {
       deletedAt: new Date(),
     });
@@ -75,9 +74,19 @@ export const database = {
       formId: updatedQuestion.form.id,
       userId: updatedQuestion.userId,
     });
-    await xata.db.question.update(
-      questions.map((q, order) => ({ id: q.id, order }))
-    );
+
+    await xata.transactions.run([
+      ...questions.map((q, order) => ({
+        update: { table: "question" as const, id: q.id, fields: { order } },
+      })),
+      {
+        update: {
+          table: "form",
+          id: updatedQuestion.form.id,
+          fields: { status: "dirty" },
+        },
+      },
+    ]);
 
     return id;
   },
@@ -141,7 +150,10 @@ export const database = {
       [question.type]: scopedProps,
     };
 
-    await xata.db.question.update({ id, ...record });
+    const q = await xata.db.question.update({ id, ...record });
+
+    if (q && q.form)
+      xata.db.form.update(q.form.id, { unpublishedChanges: { $increment: 1 } });
 
     return { id, ...question };
   },
@@ -172,6 +184,7 @@ export const database = {
     };
 
     const createdRecord = await xata.db.question.create(record);
+    xata.db.form.update(formId, { unpublishedChanges: { $increment: 1 } });
 
     return { question, id: createdRecord.id };
   },
@@ -232,6 +245,12 @@ export const database = {
       subtitle,
     });
 
+    if (updatedRecord && updatedRecord.form) {
+      xata.db.form.update(updatedRecord.form.id, {
+        unpublishedChanges: { $increment: 1 },
+      });
+    }
+
     return updatedRecord;
   },
 
@@ -239,6 +258,7 @@ export const database = {
     // Mark the form as `live` and bump the version
     const updatedForm = await xata.db.form.update(formId, {
       status: "live",
+      unpublishedChanges: 0,
       version: { $increment: 1 },
     });
     if (updatedForm === null) throw new Error("Form can't be publish");
@@ -501,8 +521,12 @@ export const database = {
     questions: Array<{
       id: string;
       order: number;
-    }>
-  ) => xata.db.question.update(questions),
+    }>,
+    formId: string
+  ) => {
+    xata.db.question.update(questions);
+    xata.db.form.update(formId, { unpublishedChanges: { $increment: 1 } });
+  },
 };
 
 export type Database = typeof database;

@@ -10,10 +10,12 @@ export function useCreateForm() {
         await utils.form.list.cancel();
         const previousForms = utils.form.list.getData();
         const optimisticForm: RouterOutputs["form"]["list"][-1] = {
-          title: newForm.title,
+          title: newForm.form.title,
           status: "draft",
           id: "optimistic_" + self.crypto.randomUUID(),
           version: 0,
+          unpublishedChanges: 0,
+          responses: 0,
         };
 
         utils.form.list.setData(undefined, (prev) =>
