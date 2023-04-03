@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout commit
+      uses: actions/checkout@v3
+      
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        cache: 'pnpm'
+        
+    - name: Restore cache
+      uses: actions/cache/restore@v3
+      with:
+        key: ${{ hashFiles(pnpm-lock.yaml) }}
+        path: node_modules
+        
+    - name: pnpm install
+      run: pnpm install
+      
+    - name: Cache node_modules
+      uses: actions/cache/save@v3
+      with:
+        key: ${{ hashFiles(pnpm-lock.yaml) }}
+        path: node_modules
+        
+    - name: Run tests
+      run: pnpm test
