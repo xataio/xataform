@@ -17,22 +17,11 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v3
       with:
+        node-version: 18
         cache: 'pnpm'
-        
-    - name: Restore cache
-      uses: actions/cache/restore@v3
-      with:
-        key: ${{ hashFiles(pnpm-lock.yaml) }}
-        path: node_modules
         
     - name: pnpm install
       run: pnpm install
-      
-    - name: Cache node_modules
-      uses: actions/cache/save@v3
-      with:
-        key: ${{ hashFiles(pnpm-lock.yaml) }}
-        path: node_modules
         
     - name: Run tests
       run: pnpm test
