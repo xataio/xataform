@@ -12,8 +12,8 @@ import { Header } from "components/Header";
 import Link from "next/link";
 import { InlineEditTitle } from "components/CreateForm/InlineEditTitle";
 import { useRenameForm } from "hooks/useRenameForm";
-import { toast } from "react-toastify";
 import { usePublishForm } from "hooks/usePublishForm";
+import { StatusButton } from "components/CreateForm/StatusButton";
 
 export default function FormCreate({
   form: initialForm,
@@ -66,13 +66,14 @@ export default function FormCreate({
         <>
           <Link
             href={{
-              pathname: "/form/[formId]",
+              pathname: "/form/[formId]/preview",
               query: {
                 formId: form.id,
               },
             }}
+            className="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
           >
-            <Button icon="preview" variant="ghost">
+            <Button icon="preview" variant="ghost" tabIndex={-1}>
               Preview
             </Button>
           </Link>
@@ -83,6 +84,10 @@ export default function FormCreate({
           >
             {isFormPublishing ? "Publishing…" : "Publish"}
           </Button>
+          <StatusButton
+            status={form.status}
+            unpublishedChanges={form.unpublishedChanges}
+          />
         </>
       </Header>
       <CreateFormMain formId={form.id} />

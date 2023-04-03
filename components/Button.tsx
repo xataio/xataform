@@ -24,6 +24,7 @@ type ButtonPropsCommun = {
   isLoading?: boolean;
   disabled?: boolean;
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
+  tabIndex?: number;
 };
 
 type ButtonPropsWithoutIcon = ButtonPropsCommun & {
@@ -105,6 +106,7 @@ export function Button(props: ButtonProps) {
         onMouseOut={() => setShowTooltip(false)}
         onBlur={() => setShowTooltip(false)}
         aria-label={props.children}
+        tabIndex={props.tabIndex}
       >
         {icon === "reset" ? (
           <ArrowPathIcon
