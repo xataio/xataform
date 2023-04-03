@@ -15,8 +15,13 @@ import { trpc } from "../utils/trpc";
 
 import "./styles.css";
 import "react-toastify/dist/ReactToastify.css";
+import { Route } from "nextjs-routes";
 
-const publicPages: string[] = ["/", "/404"] satisfies LinkProps["href"][];
+const publicPages: string[] = [
+  "/",
+  "/404",
+  "/form/[formId]",
+] satisfies Route["pathname"][];
 
 function App({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
