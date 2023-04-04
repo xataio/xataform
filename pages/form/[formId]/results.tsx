@@ -6,11 +6,10 @@ import { auth } from "server/services/auth";
 import { database } from "server/services/database";
 import { RouterOutputs, trpc } from "utils/trpc";
 
-import { CreateFormMain } from "components/CreateForm/CreateFormMain";
 import { FormHeader } from "components/Form/FormHeader";
 import { Box } from "components/Box";
 
-export default function FormCreate({
+export default function FormResults({
   form: initialForm,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: form } = trpc.form.get.useQuery(
@@ -22,8 +21,8 @@ export default function FormCreate({
 
   return (
     <Box>
-      <FormHeader form={form} page="create" />
-      <CreateFormMain formId={form.id} />
+      <FormHeader form={form} page="results" />
+      <div>Results</div>
     </Box>
   );
 }

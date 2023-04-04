@@ -28,6 +28,8 @@
     "@trpc/react-query": "^10.16.0",
     "@trpc/server": "^10.16.0",
     "@xata.io/client": "^0.23.3",
+    "ag-grid-community": "^29.2.0",
+    "ag-grid-react": "^29.2.0",
     "case": "^1.6.3",
     "clsx": "^1.2.1",
     "next": "13.1.2",
