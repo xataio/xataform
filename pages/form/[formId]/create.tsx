@@ -6,7 +6,7 @@ import { auth } from "server/services/auth";
 import { database } from "server/services/database";
 import { RouterOutputs, trpc } from "utils/trpc";
 
-import { CreateFormMain } from "components/CreateForm/CreateFormMain";
+import { FormCreateMain } from "components/FormCreate/FormCreateMain";
 import { FormHeader } from "components/Form/FormHeader";
 import { Box } from "components/Box";
 
@@ -23,7 +23,7 @@ export default function FormCreate({
   return (
     <Box>
       <FormHeader form={form} page="create" />
-      <CreateFormMain formId={form.id} />
+      <FormCreateMain formId={form.id} />
     </Box>
   );
 }

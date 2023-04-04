@@ -12,11 +12,11 @@ import { useLayoutEffect } from "react";
 import { trpc } from "utils/trpc";
 import { ContentPanel } from "./ContentPanel";
 
-export type CreateFormMainProps = {
+export type FormCreateMainProps = {
   formId: string;
 };
 
-export function CreateFormMain({ formId }: CreateFormMainProps) {
+export function FormCreateMain({ formId }: FormCreateMainProps) {
   const { addMockQuestions } = useAddMockQuestions();
   const { questions } = useFormSummary({ formId });
   const { data: ending } = trpc.ending.get.useQuery({ formId });
