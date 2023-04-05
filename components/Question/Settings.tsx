@@ -70,27 +70,31 @@ export function Settings({ formId, questionId }: SettingsProps) {
           {hasIllustration ? "Remove illustration" : "Add illustation"}
         </Button>
       </div>
-      <h1 className="mt-4 font-medium">Debug</h1>
-      <ul className="mt-1 flex flex-col gap-2">
-        {question &&
-          Object.entries(question).map(([key, value]) => (
-            <li
-              key={`${question.id}-${key}-${value}`}
-              className="flex gap-2 text-sm"
-            >
-              <label className="font-medium text-indigo-800">{key}</label>
-              <span>{JSON.stringify(value)}</span>
-            </li>
-          ))}
-      </ul>
-      <a
-        target="_blank"
-        rel="noreferrer"
-        className="text-indigo-500 underline"
-        href={xataUrl ?? ""}
-      >
-        Open in xata
-      </a>
+      {process.env.NODE_ENV === "development" ? (
+        <>
+          <h1 className="mt-4 font-medium">Debug</h1>
+          <ul className="mt-1 flex flex-col gap-2">
+            {question &&
+              Object.entries(question).map(([key, value]) => (
+                <li
+                  key={`${question.id}-${key}-${value}`}
+                  className="flex gap-2 text-sm"
+                >
+                  <label className="font-medium text-indigo-800">{key}</label>
+                  <span>{JSON.stringify(value)}</span>
+                </li>
+              ))}
+          </ul>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="text-indigo-500 underline"
+            href={xataUrl ?? ""}
+          >
+            Open in xata
+          </a>
+        </>
+      ) : null}
     </div>
   );
 }
