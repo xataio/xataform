@@ -14,6 +14,7 @@ export function AnswerWrapper(props: {
   className?: string;
   isLastAnswer: boolean;
   showRequired: boolean;
+  keyToSubmit?: "Shift ⇑ + Enter ↵" | "Enter ↵";
 }) {
   const { pathname } = useRouter();
   const isInCreateMode = pathname === "/form/[formId]/create";
@@ -57,7 +58,7 @@ export function AnswerWrapper(props: {
             {props.isLastAnswer ? "Submit" : "OK ✓"}
           </Button>
           <div className="text-xs">
-            press <b>Enter</b>↵
+            press <b>{props.keyToSubmit ?? "Enter ↵"}</b>
           </div>
         </div>
       )}
