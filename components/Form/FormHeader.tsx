@@ -69,6 +69,8 @@ export function FormHeader({ form, page }: FormHeaderProps) {
               formId: form.id,
             },
           }}
+          rel="noopener noreferrer"
+          target="_blank"
           className="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
         >
           <Button icon="preview" variant="ghost" tabIndex={-1}>

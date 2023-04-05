@@ -1,6 +1,7 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { Button } from "components/Button";
+import { useRouter } from "next/router";
 import React from "react";
 import { AnswerLayout } from "./AnswerProps";
 
@@ -14,6 +15,8 @@ export function AnswerWrapper(props: {
   isLastAnswer: boolean;
   showRequired: boolean;
 }) {
+  const { pathname } = useRouter();
+  const isInCreateMode = pathname === "/form/[formId]/create";
   return (
     <form
       onSubmit={(e) => {
@@ -27,9 +30,12 @@ export function AnswerWrapper(props: {
       )}
     >
       <div
+        style={{
+          maxHeight: isInCreateMode ? "200px" : "calc(100vh - 270px)",
+        }}
         className={clsx(
           "pr-4 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-thumb-rounded",
-          "-m-1 max-h-full overflow-auto p-1",
+          "-m-1 overflow-auto p-1",
           "flex flex-col gap-4",
           props.className
         )}
