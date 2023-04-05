@@ -9,6 +9,7 @@ import { RouterOutputs, trpc } from "utils/trpc";
 import { FormCreateMain } from "components/FormCreate/FormCreateMain";
 import { FormHeader } from "components/Form/FormHeader";
 import { Box } from "components/Box";
+import Head from "next/head";
 
 export default function FormCreate({
   form: initialForm,
@@ -21,10 +22,15 @@ export default function FormCreate({
   );
 
   return (
-    <Box>
-      <FormHeader form={form} page="create" />
-      <FormCreateMain formId={form.id} />
-    </Box>
+    <>
+      <Head>
+        <title>XataForm - Create</title>
+      </Head>
+      <Box>
+        <FormHeader form={form} page="create" />
+        <FormCreateMain formId={form.id} />
+      </Box>
+    </>
   );
 }
 

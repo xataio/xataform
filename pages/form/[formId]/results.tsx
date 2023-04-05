@@ -9,6 +9,7 @@ import { RouterOutputs, trpc } from "utils/trpc";
 import { FormHeader } from "components/Form/FormHeader";
 import { Box } from "components/Box";
 import { FormResultsMain } from "components/FormResults/FormResultsMain";
+import Head from "next/head";
 
 export default function FormResults({
   form: initialForm,
@@ -21,10 +22,15 @@ export default function FormResults({
   );
 
   return (
-    <Box>
-      <FormHeader form={form} page="results" />
-      <FormResultsMain formId={form.id} />
-    </Box>
+    <>
+      <Head>
+        <title>Xataform - Results</title>
+      </Head>
+      <Box>
+        <FormHeader form={form} page="results" />
+        <FormResultsMain formId={form.id} />
+      </Box>
+    </>
   );
 }
 

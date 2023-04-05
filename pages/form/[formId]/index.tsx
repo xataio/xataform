@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { database } from "server/services/database";
 import { trpc } from "utils/trpc";
 import { Form } from "components/Form";
+import Head from "next/head";
 
 export async function getStaticPaths() {
   const publishedForms = await database.listPublishedForms();
@@ -38,15 +39,16 @@ export async function getStaticProps(
   });
 
   const ending = await database.getEnding({ formId });
+  const form = await database.getForm(formId);
 
-  if (questions.length === 0) {
+  if (questions.length === 0 || form === null) {
     return {
       notFound: true,
     } satisfies GetStaticPropsResult<any>;
   }
 
   return {
-    props: { questions, formId, version, ending },
+    props: { questions, formId, version, ending, form },
   } satisfies GetStaticPropsResult<any>;
 }
 
@@ -60,16 +62,21 @@ export default function FormPage(
   });
 
   return (
-    <Form
-      questions={props.questions}
-      ending={props.ending}
-      onSubmit={(answers) =>
-        submit({
-          formId: props.formId,
-          version: props.version,
-          payload: answers,
-        })
-      }
-    />
+    <>
+      <Head>
+        <title>XataForm - {props.form.title}</title>
+      </Head>
+      <Form
+        questions={props.questions}
+        ending={props.ending}
+        onSubmit={(answers) =>
+          submit({
+            formId: props.formId,
+            version: props.version,
+            payload: answers,
+          })
+        }
+      />
+    </>
   );
 }
