@@ -9,6 +9,7 @@ import {
   TrashIcon,
   ArrowPathIcon,
   PhotoIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/react/20/solid";
 import { Placement } from "@popperjs/core";
 import clsx from "clsx";
@@ -44,7 +45,8 @@ type ButtonWithIconProps = ButtonPropsCommun & {
     | "trash"
     | "reset"
     | "photo"
-    | "warning";
+    | "warning"
+    | "download";
   iconOnly?: boolean;
   tooltipPlacement?: Placement;
 };
@@ -173,6 +175,12 @@ export function Button(props: ButtonProps) {
         ) : null}
         {icon === "photo" ? (
           <PhotoIcon
+            className={clsx({ "mr-2": !props.iconOnly }, "h-4 w-4")}
+            aria-hidden="true"
+          />
+        ) : null}
+        {icon === "download" ? (
+          <ArrowDownTrayIcon
             className={clsx({ "mr-2": !props.iconOnly }, "h-4 w-4")}
             aria-hidden="true"
           />

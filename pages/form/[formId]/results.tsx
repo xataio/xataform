@@ -8,6 +8,7 @@ import { RouterOutputs, trpc } from "utils/trpc";
 
 import { FormHeader } from "components/Form/FormHeader";
 import { Box } from "components/Box";
+import { FormResultsMain } from "components/FormResults/FormResultsMain";
 
 export default function FormResults({
   form: initialForm,
@@ -22,7 +23,7 @@ export default function FormResults({
   return (
     <Box>
       <FormHeader form={form} page="results" />
-      <div>Results</div>
+      <FormResultsMain formId={form.id} />
     </Box>
   );
 }

@@ -247,8 +247,8 @@ export const formRouter = router({
 
   preview: protectedProcedure
     .input(z.object({ formId: z.string() }))
-    .query(async ({ ctx: { db }, input: { formId } }) => {
-      return await db.previewForm({ formId });
+    .query(async ({ ctx: { db, user }, input: { formId } }) => {
+      return await db.previewForm({ formId, userId: user.id });
     }),
 
   submitFormAnswer: publicProcedure
@@ -261,6 +261,12 @@ export const formRouter = router({
       return {
         submitted: true,
       };
+    }),
+
+  listAnswers: protectedProcedure
+    .input(z.object({ formId: z.string(), version: z.number() }))
+    .query(async ({ ctx: { db }, input: { formId, version } }) => {
+      return db.listAnswers({ formId, version });
     }),
 });
 
