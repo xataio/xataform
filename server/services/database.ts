@@ -1,4 +1,4 @@
-import { notExists, XataApiClient, buildClient } from "@xata.io/client";
+import { notExists, XataApiClient } from "@xata.io/client";
 import { answersDatabase, answersDatabaseOptions } from "utils/answers";
 import { getXataColumn } from "utils/getXataColumn";
 import { z } from "zod";
@@ -440,9 +440,10 @@ export const database = {
     };
   },
 
-  async previewForm({ formId }: { formId: string }) {
+  async previewForm({ formId, userId }: { formId: string; userId: string }) {
     const { records } = await xata.db.question
       .filter(notExists("deletedAt"))
+      .filter("userId", userId)
       .filter("form", formId)
       .getPaginated({
         pagination: {
@@ -560,7 +561,7 @@ export const database = {
     return count;
   },
 
-  createQuestions: (
+  async createQuestions(
     questions: Array<{
       title: string;
       type: string;
@@ -568,17 +569,52 @@ export const database = {
       userId: string;
       order: number;
     }>
-  ) => xata.db.question.create(questions),
+  ) {
+    return xata.db.question.create(questions);
+  },
 
-  updateQuestions: (
+  async updateQuestions(
     questions: Array<{
       id: string;
       order: number;
     }>,
     formId: string
-  ) => {
+  ) {
     xata.db.question.update(questions);
     xata.db.form.update(formId, { unpublishedChanges: { $increment: 1 } });
+  },
+
+  async listAnswers({ formId, version }: { version: number; formId: string }) {
+    const table = `${formId}-v${version}`;
+
+    // Get columnDefs
+    const apiClient = new XataApiClient();
+    const { columns } = await apiClient.tables.getTableColumns({
+      ...answersDatabaseOptions,
+      table,
+    });
+    const columnDefs = columns.map((column) => {
+      if (column.type === "datetime") {
+        return {
+          field: column.name,
+          filter: "agDateColumnFilter",
+        };
+      }
+      if (column.type === "int" || column.type === "float") {
+        return {
+          field: column.name,
+          filter: "agNumberColumnFilter",
+        };
+      }
+      return {
+        field: column.name,
+      };
+    });
+
+    // Get answers
+    const rowData = await answersDatabase.db[table].getAll();
+
+    return { columnDefs, rowData };
   },
 };
 

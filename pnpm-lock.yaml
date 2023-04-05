@@ -26,6 +26,8 @@ specifiers:
   '@xata.io/cli': ^0.11.15
   '@xata.io/client': ^0.23.3
   '@xata.io/codegen': ^0.23.2
+  ag-grid-community: ^29.2.0
+  ag-grid-react: ^29.2.0
   autoprefixer: ^10.4.13
   case: ^1.6.3
   clsx: ^1.2.1
@@ -68,6 +70,8 @@ dependencies:
   '@trpc/react-query': 10.16.0_cjtnmp7idy5rgt3nnb3qtgk6dq
   '@trpc/server': 10.16.0
   '@xata.io/client': 0.23.3_typescript@4.9.4
+  ag-grid-community: 29.2.0
+  ag-grid-react: 29.2.0_ermkjgi2jekqaod7ucm562tq6y
   case: 1.6.3
   clsx: 1.2.1
   next: 13.1.2_biqbaboplfbrettd7655fr4n2y
@@ -2149,6 +2153,23 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  /ag-grid-community/29.2.0:
+    resolution: {integrity: sha512-1xP1fpM8gXp2ALzBLONejZNul9hA3//ddszSlhq79QZ1FskQ1Z7E2WvvFeCeLJTJZrfhQkT1q1LO5DGfGeiBvg==}
+    dev: false
+
+  /ag-grid-react/29.2.0_ermkjgi2jekqaod7ucm562tq6y:
+    resolution: {integrity: sha512-FZEWhbe51KNkvu+MohGXxXixIJdakJrs5XDdJ/h1jqmCX9WZzHNT2OvoYHIXB7gcKKj5pf47YJB8eaEqsRlpbg==}
+    peerDependencies:
+      ag-grid-community: ~29.2.0
+      react: ^16.3.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      ag-grid-community: 29.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
 
   /ajv/6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}

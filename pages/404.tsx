@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <>
       <Head>
-        <title>Page not found</title>
+        <title>XataForm - Page not found</title>
         <meta name="description" content="Page not found" />
       </Head>
       <main

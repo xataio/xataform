@@ -6,12 +6,12 @@ import { auth } from "server/services/auth";
 import { database } from "server/services/database";
 import { RouterOutputs, trpc } from "utils/trpc";
 
-import { FormCreateMain } from "components/FormCreate/FormCreateMain";
 import { FormHeader } from "components/Form/FormHeader";
 import { Box } from "components/Box";
+import { FormResultsMain } from "components/FormResults/FormResultsMain";
 import Head from "next/head";
 
-export default function FormCreate({
+export default function FormResults({
   form: initialForm,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: form } = trpc.form.get.useQuery(
@@ -24,11 +24,11 @@ export default function FormCreate({
   return (
     <>
       <Head>
-        <title>XataForm - Create</title>
+        <title>Xataform - Results</title>
       </Head>
       <Box>
-        <FormHeader form={form} page="create" />
-        <FormCreateMain formId={form.id} />
+        <FormHeader form={form} page="results" />
+        <FormResultsMain formId={form.id} />
       </Box>
     </>
   );
