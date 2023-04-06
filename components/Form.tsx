@@ -72,7 +72,9 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
             </div>
 
             {/* Description */}
-            <p>{question.description}</p>
+            <p className="col-start-2 mt-1 font-light">
+              {question.description}
+            </p>
 
             <Answer
               {...question}
