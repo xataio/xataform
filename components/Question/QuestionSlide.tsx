@@ -83,7 +83,7 @@ export function QuestionSlide({
             aria-label="title"
             type="text"
             className={clsx(
-              "border-0 text-xl placeholder:font-light placeholder:italic placeholder:text-slate-300 focus:ring-0"
+              "w-full border-0 text-xl placeholder:font-light placeholder:italic placeholder:text-slate-300 focus:ring-0"
             )}
             placeholder={
               "Your question here." +
