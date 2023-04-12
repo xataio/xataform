@@ -3,7 +3,7 @@ import slugify from "slugify";
 import clsx from "clsx";
 import { Answer } from "components/Question/Answer";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { database } from "server/services/database";
 export type FormProps = {
   questions: Awaited<
@@ -16,6 +16,7 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
   const $questions = useRef<HTMLDivElement>(null);
   const [slideNumber, setSlideNumber] = useState(1);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [answers, setAnswers] = useState<Record<string, any>>({});
 
   useEffect(() => {
@@ -29,8 +30,9 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
     const $element = $currentSlide.querySelector(
       "input, [tabindex], [role=radio], [role=checkbox]"
     );
+
     if ($element instanceof HTMLElement) {
-      requestAnimationFrame(() => $element.focus());
+      $element.focus();
     }
   }, [slideNumber, $questions]);
 
@@ -93,7 +95,15 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
               isLastQuestion={i === questions.length - 1}
               admin={false}
               onSubmit={async (val: any) => {
-                if (hasSubmitted) return;
+                if (
+                  document.activeElement &&
+                  "blur" in document.activeElement &&
+                  typeof document.activeElement.blur === "function"
+                ) {
+                  document.activeElement?.blur();
+                }
+
+                if (hasSubmitted || isSubmitting) return;
 
                 if (question.type !== "statement") {
                   setAnswers((prev) => ({
@@ -141,7 +151,14 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
                   setHasSubmitted(true);
                 }
 
-                setSlideNumber((i) => i + 1);
+                // Wait a bit to show the answer and avoid bruteforcing the form
+                setIsSubmitting(true);
+                setTimeout(() => {
+                  setIsSubmitting(false);
+                  setSlideNumber((i) => {
+                    return i + 1;
+                  });
+                }, 500);
               }}
             />
           </div>
