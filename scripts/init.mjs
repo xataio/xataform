@@ -12,6 +12,7 @@ import {
 import { XataApiClient } from "@xata.io/client";
 import { readFile, writeFile } from "node:fs/promises";
 import { generate } from "@xata.io/codegen";
+import { schema } from "../xata.schema.mjs";
 
 async function main() {
   intro("XataForm init");
@@ -138,7 +139,6 @@ async function main() {
   xataformAnswerDbSpinner.stop("Created xataform-answers database");
 
   // Create tables
-  const schema = JSON.parse(await readFile("xata.schema.json", "utf-8"));
   const createTablesSpinner = spinner();
   createTablesSpinner.start("Create tables");
   const migration = await xata.migrations.compareBranchWithUserSchema({
