@@ -32,6 +32,7 @@
     "ag-grid-react": "^29.2.0",
     "case": "^1.6.3",
     "clsx": "^1.2.1",
+    "nanoid": "^4.0.2",
     "next": "13.1.2",
     "nextjs-routes": "^1.0.8",
     "react": "18.2.0",
