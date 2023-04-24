@@ -10,6 +10,8 @@ import {
   questionSchema,
   questionTypeSchema,
 } from "../routers/question/question.schemas";
+import { Logic } from "server/routers/logic/logic.schemas";
+import * as logicUtils from "server/routers/logic/logic.utils";
 
 const xata = getXataClient();
 
@@ -615,6 +617,78 @@ export const database = {
     const rowData = await answersDatabase.db[table].getAll();
 
     return { columnDefs, rowData };
+  },
+
+  async upsertRules({
+    questionId,
+    rules,
+  }: {
+    questionId: string;
+    rules: Logic[number];
+  }) {
+    // Transform logic object to xata records
+    const records = logicUtils.toXataRecords(rules, questionId);
+
+    // Get all previous records
+    const prev = await xata.db.logic.filter("question.id", questionId).getAll();
+
+    await xata.transactions.run([
+      // Remove all previous records
+      ...prev.map((r) => ({
+        delete: { table: "logic" as const, id: r.id },
+      })),
+      // Push new records
+      ...records.map((record) => ({
+        insert: { table: "logic" as const, record },
+      })),
+    ]);
+
+    return { ok: true };
+  },
+
+  async getLogic({ formId }: { formId: string }) {
+    const data = await xata.db.logic
+      .filter("question.form.id", formId)
+      .select([
+        "id",
+        "action",
+        "operation",
+        "value",
+        "key",
+        "to.id",
+        "parentRule.id",
+        "question.id",
+        "question.type",
+      ])
+      .getAll();
+
+    return logicUtils.fromXataRecords(data);
+  },
+
+  async getPublishedLogic({
+    formId,
+    version,
+  }: {
+    formId: string;
+    version: number;
+  }) {
+    const data = await xata.db.publishedLogic
+      .filter("question.form.id", formId)
+      .filter("version", version)
+      .select([
+        "id",
+        "action",
+        "operation",
+        "value",
+        "key",
+        "to.id",
+        "parentRule.id",
+        "question.id",
+        "question.type",
+      ])
+      .getAll();
+
+    return logicUtils.fromXataRecords(data);
   },
 };
 

@@ -474,6 +474,55 @@ const tables = [
       { name: "userId", type: "string", notNull: true, defaultValue: "" },
     ],
   },
+  {
+    name: "logic",
+    columns: [
+      {
+        name: "createdAt",
+        type: "datetime",
+        notNull: true,
+        defaultValue: "now",
+      },
+      {
+        name: "updatedAt",
+        type: "datetime",
+        notNull: true,
+        defaultValue: "now",
+      },
+      { name: "question", type: "link", link: { table: "question" } },
+      { name: "operation", type: "string" },
+      { name: "value", type: "string" },
+      { name: "key", type: "string" },
+      { name: "to", type: "link", link: { table: "question" } },
+      { name: "action", type: "string" },
+      { name: "parentRule", type: "link", link: { table: "logic" } },
+    ],
+  },
+  {
+    name: "publishedLogic",
+    columns: [
+      {
+        name: "createdAt",
+        type: "datetime",
+        notNull: true,
+        defaultValue: "now",
+      },
+      {
+        name: "updatedAt",
+        type: "datetime",
+        notNull: true,
+        defaultValue: "now",
+      },
+      { name: "question", type: "link", link: { table: "question" } },
+      { name: "operation", type: "string" },
+      { name: "value", type: "string" },
+      { name: "key", type: "string" },
+      { name: "to", type: "link", link: { table: "question" } },
+      { name: "action", type: "string" },
+      { name: "parentRule", type: "link", link: { table: "logic" } },
+      { name: "version", type: "int", defaultValue: "0" },
+    ],
+  },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -491,11 +540,19 @@ export type PublishedQuestionRecord = PublishedQuestion & XataRecord;
 export type Ending = InferredTypes["ending"];
 export type EndingRecord = Ending & XataRecord;
 
+export type Logic = InferredTypes["logic"];
+export type LogicRecord = Logic & XataRecord;
+
+export type PublishedLogic = InferredTypes["publishedLogic"];
+export type PublishedLogicRecord = PublishedLogic & XataRecord;
+
 export type DatabaseSchema = {
   question: QuestionRecord;
   form: FormRecord;
   publishedQuestion: PublishedQuestionRecord;
   ending: EndingRecord;
+  logic: LogicRecord;
+  publishedLogic: PublishedLogicRecord;
 };
 
 const DatabaseClient = buildClient();
