@@ -115,6 +115,18 @@ async function main() {
     process.exit(0);
   }
 
+  // Save region & workspace
+  const configSpinner = spinner();
+  configSpinner.start("Saving config");
+  await writeFile(
+    "scripts/config.mjs",
+    `// Xata config
+    export const region = "${region}";
+    export const workspace = "${workspace}";
+    `
+  );
+  configSpinner.stop("Saved config");
+
   // Create databases
   const xataformDbSpinner = spinner();
   xataformDbSpinner.start("Creating xataform database");

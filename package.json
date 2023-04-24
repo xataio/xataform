@@ -9,6 +9,7 @@
     "lint": "next lint",
     "xata": "xata",
     "xata:init": "node scripts/init.mjs",
+    "xata:push": "node scripts/push.mjs",
     "test": "vitest"
   },
   "dependencies": {
