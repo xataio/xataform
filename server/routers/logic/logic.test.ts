@@ -664,6 +664,79 @@ describe("logic", () => {
           answer: "1989-02-01T00:00:00.000Z",
           expected: "next-question",
         },
+        {
+          name: "and",
+          rules: [
+            {
+              operation: "and",
+              rules: [
+                {
+                  action: "jump",
+                  questionType: "shortText",
+                  operation: "contains",
+                  value: "let",
+                  to: "next-question",
+                },
+                {
+                  action: "jump",
+                  questionType: "shortText",
+                  operation: "contains",
+                  value: "do",
+                  to: "next-question",
+                },
+                {
+                  action: "jump",
+                  questionType: "shortText",
+                  operation: "contains",
+                  value: "it",
+                  to: "next-question",
+                },
+              ],
+            },
+          ],
+          answer: "let's do it, oh yeah!",
+          expected: "next-question",
+        },
+        {
+          name: "or",
+          rules: [
+            {
+              operation: "and",
+              rules: [
+                {
+                  action: "jump",
+                  questionType: "shortText",
+                  operation: "contains",
+                  value: "let",
+                  to: "next-question",
+                },
+                {
+                  action: "jump",
+                  questionType: "shortText",
+                  operation: "contains",
+                  value: "do",
+                  to: "next-question",
+                },
+                {
+                  action: "jump",
+                  questionType: "shortText",
+                  operation: "contains",
+                  value: "it",
+                  to: "next-question",
+                },
+              ],
+            },
+            {
+              action: "jump",
+              questionType: "shortText",
+              operation: "equal",
+              value: "done!",
+              to: "end-of-testing",
+            },
+          ],
+          answer: "done!",
+          expected: "end-of-testing",
+        },
       ] satisfies Array<{
         name: string;
         rules: Rules;

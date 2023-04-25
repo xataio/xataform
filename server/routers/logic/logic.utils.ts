@@ -162,7 +162,19 @@ export function applyRules(
   answer: string | number | boolean | string[] | Record<string, string>
 ): string | null {
   for (const rule of rules) {
-    if (rule.operation === "and") continue; // TODO
+    if (rule.operation === "and") {
+      const combinedResult = rule.rules.reduce((mem, r, i) => {
+        if (i === 0) return applyRules([r], answer);
+        const result = applyRules([r], answer);
+        if (result === mem) return mem;
+        return null;
+      }, null as string | null);
+
+      if (combinedResult !== null) {
+        return combinedResult;
+      }
+      continue;
+    }
 
     // String rules
     const isStringQuestion =
