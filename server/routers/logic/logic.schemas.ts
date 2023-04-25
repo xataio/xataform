@@ -123,7 +123,7 @@ const dateRuleSchema = z.object({
     "laterThan",
     "laterThanOrOn",
   ]),
-  value: z.string().datetime(),
+  value: z.string(),
 });
 
 export const ruleSchema = z.union([
@@ -146,3 +146,4 @@ export const rulesSchema = z.array(z.union([ruleSchema, andRule]));
 export const logicSchema = z.record(rulesSchema);
 
 export type Logic = z.infer<typeof logicSchema>;
+export type Rules = z.infer<typeof rulesSchema>;

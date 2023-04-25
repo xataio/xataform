@@ -1,5 +1,7 @@
-import { Logic, logicSchema } from "./logic.schemas";
+import { Logic, Rules, logicSchema } from "./logic.schemas";
 import { nanoid } from "nanoid";
+import isBefore from "date-fns/isBefore";
+import isAfter from "date-fns/isAfter";
 
 type LogicRecord = Nullable<{
   id: string;
@@ -146,4 +148,128 @@ export function toXataRecords(payload: Logic[number], questionId: string) {
   });
 
   return records;
+}
+
+/**
+ * Apply question rules.
+ *
+ * @param rules Rules related to the current question
+ * @param answer User answer
+ * @returns id of the next question or null if no rules
+ */
+export function applyRules(
+  rules: Rules,
+  answer: string | number | boolean | string[] | Record<string, string>
+): string | null {
+  for (const rule of rules) {
+    if (rule.operation === "and") continue; // TODO
+
+    // String rules
+    const isStringQuestion =
+      rule.questionType === "shortText" ||
+      rule.questionType === "phoneNumber" ||
+      rule.questionType === "longText" ||
+      rule.questionType === "email" ||
+      rule.questionType === "dropdown" ||
+      rule.questionType === "website";
+
+    if (isStringQuestion && typeof answer === "string") {
+      const value = rule.value.toLowerCase();
+      const strAnswer = answer.toLowerCase();
+      if (
+        (rule.operation === "equal" && value === strAnswer) ||
+        (rule.operation === "notEqual" && value !== strAnswer) ||
+        (rule.operation === "beginsWith" && strAnswer.startsWith(value)) ||
+        (rule.operation === "endsWith" && strAnswer.endsWith(value)) ||
+        (rule.operation === "contains" && strAnswer.includes(value)) ||
+        (rule.operation === "notContains" && !strAnswer.includes(value))
+      ) {
+        return rule.to;
+      }
+    }
+
+    // Number rules
+    const isNumberQuestion =
+      rule.questionType === "number" ||
+      rule.questionType === "opinionScale" ||
+      rule.questionType === "rating";
+
+    if (
+      isNumberQuestion &&
+      typeof answer === "number" &&
+      Number.isFinite(answer)
+    ) {
+      if (
+        (rule.operation === "equal" && rule.value === answer) ||
+        (rule.operation === "notEqual" && rule.value !== answer) ||
+        (rule.operation === "lowerThan" && rule.value > answer) ||
+        (rule.operation === "lowerEqualThan" && rule.value >= answer) ||
+        (rule.operation === "greaterThan" && rule.value < answer) ||
+        (rule.operation === "greaterEqualThan" && rule.value <= answer)
+      ) {
+        return rule.to;
+      }
+    }
+
+    // Ranking
+    if (rule.questionType === "ranking" && Array.isArray(answer)) {
+      const selectedAnswer = (answer[rule.index] || "").toLowerCase();
+      const value = rule.value;
+      if (
+        (rule.operation === "equal" && value === selectedAnswer) ||
+        (rule.operation === "notEqual" && value !== selectedAnswer) ||
+        (rule.operation === "beginsWith" && selectedAnswer.startsWith(value)) ||
+        (rule.operation === "endsWith" && selectedAnswer.endsWith(value)) ||
+        (rule.operation === "contains" && selectedAnswer.includes(value)) ||
+        (rule.operation === "notContains" && !selectedAnswer.includes(value))
+      ) {
+        return rule.to;
+      }
+    }
+
+    // Choice
+    if (
+      rule.questionType === "multipleChoice" ||
+      rule.questionType === "legal"
+    ) {
+      if (
+        (rule.operation === "is" && rule.value === answer) ||
+        (rule.operation === "isNot" && rule.value !== answer)
+      ) {
+        return rule.to;
+      }
+    }
+
+    // Matrix
+    if (
+      rule.questionType === "matrix" &&
+      typeof answer === "object" &&
+      !Array.isArray(answer)
+    ) {
+      if (
+        (rule.operation === "is" && rule.value === answer[rule.key]) ||
+        (rule.operation === "isNot" && rule.value !== answer[rule.key])
+      ) {
+        return rule.to;
+      }
+    }
+
+    // Date
+    if (rule.questionType === "date" && typeof answer === "string") {
+      if (
+        (rule.operation === "on" && answer === rule.value) ||
+        (rule.operation === "earlierThanOrOn" && answer === rule.value) ||
+        (rule.operation === "laterThanOrOn" && answer === rule.value) ||
+        (rule.operation === "notOn" && answer !== rule.value) ||
+        (rule.operation === "earlierThan" &&
+          isBefore(new Date(answer), new Date(rule.value))) ||
+        (rule.operation === "laterThan" &&
+          isAfter(new Date(answer), new Date(rule.value)))
+      ) {
+        return rule.to;
+      }
+    }
+  }
+
+  return null;
 }
