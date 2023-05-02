@@ -1,6 +1,11 @@
-# XataForm
+<p align="center">
+  <a href="https://github.com/xataio/xataform">
+    <img src="media/xataform-logo@2x.png?raw=true" alt="XataForm logo" width="300" />
+  </a>
+</p>
 
-Create, share and analyse your forms with Xata.
+<h1 align="center">Create, share and analyse your forms</h1>
+<br />
 
 ## Prerequisite
 
