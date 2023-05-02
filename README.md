@@ -5,7 +5,18 @@
 </p>
 
 <h1 align="center">Create, share and analyse your forms</h1>
-<br />
+
+
+<p align="center">
+  <img alt="Github Checks" src="https://badgen.net/github/checks/xataio/xataform/main"/>
+  <a href="https://github.com/xataio/xataform/blob/main/LICENSE">
+    <img alt="MIT License" src="https://img.shields.io/github/license/xataio/xataform"/>
+  </a>
+  <a href="https://xata.io/discord">
+    <img alt="Discord" src="https://img.shields.io/discord/996791218879086662.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" />
+  </a>
+</p>
+
 
 ## Prerequisite
 
