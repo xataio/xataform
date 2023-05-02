@@ -80,7 +80,7 @@ export const formRouter = router({
           maxLength: null,
           order: 0,
           required: false,
-          title: "My first question",
+          title: "",
           userId: user.id,
         });
 
