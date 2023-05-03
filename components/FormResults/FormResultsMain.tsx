@@ -74,18 +74,26 @@ export function FormResultsMain({ formId }: FormResultsMainProps) {
         </div>
       </div>
       <div className="ag-theme-alpine relative h-full w-full pt-2">
-        <AgGridReact
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          animateRows
-          className={clsx(isLoading && "opacity-50")}
-        />
-        {isLoading && (
-          <div className="absolute top-2 bottom-0 right-0 left-0 flex items-center justify-center">
-            <Spinner />
+        {form && version === 0 ? (
+          <div className="text-m flex w-full items-center justify-center py-8">
+            This form is not published yet
           </div>
+        ) : (
+          <>
+            <AgGridReact
+              ref={gridRef}
+              rowData={rowData}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              animateRows
+              className={clsx(isLoading && "opacity-50")}
+            />
+            {isLoading && (
+              <div className="absolute top-2 bottom-0 right-0 left-0 flex items-center justify-center">
+                <Spinner />
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
