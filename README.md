@@ -51,7 +51,7 @@ In order to run the project, you will need two accounts (free):
 
 ## Architecture
 
-This application is build on top of Xata, Next.js, tRPC and Clerk.
+This application is built on top of Xata, Next.js, tRPC and Clerk.
 
 ### Server side
 
