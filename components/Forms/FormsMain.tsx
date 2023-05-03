@@ -105,7 +105,7 @@ export function FormsMain() {
                 onDelete={() => deleteForm({ formId: form.id })}
                 onPublicUrlCopy={() =>
                   copy(
-                    location.href.split("?")[0].slice(0, "/create".length * -1),
+                    location.href.slice(0, -1) + `/${form.id}`,
                     "Public form url"
                   )
                 }
