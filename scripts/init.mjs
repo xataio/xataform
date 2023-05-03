@@ -19,7 +19,7 @@ async function main() {
   // Read dotenv
   let dotEnv = "";
   try {
-    dotEnv = await readFile(".env", "utf-8");
+    dotEnv = await readFile(".env.local", "utf-8");
   } catch {}
 
   // Xata token
@@ -44,11 +44,11 @@ async function main() {
     if (
       (await confirm({
         message:
-          "Do you want to store the key in .env file? (required to have project working)",
+          "Do you want to store the key in .env.local file? (required to have project working)",
       })) === true
     ) {
       writeFile(
-        ".env",
+        ".env.local",
         dotEnv.trim() +
           `${
             dotEnv.trim().split("\n").length > 1 ? "\n\n" : ""
