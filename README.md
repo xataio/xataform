@@ -17,6 +17,11 @@
   </a>
 </p>
 
+## Open Source alternative to Typeform
+
+To create new forms, you can use our instance at: https://xataform.com/
+
+Or deploy your own following the instructions below.
 
 ## Prerequisite
 
