@@ -11,6 +11,7 @@ import { WelcomeForms } from "./WelcomeForms";
 import { CreateOrRenameFormModal } from "./CreateOrRenameFormModal";
 import { FormCard } from "./FormCard";
 import clsx from "clsx";
+import { useCopyToClipboard } from "hooks/useCopyToClipboard";
 
 export function FormsMain() {
   const {
@@ -22,6 +23,7 @@ export function FormsMain() {
   const { createForm, isFormCreating } = useCreateForm();
   const { renameForm } = useRenameForm();
   const { deleteForm } = useDeleteForm();
+  const { copy } = useCopyToClipboard();
 
   const [modal, setModal] = useState<
     | null
@@ -101,6 +103,12 @@ export function FormsMain() {
                   })
                 }
                 onDelete={() => deleteForm({ formId: form.id })}
+                onPublicUrlCopy={() =>
+                  copy(
+                    location.href.split("?")[0].slice(0, "/create".length * -1),
+                    "Public form url"
+                  )
+                }
               />
             ))}
           </div>

@@ -8,6 +8,7 @@ export type FormCardProps = {
   onRename: () => void;
   onDelete: () => void;
   onDuplicate: () => void;
+  onPublicUrlCopy: () => void;
 } & React.PropsWithChildren;
 
 export function FormCard({
@@ -15,6 +16,7 @@ export function FormCard({
   onRename,
   onDelete,
   onDuplicate,
+  onPublicUrlCopy,
   ...props
 }: FormCardProps) {
   return (
@@ -47,13 +49,27 @@ export function FormCard({
         <Menu
           items={[
             {
-              title: "Open",
+              title: "Edit",
               href: {
                 pathname: "/form/[formId]/create",
                 query: {
                   formId: form.id,
                 },
               },
+            },
+            {
+              title: "View responses",
+              href: {
+                pathname: "/form/[formId]/results",
+                query: {
+                  formId: form.id,
+                },
+              },
+            },
+            "---",
+            {
+              title: "Copy public url",
+              onClick: onPublicUrlCopy,
             },
             "---",
             {
