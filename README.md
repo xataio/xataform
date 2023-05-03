@@ -6,7 +6,6 @@
 
 <h1 align="center">Create, share and analyse your forms</h1>
 
-
 <p align="center">
   <img alt="Github Checks" src="https://badgen.net/github/checks/xataio/xataform/main"/>
   <a href="https://github.com/xataio/xataform/blob/main/LICENSE">
@@ -34,7 +33,7 @@ In order to run the project, you will need two accounts (free):
 
 1. Install the dependencies: `pnpm install`
 1. Initialize your database: `pnpm xata:init`
-1. Add Clerk keys in `.env`: https://clerk.com/docs/nextjs/set-environment-keys
+1. Add Clerk keys in `.env.local`: https://clerk.com/docs/nextjs/set-environment-keys
 1. Start the dev server: `pnpm dev`
 
 ## Architecture
@@ -52,6 +51,3 @@ Everything is defined in `/server`:
 ### Pages
 
 A classic Next.js application pattern, every file is a page.
-
-
-
