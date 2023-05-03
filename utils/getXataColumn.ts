@@ -79,7 +79,7 @@ export function getXataColumn(
       return {
         name,
         type: "object",
-        columns: question.matrix?.rows?.map((row, i) => ({
+        columns: (question.matrix?.rows || [""]).map((row, i) => ({
           name: row
             ? slugify(row, {
                 lower: true,
