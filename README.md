@@ -18,6 +18,8 @@
 
 ## Open Source alternative to Typeform
 
+You can read more about the project and its motivation in our [blog post](https://xata.io/blog/xataform-is-here).
+
 To create new forms, you can use our instance at: https://xataform.com/
 
 Or deploy your own following the instructions below.
