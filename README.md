@@ -32,9 +32,22 @@ In order to run the project, you will need two accounts (free):
 ## Getting started
 
 1. Install the dependencies: `pnpm install`
-1. Initialize your database: `pnpm xata:init`
-1. Add Clerk keys in `.env.local`: https://clerk.com/docs/nextjs/set-environment-keys
-1. Start the dev server: `pnpm dev`
+2. Initialize your database: `pnpm xata:init`
+3. Add Clerk keys in `.env.local`: https://clerk.com/docs/nextjs/set-environment-keys
+4. At this stage, you should have 3 values in your `.env.local`
+
+   ```env
+   # Xata
+   XATA_API_KEY=xau_…
+
+   # Clerk
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_…
+   CLERK_SECRET_KEY=sk_…
+   ```
+
+   If not, please check that you picked `nextjs` in clerk.
+
+5. Start the dev server: `pnpm dev`
 
 ## Architecture
 
