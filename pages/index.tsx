@@ -16,6 +16,12 @@ export default function Home() {
           content="Create and share your forms like a boss with Xata"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="XataForm" />
+        <meta
+          property="og:description"
+          content="Create and share your forms like a boss with Xata"
+        />
+        <meta property="og:image" content="/xataform-og.png" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="isolate bg-white">
@@ -49,7 +55,7 @@ export default function Home() {
           <div className="relative px-6 lg:px-8">
             {isSignedIn && (
               <SignOutButton>
-                <button className="absolute top-2 right-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <button className="absolute top-2 right-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:bg-gray-50">
                   Logout
                 </button>
               </SignOutButton>
