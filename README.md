@@ -33,6 +33,8 @@ In order to run the project, you will need two accounts (free):
 - A Xata account for the database - https://xata.io/
 - A Clerk account for the authentication layer - https://clerk.com/
 
+You will also need to have [Node 18](https://nodejs.org/) installed, and [pnpm](https://pnpm.io/) is a nice to have.
+
 ## Getting started
 
 1. Install the dependencies: `pnpm install`
