@@ -57,7 +57,7 @@ export function AnswerWrapper(props: {
           <Button type="submit">
             {props.isLastAnswer ? "Submit" : "OK ✓"}
           </Button>
-          <div className="text-xs">
+          <div className="hidden text-xs sm:block">
             press <b>{props.keyToSubmit ?? "Enter ↵"}</b>
           </div>
         </div>

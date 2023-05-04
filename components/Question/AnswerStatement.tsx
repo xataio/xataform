@@ -20,7 +20,7 @@ function AnswerStatement(props: AnswerProps<"statement">) {
         <Button type="submit">
           {props.buttonText || (props.isLastQuestion ? "Submit" : "Continue")}
         </Button>
-        <div className="text-xs">
+        <div className="hidden text-xs sm:block">
           press <b>Enter</b>↵
         </div>
       </div>
