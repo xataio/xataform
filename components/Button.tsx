@@ -10,7 +10,9 @@ import {
   ArrowPathIcon,
   PhotoIcon,
   ArrowDownTrayIcon,
+  XMarkIcon,
 } from "@heroicons/react/20/solid";
+import { match } from "ts-pattern";
 import { Placement } from "@popperjs/core";
 import clsx from "clsx";
 import { ButtonHTMLAttributes, useState } from "react";
@@ -21,7 +23,7 @@ export type ButtonProps = ButtonPropsWithoutIcon | ButtonWithIconProps;
 type ButtonPropsCommun = {
   children: string;
   onClick?: () => void;
-  variant?: "ghost" | "secondary" | "warning";
+  variant?: "ghost" | "secondary" | "warning" | "panel";
   isLoading?: boolean;
   disabled?: boolean;
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
@@ -46,7 +48,8 @@ type ButtonWithIconProps = ButtonPropsCommun & {
     | "reset"
     | "photo"
     | "warning"
-    | "download";
+    | "download"
+    | "close";
   iconOnly?: boolean;
   tooltipPlacement?: Placement;
 };
@@ -82,14 +85,16 @@ export function Button(props: ButtonProps) {
     ],
   });
 
-  const colorClasses =
-    props.variant === "ghost"
-      ? "bg-indigo-500 text-white hover:bg-indigo-400"
-      : props.variant === "secondary"
-      ? "bg-slate-300 text-slate-700 hover:bg-slate-400"
-      : props.variant === "warning"
-      ? "bg-orange-600 text-white hover:bg-orange-700"
-      : "bg-indigo-600 text-white hover:bg-indigo-700";
+  const colorClasses = match(props.variant)
+    .with("ghost", () => "bg-indigo-500 text-white hover:bg-indigo-400")
+    .with("secondary", () => "bg-slate-300 text-slate-700 hover:bg-slate-400")
+    .with("warning", () => "bg-orange-600 text-white hover:bg-orange-700")
+    .with(
+      "panel",
+      () =>
+        "text-slate-800 bg-white shadow-none hover:bg-slate-300 rounded-full"
+    )
+    .otherwise(() => "bg-indigo-600 text-white hover:bg-indigo-700");
 
   return (
     <>
@@ -128,6 +133,12 @@ export function Button(props: ButtonProps) {
         {icon === "add" ? (
           <PlusIcon
             className={clsx({ "mr-2": !props.iconOnly }, "h-5 w-5")}
+            aria-hidden="true"
+          />
+        ) : null}
+        {icon === "close" ? (
+          <XMarkIcon
+            className={clsx({ "mr-2": !props.iconOnly }, "h-4 w-5")}
             aria-hidden="true"
           />
         ) : null}
