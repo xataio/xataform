@@ -20,6 +20,8 @@
 
 You can read more about the project and its motivation in our [blog post](https://xata.io/blog/xataform-is-here).
 
+If you prefer a guided tour, [here is a loom](https://www.loom.com/share/7d24e3bc10fe4a89be601801b925d486).
+
 To create new forms, you can use our instance at: https://xataform.com/
 
 Or deploy your own following the instructions below.
