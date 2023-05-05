@@ -54,7 +54,7 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
           <div
             className={clsx(
               "grid grid-cols-header p-10",
-              !question.illustration && "w-full p-28"
+              !question.illustration && "w-full sm:p-28"
             )}
           >
             {/* Question number */}
@@ -181,7 +181,7 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
         style={{ top: `calc(100vh * -${slideNumber - 1})` }}
         className={clsx(
           "relative transition-all duration-700",
-          "h-screen",
+          "h-screen w-screen text-center",
           "flex flex-col items-center justify-center gap-4",
           "bg-indigo-50"
         )}
@@ -198,8 +198,11 @@ export function Form({ questions, onSubmit, ending }: FormProps) {
         <>
           <div
             className={clsx(
-              "absolute bottom-3 -translate-x-full text-sm text-indigo-600",
-              "transition-all duration-200"
+              "absolute bottom-3 px-1 text-sm text-indigo-600",
+              "transition-all duration-200",
+              slideNumber > questions.length / 2
+                ? "-translate-x-full"
+                : "-translate-x-1/2"
             )}
             style={{
               left: `calc(${(slideNumber / questions.length) * 100}vw)`,
