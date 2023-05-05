@@ -1,6 +1,5 @@
-import { notExists, XataApiClient } from "@xata.io/client";
-import { answersDatabase, answersDatabaseOptions } from "utils/answers";
-import { getXataColumn } from "utils/getXataColumn";
+import { notExists } from "@xata.io/client";
+import slugify from "slugify";
 import { z } from "zod";
 import { getXataClient } from "../../utils/xata";
 import { Form, formSchema } from "../routers/form/form.schemas";
@@ -284,23 +283,6 @@ export const database = {
       }))
     );
 
-    // Create the answer table with the current schema
-    const xataApi = new XataApiClient();
-    const options = {
-      ...answersDatabaseOptions,
-      table: `${formId}-v${updatedForm.version}`,
-    };
-
-    await xataApi.tables.createTable(options);
-    await xataApi.tables.setTableSchema({
-      ...options,
-      schema: {
-        columns: [
-          { name: "createdAt", type: "datetime", defaultValue: "now" },
-          ...questions.map(getXataColumn).filter(valueOnly),
-        ],
-      },
-    });
     return { ...updatedForm };
   },
 
@@ -313,7 +295,11 @@ export const database = {
     version: number;
     payload: any;
   }) {
-    await answersDatabase.db[`${formId}-v${version}`].create(payload);
+    await xata.db.answer.create({
+      form: formId,
+      payload: JSON.stringify(payload),
+      version,
+    });
     await xata.db.form.update(formId, {
       responses: { $increment: 1 },
     });
@@ -585,34 +571,109 @@ export const database = {
   },
 
   async listAnswers({ formId, version }: { version: number; formId: string }) {
-    const table = `${formId}-v${version}`;
-
     // Get columnDefs
-    const apiClient = new XataApiClient();
-    const { columns } = await apiClient.tables.getTableColumns({
-      ...answersDatabaseOptions,
-      table,
-    });
-    const columnDefs = columns.map((column) => {
-      if (column.type === "datetime") {
-        return {
-          field: column.name,
-          filter: "agDateColumnFilter",
-        };
+    const questions = await xata.db.publishedQuestion
+      .filter({
+        version,
+        form: formId,
+      })
+      .getAll();
+
+    const columnDefs = questions.reduce((mem, question) => {
+      const field = `${question.order}-${slugify(question.title, {
+        lower: true,
+        strict: true,
+        trim: true,
+      })}`;
+
+      if (question.type === "contactInfo") {
+        return [
+          ...mem,
+          { field: `${field}.firstName` },
+          { field: `${field}.lastName` },
+          { field: `${field}.phoneNumber` },
+          { field: `${field}.email` },
+          { field: `${field}.company` },
+        ];
       }
-      if (column.type === "int" || column.type === "float") {
-        return {
-          field: column.name,
-          filter: "agNumberColumnFilter",
-        };
+
+      if (question.type === "address") {
+        return [
+          ...mem,
+          { field: `${field}.address` },
+          { field: `${field}.address2` },
+          { field: `${field}.cityTown` },
+          { field: `${field}.zipCode` },
+          { field: `${field}.country` },
+        ];
       }
-      return {
-        field: column.name,
-      };
-    });
+
+      if (question.type === "matrix") {
+        return [
+          ...mem,
+          ...(question?.matrix?.rows || [""]).reduce((def, row, i) => {
+            return [
+              ...def,
+              {
+                field: `${field}.${
+                  row
+                    ? slugify(row, {
+                        lower: true,
+                        strict: true,
+                        trim: true,
+                      })
+                    : `row${i + 1}`
+                }`,
+              },
+            ];
+          }, [] as Array<{ field: string }>),
+        ];
+      }
+
+      if (question.type === "date") {
+        return [
+          ...mem,
+          {
+            field,
+            filter: "agDateColumnFilter",
+          },
+        ];
+      }
+      if (
+        question.type === "number" ||
+        question.type === "opinionScale" ||
+        question.type === "ranking"
+      ) {
+        return [
+          ...mem,
+          {
+            field,
+            filter: "agNumberColumnFilter",
+          },
+        ];
+      }
+
+      return [
+        ...mem,
+        {
+          field,
+        },
+      ];
+    }, [] as Array<{ field: string; filter?: string }>);
 
     // Get answers
-    const rowData = await answersDatabase.db[table].getAll();
+    const rowData = (
+      await xata.db.answer.filter({ version, form: formId }).getAll()
+    ).map((d) => {
+      if (d.payload === null || d.payload === undefined) return {};
+      try {
+        return JSON.parse(d.payload);
+      } catch {
+        return {};
+      }
+    });
+
+    console.log(rowData);
 
     return { columnDefs, rowData };
   },
