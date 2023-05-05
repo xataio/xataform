@@ -519,7 +519,7 @@ export type DatabaseSchema = {
 const DatabaseClient = buildClient();
 
 const defaultOptions = {
-  databaseURL: "https://doom-day-3-f6iao7.eu-west-1.xata.sh/db/xataform",
+  databaseURL: "https://XataForm-kh171g.eu-west-1.xata.sh/db/xataform",
 };
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {
