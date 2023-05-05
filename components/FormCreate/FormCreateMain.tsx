@@ -11,6 +11,7 @@ import React, { useEffect, useRef } from "react";
 import { useLayoutEffect } from "react";
 import { trpc } from "utils/trpc";
 import { ContentPanel } from "./ContentPanel";
+import { Panel } from "components/Panel";
 
 export type FormCreateMainProps = {
   formId: string;
@@ -150,21 +151,5 @@ export function FormCreateMain({ formId }: FormCreateMainProps) {
         </Panel>
       ) : null}
     </div>
-  );
-}
-
-function Panel({
-  children,
-  isOpen,
-}: React.PropsWithChildren<{ isOpen: boolean }>) {
-  return (
-    <section
-      className={clsx(
-        isOpen ? "w-64 min-w-[16rem]" : "w-0",
-        "z-10 flex h-full flex-col shadow-lg transition-all overflow-x-hidden"
-      )}
-    >
-      {children}
-    </section>
   );
 }

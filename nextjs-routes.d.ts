@@ -10,6 +10,7 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/api/trpc/[trpc]", { "trpc": string }>
     | DynamicRoute<"/form/[formId]/create", { "formId": string }>
     | DynamicRoute<"/form/[formId]", { "formId": string }>
+    | DynamicRoute<"/form/[formId]/logic", { "formId": string }>
     | DynamicRoute<"/form/[formId]/preview", { "formId": string }>
     | DynamicRoute<"/form/[formId]/results", { "formId": string }>
     | StaticRoute<"/forms">

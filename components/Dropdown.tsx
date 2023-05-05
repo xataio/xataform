@@ -7,9 +7,11 @@ export type DropdownProps<T extends string | number> = {
   onChange: (value: T) => void;
   choices: T[];
   label: string;
+  hideLabel?: boolean;
 };
 
 export function Dropdown<T extends string | number>({
+  hideLabel,
   value,
   onChange,
   choices,
@@ -22,7 +24,9 @@ export function Dropdown<T extends string | number>({
       className="flex w-full items-center gap-1 ui-open:z-10 "
       as="div"
     >
-      <Listbox.Label className="text-slate-800">{label}</Listbox.Label>
+      <Listbox.Label className={clsx("text-slate-800", hideLabel && "sr-only")}>
+        {label}
+      </Listbox.Label>
       <div className="relative block w-full">
         <Listbox.Button className="relative w-full cursor-default rounded border border-indigo-200 bg-white py-1 pl-3 pr-10 text-left text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2">
           <span className="block truncate">{value}</span>

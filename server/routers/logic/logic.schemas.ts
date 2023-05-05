@@ -95,7 +95,7 @@ const numberRuleSchema = z.object({
 });
 
 const choiceRuleSchema = z.object({
-  questionType: z.enum(["multipleChoice", "legal"]),
+  questionType: z.enum(["multipleChoice", "legal", "yesNo"]),
   action: z.literal("jump"),
   to: questionId,
   operation: z.enum(["is", "isNot"]),
@@ -147,3 +147,13 @@ export const logicSchema = z.record(rulesSchema);
 
 export type Logic = z.infer<typeof logicSchema>;
 export type Rules = z.infer<typeof rulesSchema>;
+export type Rule = z.infer<typeof ruleSchema>;
+
+export type AddressRule = z.infer<typeof addressRuleSchema>;
+export type ContactInfoRule = z.infer<typeof contactInfoRuleSchema>;
+export type RankingRule = z.infer<typeof rankingRuleSchema>;
+export type StringRule = z.infer<typeof stringRuleSchema>;
+export type NumberRule = z.infer<typeof numberRuleSchema>;
+export type ChoiceRule = z.infer<typeof choiceRuleSchema>;
+export type MatrixRule = z.infer<typeof matrixRuleSchema>;
+export type DateRule = z.infer<typeof dateRuleSchema>;

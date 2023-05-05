@@ -285,3 +285,9 @@ export function applyRules(
 
   return null;
 }
+
+export function toReactFlow(questions: any[], logic: Logic) {
+  /**
+   * TODO
+   */
+}

@@ -7,11 +7,16 @@ import Link from "next/link";
 import { Form } from "server/routers/form/form.schemas";
 import { InlineEditTitle } from "./InlineEditTitle";
 import { StatusButton } from "./StatusButton";
+import { Route } from "nextjs-routes";
+
+type FormPage<T = Route["pathname"]> =
+  T extends `/form/[formId]/${infer PathName}` ? PathName : never;
 
 export type FormHeaderProps = {
   form: Form & { id: string };
-  page: "create" | "results";
+  page: FormPage;
 };
+
 export function FormHeader({ form, page }: FormHeaderProps) {
   const { renameForm } = useRenameForm();
   const { publishForm, isFormPublishing } = usePublishForm();
@@ -36,13 +41,29 @@ export function FormHeader({ form, page }: FormHeaderProps) {
             },
           }}
           className={clsx(
-            "inline-flex items-center border-b-4 px-2 pt-3 text-base font-medium",
+            "inline-flex items-center border-b-4 px-2 pt-3 text-base font-medium focus:bg-indigo-500 focus:outline-none",
             page === "create"
-              ? "border-indigo-300 text-white focus:bg-indigo-500 focus:outline-none"
+              ? "border-indigo-300 text-white"
               : "border-transparent text-indigo-300 hover:border-indigo-500 hover:text-indigo-200"
           )}
         >
           Create
+        </Link>
+        <Link
+          href={{
+            pathname: "/form/[formId]/logic",
+            query: {
+              formId: form.id,
+            },
+          }}
+          className={clsx(
+            "inline-flex items-center border-b-4 px-2 pt-3 text-base font-medium focus:bg-indigo-500 focus:outline-none",
+            page === "logic"
+              ? "border-indigo-300 text-white"
+              : "border-transparent text-indigo-300 hover:border-indigo-500 hover:text-indigo-200"
+          )}
+        >
+          Logic
         </Link>
         <Link
           href={{
@@ -52,9 +73,9 @@ export function FormHeader({ form, page }: FormHeaderProps) {
             },
           }}
           className={clsx(
-            "inline-flex items-center border-b-4 px-2 pt-3 text-base font-medium",
+            "inline-flex items-center border-b-4 px-2 pt-3 text-base font-medium focus:bg-indigo-500 focus:outline-none",
             page === "results"
-              ? "border-indigo-300 text-white focus:bg-indigo-500 focus:outline-none"
+              ? "border-indigo-300 text-white"
               : "border-transparent text-indigo-300 hover:border-indigo-500 hover:text-indigo-200"
           )}
         >

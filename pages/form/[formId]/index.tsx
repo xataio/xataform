@@ -1,16 +1,10 @@
-import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import slugify from "slugify";
-import clsx from "clsx";
-import { Answer } from "components/Question/Answer";
 import {
   InferGetStaticPropsType,
   GetStaticPropsResult,
   GetStaticPathsResult,
   GetStaticPropsContext,
 } from "next";
-import Image from "next/image";
 import { RoutedQuery } from "nextjs-routes";
-import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { database } from "server/services/database";
 import { trpc } from "utils/trpc";
