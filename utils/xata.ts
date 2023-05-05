@@ -474,6 +474,20 @@ const tables = [
       { name: "userId", type: "string", notNull: true, defaultValue: "" },
     ],
   },
+  {
+    name: "answer",
+    columns: [
+      {
+        name: "createdAt",
+        type: "datetime",
+        notNull: true,
+        defaultValue: "now",
+      },
+      { name: "form", type: "link", link: { table: "form" } },
+      { name: "version", type: "int", notNull: true, defaultValue: "0" },
+      { name: "payload", type: "text" },
+    ],
+  },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -491,11 +505,15 @@ export type PublishedQuestionRecord = PublishedQuestion & XataRecord;
 export type Ending = InferredTypes["ending"];
 export type EndingRecord = Ending & XataRecord;
 
+export type Answer = InferredTypes["answer"];
+export type AnswerRecord = Answer & XataRecord;
+
 export type DatabaseSchema = {
   question: QuestionRecord;
   form: FormRecord;
   publishedQuestion: PublishedQuestionRecord;
   ending: EndingRecord;
+  answer: AnswerRecord;
 };
 
 const DatabaseClient = buildClient();

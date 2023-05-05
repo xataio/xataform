@@ -950,6 +950,31 @@
           "defaultValue": ""
         }
       ]
+    },
+    {
+      "name": "answer",
+      "columns": [
+        {
+          "name": "createdAt",
+          "type": "datetime",
+          "notNull": true,
+          "defaultValue": "now"
+        },
+        {
+          "name": "form",
+          "type": "link",
+          "link": {
+            "table": "form"
+          }
+        },
+        {
+          "name": "version",
+          "type": "int",
+          "notNull": true,
+          "defaultValue": "0"
+        },
+        { "name": "payload", "type": "text" }
+      ]
     }
   ]
 }
