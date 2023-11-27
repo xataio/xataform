@@ -1,3 +1,7 @@
+:warning: **Xataform is deprecated and shuts down on December 13, 2023** :warning:
+
+Due to the use of [object](https://xata.io/docs/concepts/data-model#object) columns in the schema, which will no longer be available after December 13 2023, Xataform stops working and will not be maintained by Xata. If you are using the objects column, please make sure to migrate away before the end date following the [migration guide](https://xata.io/docs/concepts/data-model#object-type-migration).
+
 <p align="center">
   <a href="https://github.com/xataio/xataform">
     <img src="media/xataform-logo@2x.png?raw=true" alt="XataForm logo" width="300" />
